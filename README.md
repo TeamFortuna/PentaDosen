@@ -28,47 +28,55 @@ Dibangun menggunakan *CodeIgniter 4 (CI4)*, proyek ini bertujuan untuk mempermud
 
 Untuk memulai dengan proyek ini, pertama-tama clone repository ini ke komputer lokalmu.
 
-bash
+```bash
 git clone https://github.com/Umam07/Team-Fortuna.git
+```
 
 ### Langkah 2: Setup CodeIgniter 4
 #### 1. Masuk ke folder proyek:
- bash
+```bash
 cd Team-Fortuna
-`
+```
+
 #### 2. Install dependencies Composer:
 Jika belum menginstall Composer, unduh dari sini [composer](https://getcomposer.org/download/). 
 Setelah Composer terinstall, jalankan perintah berikut untuk menginstall dependencies:
- bash 
+ ```bash 
 composer install
+```
 
 #### 3. Salin file contoh .env untuk membuat file .env milikmu sendiri:
- bash 
+ ````bash 
 cp env.example .env
+````
 
 #### 4. Buka file .env dan sesuaikan pengaturan database dengan mengganti baris berikut:
- bash
+ ```bash
 database.default.hostname = localhost
 database.default.database = nama_database_anda
 database.default.username = username_database_anda
 database.default.password = password_database_anda
 database.default.DBDriver = MySQLi
+```
 
 
 #### 5. Jalankan migrasi database:
- bash
+ ```bash
 php spark migrate
+```
 
 
 #### 6. Jalankan server bawaan CodeIgniter:
- bash
+ ```bash
 php spark serve
+```
 
 
 ### Langkah 3: Menjalankan Aplikasi
 Setelah menyelesaikan langkah instalasi, buka browser dan akses:
- bash 
+ ```bash 
 http://localhost:8080
+```
 
 
 Semoga README ini dapat membantu pengguna memahami proyek dengan baik!
