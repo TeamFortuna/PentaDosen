@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+<?php
+
+use App\Controllers\DashboardController;
+
+?><!DOCTYPE html>
 <html lang="en">
 
 <head>

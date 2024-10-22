@@ -1,3 +1,7 @@
+<?php
+
+use App\Controllers\RegisterLoginController;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,11 +18,11 @@
 
     <div class="container" id="container">
         <div class="form-container sign-up">
-            <form action="/register" method="post">
+            <form action="<?= base_url('/processRegister') ?>" method="post">                
                 <h1>Lengkapi Data</h1>
                 <input type="text" name="nama" placeholder="Nama" required>
-                <input type="text" name="nama insial" placeholder="Inisial Nama" required>
-                <select name="nama instasi" required>
+                <input type="text" name="nama_inisial" placeholder="Inisial Nama" required>
+                <select name="program_studi" required>
                     <option value="" disabled selected>Pilih Nama Prodi</option>
                     <option value="Teknik Informatika">Teknik Informatika</option>
                     <option value="Perpustakaan dan Sains Informasi">Perpustakaan dan Sains Informasi</option>
@@ -30,7 +34,7 @@
             </form>
         </div>
         <div class="form-container sign-in">
-            <form action="/login" method="post">
+            <form action="<?= base_url('/processLogin') ?>" method="post">
                 <h1>Login</h1>
                 <input type="text" name="username" placeholder="Username" required>
                 <input type="password" name="password" placeholder="Password" required>
@@ -58,4 +62,4 @@
     <script src="<?= base_url('js/script.js') ?>"></script>
 </body>
 
-</html>
+</html> 
