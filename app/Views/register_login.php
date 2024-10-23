@@ -39,7 +39,7 @@ use App\Controllers\RegisterLoginController;
                 <input type="text" name="username" placeholder="Username" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <a href="#">Forgot Your Password?</a>
-                <button type="submit">Login</button>
+                <button type="button" onclick="window.location='<?= base_url('dashboard'); ?>'">Login</button>
             </form>
         </div>
         <div class="toggle-container">
