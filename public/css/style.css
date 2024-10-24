@@ -28,6 +28,12 @@ body{
     min-height: 480px;
 }
 
+.invalid-feedback {
+    color: crimson;
+    font-size: 13px;
+    margin-right: 29%;
+}
+
 .container p{
     font-size: 14px;
     line-height: 20px;

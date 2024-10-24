@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use App\Controllers\DashboardController;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
 use CodeIgniter\Filters\CSRF;
@@ -28,6 +29,7 @@ class Filters extends BaseFilters
         'csrf'          => CSRF::class,
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
+        'filterlogin'   => \App\Filters\FilterLogin::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
         'cors'          => Cors::class,
@@ -69,11 +71,21 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
+            // 'filterlogin' => [
+            //     'except' => [
+            //         '/', 'registerlogincontroller/*', 
+            //     ]
+            // ]
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
         ],
         'after' => [
+            // 'filterlogin' => [
+            //     'except' => [
+            //         'dashboardcontroller/*', 'dashboardcontroller',
+            //     ]
+            // ]
             // 'honeypot',
             // 'secureheaders',
         ],

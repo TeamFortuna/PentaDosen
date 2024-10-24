@@ -1,7 +1,7 @@
 <?php
-
-use App\Controllers\RegisterLoginController;
+if (!session()->get('logged_in')):
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +18,8 @@ use App\Controllers\RegisterLoginController;
 
     <div class="container" id="container">
         <div class="form-container sign-up">
-            <form action="<?= base_url('/processRegister') ?>" method="post">                
+            <?= form_open('registerlogincontroller/processRegister'); ?>
+                
                 <h1>Lengkapi Data</h1>
                 <input type="text" name="nama" placeholder="Nama" required>
                 <input type="text" name="nama_inisial" placeholder="Inisial Nama" required>
@@ -31,16 +32,44 @@ use App\Controllers\RegisterLoginController;
                 <input type="text" name="username" placeholder="Username" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <button type="submit">Daftar</button>
-            </form>
+            <?= form_close(); ?>
         </div>
         <div class="form-container sign-in">
-            <form action="<?= base_url('/processLogin') ?>" method="post">
+                <?php
+                if (session()->getFlashdata('errUsername')) {
+                    $isInvalidUser = 'is-invalid';
+                } else {
+                    $isInvalidUser = '';                
+                }
+                ?>
+            <?= form_open('registerlogincontroller/processLogin'); ?>
                 <h1>Login</h1>
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="password" name="password" placeholder="Password" required>
+                <input type="text" name="username" placeholder="Username">
+                    <?php  
+                    if (session()->getFlashdata('errUsername')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('errUsername').'
+                        </div>';
+                    }
+                    ?>
+                    <?php
+                    if (session()->getFlashdata('errPassword')) {
+                        $isInvalidUser = 'is-invalid';
+                    } else {
+                        $isInvalidUser = '';                
+                    }
+                    ?>           
+                <input type="password" name="password" placeholder="Password">
+                    <?php  
+                    if (session()->getFlashdata('errPassword')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('errPassword').'
+                        </div>';
+                    }
+                    ?>
                 <a href="#">Forgot Your Password?</a>
-                <button type="button" onclick="window.location='<?= base_url('dashboard'); ?>'">Login</button>
-            </form>
+                <button type="submit">Login</button>
+            <?= form_close(); ?>
         </div>
         <div class="toggle-container">
             <div class="toggle">
@@ -62,4 +91,9 @@ use App\Controllers\RegisterLoginController;
     <script src="<?= base_url('js/script.js') ?>"></script>
 </body>
 
-</html> 
+</html>
+<?php else: ?>
+    <script>
+        window.location.href = "<?= base_url('dashboard'); ?>";
+    </script>
+<?php endif; ?>

@@ -9,9 +9,7 @@ class RegisterLoginController extends BaseController
 {
     public function index()
     {
-        
-        
-        // helper('form');
+        helper('form');
         // Load the registration form view
         return view('register_login');
     }
@@ -51,7 +49,7 @@ class RegisterLoginController extends BaseController
     } else {
         echo "Data berhasil disimpan!";
         // Redirect ke halaman login setelah sukses
-        return redirect()->to('/register_login')->with('success', 'Registrasi berhasil, silakan login.');
+        return redirect()->to('register_login')->with('success', 'Registrasi berhasil, silakan login.');
     }
     
     // Tambahkan logika registrasi di sini
@@ -103,36 +101,103 @@ class RegisterLoginController extends BaseController
         $password = $this->request->getPost('password');
 
         // Validasi input (validasi sederhana, bisa disesuaikan dengan kebutuhan)
-        if (empty($username) || empty($password)) {
-            return redirect()->back()->withInput()->with('error', 'All fields are required.');
-        }
+        // if (empty($username) || empty($password)) {
+        //     return redirect()->back()->withInput()->with('error', 'All fields are required.');
+        // }
+        $validation = \Config\Services::validation();
 
-        // Inisialisasi model
-        $loginModel = new RegisterLogin_Model();
+        $valid = $this->validate([
+            'username' => [
+                    'label' => 'Username',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong'
+                    ]
+            ],
+            'password' => [
+                'label' => 'Password',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} tidak boleh kosong'
+                    ],
+            ],
+        ]);
 
-        // Cek apakah username ada di database
-        $user = $loginModel->where('username', $username)->first();
+        if(!$valid) {
+            $sessError = [
+                'errUsername' => $validation->getError('username'),
+                'errPassword' => $validation->getError('password'),
+            ];
 
-        if ($user) {
-            // Verifikasi password
-            if (password_verify($password, $user['password'])) {
-                // Jika login berhasil, set session untuk user
-                session()->set([
-                    'username' => $user['username'],
-                    'logged_in' => true,
-                    'user_type' => $user['user_type'] // Misalnya untuk mengatur role
-                ]);
+            session()->setFlashdata($sessError);
+            return redirect()->to(base_url('registerlogincontroller/index'));
 
-                // Redirect ke halaman dashboard atau halaman lain setelah login sukses
-                return redirect()->to('/dashboard')->with('success', 'Login successful.');
-            } else {
-                // Jika password salah
-                return redirect()->back()->with('error', 'Invalid password.');
-            }
         } else {
-            // Jika username tidak ditemukan
-            return redirect()->back()->with('error', 'Username not found.');
+            // Inisialisasi model
+            $loginModel = new RegisterLogin_Model();
+            // Cek apakah username ada di database
+            $user = $loginModel->where('username', $username)->first();
+                if($user == null) {
+                    // Jika username tidak ditemukan
+                    $sessError = [
+                        'errUsername' => 'Maaf Username salah !',
+                    ];
+                    session()->setFlashdata($sessError);
+                    return redirect()->to(base_url('register_login'));   
+                } else {
+                    if (password_verify($password, $user['password'])) {
+                        // Jika login berhasil, set session untuk user
+                        session()->set([
+                            'username' => $user['username'],
+                            'logged_in' => true,
+                            'user_type' => $user['user_type'] // Misalnya untuk mengatur role
+                        ]);
+                        // Redirect ke halaman dashboard atau halaman lain setelah login sukses
+                        return redirect()->to('dashboard');
+                    } else {
+                        // Jika password salah
+                        $sessError = [
+                            'errPassword' => 'Maaf Password salah !',
+                        ];
+                        session()->setFlashdata($sessError);
+                        return redirect()->to(base_url('register_login'));
+                    }   
+                }
+                                 
         }
+        // // Inisialisasi model
+        // $loginModel = new RegisterLogin_Model();
+
+        // // Cek apakah username ada di database
+        // $user = $loginModel->where('username', $username)->first();
+
+        // if ($user) {
+        //     // Verifikasi password
+        //     if (password_verify($password, $user['password'])) {
+        //         // Jika login berhasil, set session untuk user
+        //         session()->set([
+        //             'username' => $user['username'],
+        //             'logged_in' => true,
+        //             'user_type' => $user['user_type'] // Misalnya untuk mengatur role
+        //         ]);
+        //         // Redirect ke halaman dashboard atau halaman lain setelah login sukses
+        //         return redirect()->to('/dashboard')->with('success', 'Login successful.');
+                
+        //     } else {
+        //         // Jika password salah
+        //         return redirect()->back()->with('error', 'Invalid password.');
+        //     }
+        // } else {
+        //     // Jika username tidak ditemukan
+        //     return redirect()->back()->with('error', 'Username not found.');
+        // }
+    }
+
+    public function logout() {
+        session()->remove('logged_in');
+        session()->remove('username');
+        session()->remove('user_type');
+        return redirect()->to(base_url('register_login'));
     }
 
 }

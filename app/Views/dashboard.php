@@ -1,8 +1,8 @@
 <?php
+if (session()->get('logged_in')):
+?>
 
-use App\Controllers\DashboardController;
-
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -15,7 +15,9 @@ use App\Controllers\DashboardController;
 </head>
 
 <body>
-
+<a>SELAMAT DATANG <?= session()->get('username');?></a>
+<a><?= session()->get('logged_in');?></a>
+<a> Anda adalah <?= session()->get('user_type');?></a>
     <div class="container">
         <!-- Sidebar Section -->
         <aside>
@@ -87,7 +89,7 @@ use App\Controllers\DashboardController;
                     </span>
                     <h3>New Login</h3>
                 </a> -->
-                <a href="register_login ">
+                <a href="registerlogincontroller/logout">
                     <span class="material-icons-sharp">
                         logout
                     </span>
@@ -280,3 +282,8 @@ use App\Controllers\DashboardController;
 </body>
 
 </html>
+<?php else: ?>
+    <script>
+        window.location.href = "<?= base_url('register_login'); ?>";
+    </script>
+<?php endif; ?>
