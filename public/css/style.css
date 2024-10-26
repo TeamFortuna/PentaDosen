@@ -31,7 +31,7 @@ body{
 .invalid-feedback {
     color: crimson;
     font-size: 13px;
-    margin-right: 29%;
+    margin-right: 10%;
 }
 
 .container p{
@@ -67,6 +67,27 @@ body{
 }
 
 .container button.hidden{
+    background-color: transparent;
+    border-color: #fff;
+}
+
+.container a.button {
+    display: inline-block;
+    background-color: #512da8;
+    color: #fff;
+    font-size: 12px;
+    padding: 10px 45px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 10px;
+    cursor: pointer;
+    text-decoration: none; 
+}
+
+.container a.button.hidden{
     background-color: transparent;
     border-color: #fff;
 }
@@ -149,6 +170,16 @@ body{
     animation: move 0.6s;
 }
 
+.forgot-password{
+    left: 0;
+    width: 50%;
+    z-index: 2;
+}
+
+.container.active .forgot-password{
+    transform: translateX(100%);
+}
+
 @keyframes move{
     0%, 49.99%{
         opacity: 0;
@@ -224,4 +255,33 @@ body{
 
 .container.active .toggle-right{
     transform: translateX(200%);
+}
+
+/* Atur styling untuk ol dan li */
+.toggle-panel ol {
+    font-size: 14px; /* Atur ukuran teks ol sama seperti p */
+    line-height: 1.5; /* Atur jarak antar baris */
+    margin-top: 10px; /* Tambahkan jarak di atas ol */
+    padding-left: 20px; /* Menambahkan indentasi */
+}
+
+.toggle-panel li {
+    margin-bottom: 10px; /* Atur jarak antar item list */
+}
+
+/* Atur jarak untuk h1 "Pemberitahuan" */
+.toggle-panel h1 {
+    margin-bottom: 15px; /* Tambahkan jarak di bawah heading */
+}
+
+
+/* Animasi fade in dan fade out */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-out; /* Durasi animasi fade out */
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity 0.5s ease-in;  /* Durasi animasi fade in */
 }
