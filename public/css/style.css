@@ -31,7 +31,7 @@ body{
 .invalid-feedback {
     color: crimson;
     font-size: 13px;
-    margin-right: 10%;
+    margin-right: auto;
 }
 
 .container p{

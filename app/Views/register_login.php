@@ -15,11 +15,9 @@ if (!session()->get('logged_in')):
     </head>
 
     <body>
-
         <div class="container" id="container">
             <div class="form-container sign-up">
                 <?= form_open('registerlogincontroller/processRegister'); ?>
-
                 <h1>Lengkapi Data</h1>
                 <input type="text" name="nama" placeholder="Nama" required>
                 <input type="text" name="nama_inisial" placeholder="Inisial Nama" required>
@@ -30,7 +28,21 @@ if (!session()->get('logged_in')):
                 </select>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="text" name="username" placeholder="Username" required>
+                <?php  
+                    if (session()->getFlashdata('errUsername')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('errUsername').'
+                        </div>';
+                    }
+                ?>
                 <input type="password" name="password" placeholder="Password" required>
+                <?php  
+                    if (session()->getFlashdata('errors')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('errors')['password'].'
+                        </div>';
+                    }
+                ?>
                 <button type="submit">Daftar</button>
                 <?= form_close(); ?>
             </div>

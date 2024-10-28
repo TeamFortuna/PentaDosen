@@ -12,7 +12,7 @@
 <body data-baseurl="<?= base_url(); ?>">
     <div class="container" id="container">
         <div class="form-container new-password">
-            <form action="<?= base_url('/process_new_password') ?>" method="post">
+            <form action="<?= base_url('/processNewPassword') ?>" method="post">
                 <h1>Password Baru</h1>
                 <input type="text" name="kode_otp" placeholder="Masukkan OTP" required>
                 <input type="password" name="new_password" placeholder="Password Baru" required>

@@ -21,10 +21,9 @@ $routes->post('/processLogin', 'RegisterLoginController::processLogin');
 
 # Lupa Password
 $routes->get('/forgot_password', 'ForgotPasswordController::forgotPassword');
-$routes->post('/processForgotPassword', 'ForgotPasswordController::processForgotPassword');
+$routes->post('/processForgotPassword', 'ForgotPasswordController::processOTP');
+$routes->post('/processNewPassword', 'ForgotPasswordController::processNewPassword');
 $routes->get('/password_baru', 'ForgotPasswordController::newPassword');
-
-
 
 # Menu
 $routes->get('/dashboard', 'DashboardController::index');
