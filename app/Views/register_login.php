@@ -55,6 +55,20 @@ if (!session()->get('logged_in')):
                 }
                 ?>
                 <?= form_open('registerlogincontroller/processLogin'); ?>
+                <?php  
+                    if (session()->getFlashdata('gmailC')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('gmailC').'
+                        </div>';
+                    }
+                ?>
+                <?php  
+                    if (session()->getFlashdata('berhasil')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('berhasil').'
+                        </div>';
+                    }
+                ?>
                 <h1>Login</h1>
                 <input type="text" name="username" placeholder="Username">
                 <?php

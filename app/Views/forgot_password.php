@@ -25,8 +25,29 @@
     <div class="container" id="container">
         <div class="form-container forgot-password">
             <form action="<?= base_url('/processForgotPassword') ?>" method="post">
+                <?php 
+                    if (session()->getFlashdata('errToken')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('errToken').'
+                        </div>';
+                    } 
+                ?>
+                <?php  
+                    if (session()->getFlashdata('errOTP')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('errOTP').'
+                        </div>';
+                    }
+                ?>
                 <h1>Forgot Password</h1>
                 <input type="email" name="email" placeholder="Email" required>
+                <?php 
+                    if (session()->getFlashdata('errEmail')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('errEmail').'
+                        </div>';
+                    } 
+                ?>
                 <button type="submit">Reset Password</button>
             </form>
         </div>

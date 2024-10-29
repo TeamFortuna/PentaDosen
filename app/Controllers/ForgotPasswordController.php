@@ -11,6 +11,9 @@ class ForgotPasswordController extends BaseController
     // Fungsi untuk menampilkan halaman forgot password
     public function forgotPassword()
     {
+        if (session()->has('email_access') && session()->has('token')) {
+            return redirect()->to(base_url('password_baru'));
+        }
         return view('forgot_password');
     }
 
@@ -19,11 +22,11 @@ class ForgotPasswordController extends BaseController
         $userModel = new RegisterLogin_Model();
         $email = session()->get('email_access');
         $token = session()->get('token');
+        $user = $userModel->where('email', $email)->first();
+        $currentDateTime = new \DateTime(); // Waktu saat ini
+        $otpExpirationDateTime = new \DateTime($user['otp_expiration']); // Waktu kadaluarsa OTP
         // Cek apakah email ada di database dan ambil OTP serta waktu kadaluwarsanya
         if($token) {
-            $user = $userModel->where('email', $email)->first();
-            $currentDateTime = new \DateTime(); // Waktu saat ini
-            $otpExpirationDateTime = new \DateTime($user['otp_expiration']); // Waktu kadaluarsa OTP
             $data = [
                 'currentDateTime' => $currentDateTime,
                 'otpExpirationDateTime' => $otpExpirationDateTime,
@@ -31,7 +34,7 @@ class ForgotPasswordController extends BaseController
                 'user' => $user,
             ];
         }
-        if (!session()->has('email_access')) {
+        if (!session()->has('email_access') && !session()->has('token')) {
             return redirect()->to(base_url('register_login'));
         }
         // Jika OTP masih valid, tampilkan view password_baru
@@ -54,7 +57,7 @@ class ForgotPasswordController extends BaseController
             ]); 
             $emailMessage = 'Halo '.$userEmail['username'].'<br><br>'
                         . 'Anda sedang melakukan reset password<br><br>'
-                        .'Kode OTP Anda '.$otp.''
+                        .'Kode OTP Anda '.$otp.' <br>Kode OTP Hanya Berlaku 15 Menit !<br>'
                         .'<br>Silahkan klik link di bawah ini untuk reset password Anda !<br><br>'
                         .'<a href="'.base_url('password_baru').'">Klik di sini untuk reset password Anda</a><br><br>'                        
                         .'Terimakasih<br> Fortuna';                        
@@ -65,16 +68,23 @@ class ForgotPasswordController extends BaseController
             if($email->send()) {
                 session()->set('email_access', $userEmail['email']);
                 session()->set('token', true);
-                return redirect()->to(base_url('forgot_password'));
+                $notifGmail = [
+                    'gmailC' => 'Silahkan Cek Kode OTP pada Gmail Anda atau 
+                                Anda bisa Klik Forgot Password untuk langsung masuk ke halaman Reset Password !',
+                ];
+                session()->setFlashdata($notifGmail);
+                return redirect()->to(base_url('register_login'));
             } else {
                 $data = $email->printDebugger(['headers']);
                 print_r($data);
             }
+        } else {
+            $sessError = [
+                'errEmail' => 'Maaf Email Anda Tidak Terdaftar !',
+            ];
+            session()->setFlashdata($sessError);
+            return redirect()->to(base_url('forgot_password'));
         }
-        // Jika tidak menggunakan email, langsung alihkan ke halaman password_baru.php
-
-        // Redirect ke halaman password baru
-        // return redirect()->to(base_url('forgot_password'));
     }
 
     private function generateUniqueOTP($userModel)
@@ -83,7 +93,6 @@ class ForgotPasswordController extends BaseController
         $otp = mt_rand(100000, 999999); // Generate new OTP
         $exists = $userModel->where('otp', $otp)->first(); // Check if OTP already exists
     } while ($exists); // Loop until a unique OTP is found
-    
     return $otp;
     }
 
@@ -97,16 +106,26 @@ class ForgotPasswordController extends BaseController
         $otpExpirationDateTime = new \DateTime($verify['otp_expiration']); // Waktu kadaluarsa OTP
         if($verify) {
             if ($currentDateTime > $otpExpirationDateTime) {
-                // Jika OTP sudah kadaluarsa, hapus OTP dan redirect ke forgot_password
+                // Jika OTP sudah Kedaluwarsa, hapus OTP dan redirect ke forgot_password
                 $userModel->update($verify['id'], [
                     'otp' => NULL,
                     'otp_expiration' => NULL, // Pastikan untuk menghapus juga kolom ini
                 ]);
                 session()->remove('email_access');
                 session()->remove('token');
+                $sessError = [
+                    'errToken' => 'Maaf Token Anda Sudah Kedaluwarsa !',
+                ];
+                session()->setFlashdata($sessError);
                 return redirect()->to(base_url('forgot_password'));
+            } else if ($confirm_password != $new_password) {
+                $sessError = [
+                    'errRepassword' => 'Maaf Re-Password Anda Tidak Sama !',
+                ];
+                session()->setFlashdata($sessError);
+                return redirect()->to(base_url('password_baru'));
             }
-            // Pastikan array di dalam update() hanya berisi data yang akan diupdate
+            // Jika kode OTP dan Re-Password Sesuai
             else {
                 $userModel->update($verify['id'], [
                     'password' => password_hash($new_password, PASSWORD_DEFAULT),
@@ -115,9 +134,18 @@ class ForgotPasswordController extends BaseController
                 ]); 
                 session()->remove('email_access');
                 session()->remove('token');
+                $notifBerhasil = [
+                    'berhasil' => 'Selamat Anda Telah Mengubah Password Anda !',
+                ];
+                session()->setFlashdata($notifBerhasil);
                 return redirect()->to(base_url('register_login'));
             }
         } else {
+            // Alternatif dari Required HTML, jika Token Dan Password Tidak diisi
+            $sessError = [
+                'errEmpty' => 'Field Tidak boleh kosong !',
+            ];
+            session()->setFlashdata($sessError);
             return redirect()->to(base_url('password_baru'));
         }
     }

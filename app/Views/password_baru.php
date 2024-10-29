@@ -10,6 +10,11 @@
 </head>
 <body data-baseurl="<?= base_url(); ?>">
     <?php if($currentDateTime > $otpExpirationDateTime):?>
+        <?= $errOTP = [
+                    'errToken' => 'Maaf Token Anda Sudah Kedaluwarsa !',
+                ];
+            session()->setFlashdata($errOTP); 
+        ?>
         <?= 
             $userModel->update($user['id'], [
                 'otp' => NULL,
@@ -26,10 +31,31 @@
     <div class="container" id="container">
         <div class="form-container new-password">
             <form action="<?= base_url('/processNewPassword') ?>" method="post">
+                <?php  
+                    if (session()->getFlashdata('berhasil')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('berhasil').'
+                        </div>';
+                    }
+                ?>
                 <h1>Password Baru</h1>
                 <input type="text" name="kode_otp" placeholder="Masukkan OTP" required>
+                <?php  
+                    if (session()->getFlashdata('errToken')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('errToken').'
+                        </div>';
+                    }
+                ?>
                 <input type="password" name="new_password" placeholder="Password Baru" required>
                 <input type="password" name="confirm_password" placeholder="Konfirmasi Password Baru" required>
+                <?php  
+                    if (session()->getFlashdata('errRepassword')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('errRepassword').'
+                        </div>';
+                    }
+                ?>
                 <button type="submit">Simpan Password</button>
             </form>
         </div>
