@@ -7,6 +7,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('css/sidebar.css'); ?>">
     <title>Laporan Kemajuan</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+
 </head>
 
 <body>
@@ -20,6 +23,7 @@
         <main>
             <h1>Kalender</h1>
             <p>Ini adalah halaman untuk Kalender.</p>
+            <div id="calendar"></div> <!-- Elemen kalender -->
         </main>
         <!-- End of Main Content -->
 
@@ -49,6 +53,28 @@
         </div>
 
         <script src="<?= base_url('js/index.js') ?>"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth', // Tipe tampilan kalender (bulanan, mingguan, dll.)
+            events: [
+                // Anda bisa menambahkan daftar event di sini
+                {
+                    title: 'Event 1',
+                    start: '2024-11-01'
+                },
+                {
+                    title: 'Event 2',
+                    start: '2024-11-15',
+                    end: '2024-11-17'
+                }
+            ]
+        });
+        calendar.render();
+    });
+</script>
+
 </body>
 
 </html>
