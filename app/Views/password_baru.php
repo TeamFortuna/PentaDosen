@@ -8,8 +8,21 @@
     <link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
     <title>Password Baru</title>
 </head>
-
 <body data-baseurl="<?= base_url(); ?>">
+    <?php if($currentDateTime > $otpExpirationDateTime):?>
+        <?= 
+            $userModel->update($user['id'], [
+                'otp' => NULL,
+                'otp_expiration' => NULL,
+            ]);
+        ; ?>
+        <?= session()->remove('email_access'); ?>
+        <?= session()->remove('token'); ?>
+        <script>
+            // Jika OTP sudah kadaluarsa, alihkan ke forgot_password
+            window.location.href = "<?= base_url('forgot_password'); ?>";
+        </script>
+    <?php else: ?>
     <div class="container" id="container">
         <div class="form-container new-password">
             <form action="<?= base_url('/processNewPassword') ?>" method="post">
@@ -21,6 +34,6 @@
             </form>
         </div>
     </div>
+    <?php endif; ?>
 </body>
-
 </html>
