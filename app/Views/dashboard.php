@@ -116,14 +116,15 @@ if (session()->get('logged_in')):
                     <div class="profile">
                         <div class="info">
                             <p>Hey, <b><?= session()->get('nama') ? session()->get('nama') : 'Guest'; ?></b></p>
-                            <small class="text-muted">
-                                <small class="text-muted"><?= session()->get('user_type'); ?></small>
-                            </small>
+                            <small class="text-muted"><?= session()->get('user_type'); ?></small>
                         </div>
                         <div class="profile-photo">
-                            <img src="<?= base_url('images/Logo Web Fortuna.png'); ?>" alt="Logo Web Fortuna">
+                            <a href="<?= base_url('profile'); ?>"> <!-- Tambahkan link ke halaman profil -->
+                                <img src="<?= base_url('images/Logo Web Fortuna.png'); ?>" alt="Logo Web Fortuna">
+                            </a>
                         </div>
                     </div>
+
                 </div>
                 <!-- End of Nav -->
 
