@@ -35,7 +35,7 @@ class RegisterLoginController extends BaseController
 
     if(!$valid) {
         $sessError = [
-            'errPassword' => $validation->getError('password'),
+            'errPasswordRegister' => $validation->getError('password'),
             ];
         session()->setFlashdata($sessError);
         return redirect()->to(base_url('registerlogincontroller/index'));
@@ -49,7 +49,7 @@ class RegisterLoginController extends BaseController
     if($username || $userEmail) {
         if($username) {
             $sessError = [
-                'errUsername' => 'Maaf Username sudah terdaftar !',
+                'errUsernameRegister' => 'Maaf Username sudah terdaftar !',
             ];
             session()->setFlashdata($sessError);
         } if($userEmail) {
@@ -152,8 +152,8 @@ class RegisterLoginController extends BaseController
 
         if(!$valid) {
             $sessError = [
-                'errUsername' => $validation->getError('username'),
-                'errPassword' => $validation->getError('password'),
+                'errUsernameLogin' => $validation->getError('username'),
+                'errPasswordLogin' => $validation->getError('password'),
             ];
             session()->setFlashdata($sessError);
             return redirect()->to(base_url('registerlogincontroller/index'));
@@ -166,7 +166,7 @@ class RegisterLoginController extends BaseController
                 if($user == null) {
                     // Jika username tidak ditemukan
                     $sessError = [
-                        'errUsername' => 'Maaf Username salah !',
+                        'errUsernameLogin' => 'Maaf Username salah !',
                     ];
                     session()->setFlashdata($sessError);
                     return redirect()->to(base_url('register_login'));   
@@ -183,7 +183,7 @@ class RegisterLoginController extends BaseController
                     } else {
                         // Jika password salah
                         $sessError = [
-                            'errPassword' => 'Maaf Password salah !',
+                            'errPasswordLogin' => 'Maaf Password salah !',
                         ];
                         session()->setFlashdata($sessError);    
                         return redirect()->to(base_url('register_login'));

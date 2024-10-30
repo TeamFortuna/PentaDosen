@@ -114,7 +114,7 @@ class ForgotPasswordController extends BaseController
                 session()->remove('email_access');
                 session()->remove('token');
                 $sessError = [
-                    'errToken' => 'Maaf Token Anda Sudah Kedaluwarsa !',
+                    'errToken' => 'Maaf Kode OTP Anda Sudah Kedaluwarsa !',
                 ];
                 session()->setFlashdata($sessError);
                 return redirect()->to(base_url('forgot_password'));
@@ -126,7 +126,7 @@ class ForgotPasswordController extends BaseController
                 return redirect()->to(base_url('password_baru'));
             } else if ($kode_otp != $verify['otp']) {
                 $sessError = [
-                    'errTokenInvalid' => 'Maaf Token Anda Salah !',
+                    'errTokenInvalid' => 'Maaf Kode OTP Anda Salah !',
                 ];
                 session()->setFlashdata($sessError);
                 return redirect()->to(base_url('password_baru'));

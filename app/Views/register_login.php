@@ -29,9 +29,9 @@ if (!session()->get('logged_in')):
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="text" name="username" placeholder="Username" required>
                 <?php  
-                    if (session()->getFlashdata('errUsername')) {
+                    if (session()->getFlashdata('errUsernameRegister')) {
                         echo '<div id="validationServer03Feedback" class="invalid-feedback">
-                            '.session()->getFlashdata('errUsername').'
+                            '.session()->getFlashdata('errUsernameRegister').'
                         </div>';
                     }
                 ?>
@@ -48,7 +48,7 @@ if (!session()->get('logged_in')):
             </div>
             <div class="form-container sign-in">
                 <?php
-                if (session()->getFlashdata('errUsername')) {
+                if (session()->getFlashdata('errUsernameLogin')) {
                     $isInvalidUser = 'is-invalid';
                 } else {
                     $isInvalidUser = '';
@@ -72,14 +72,14 @@ if (!session()->get('logged_in')):
                 <h1>Login</h1>
                 <input type="text" name="username" placeholder="Username">
                 <?php
-                if (session()->getFlashdata('errUsername')) {
+                if (session()->getFlashdata('errUsernameLogin')) {
                     echo '<div id="validationServer03Feedback" class="invalid-feedback">
-                            ' . session()->getFlashdata('errUsername') . '
+                            ' . session()->getFlashdata('errUsernameLogin') . '
                         </div>';
                 }
                 ?>
                 <?php
-                if (session()->getFlashdata('errPassword')) {
+                if (session()->getFlashdata('errPasswordLogin')) {
                     $isInvalidUser = 'is-invalid';
                 } else {
                     $isInvalidUser = '';
@@ -87,9 +87,9 @@ if (!session()->get('logged_in')):
                 ?>
                 <input type="password" name="password" placeholder="Password">
                 <?php
-                if (session()->getFlashdata('errPassword')) {
+                if (session()->getFlashdata('errPasswordLogin')) {
                     echo '<div id="validationServer03Feedback" class="invalid-feedback">
-                            ' . session()->getFlashdata('errPassword') . '
+                            ' . session()->getFlashdata('errPasswordLogin') . '
                         </div>';
                 }
                 ?>
