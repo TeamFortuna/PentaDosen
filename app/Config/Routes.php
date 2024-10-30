@@ -32,3 +32,4 @@ $routes->get('/laporan_kemajuan', 'LaporanKemajuanController::LaporanKemajuan');
 $routes->get('/laporan_akhir', 'LaporanAkhirController::LaporanAkhir');
 $routes->get('/publikasi', 'PublikasiController::publikasi');
 $routes->get('/setting', 'SettingController::setting');
+$routes->get('/profile', 'ProfileController::profile');
