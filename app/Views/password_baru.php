@@ -10,11 +10,6 @@
 </head>
 <body data-baseurl="<?= base_url(); ?>">
     <?php if($currentDateTime > $otpExpirationDateTime):?>
-        <?= $errOTP = [
-                    'errToken' => 'Maaf Token Anda Sudah Kedaluwarsa !',
-                ];
-            session()->setFlashdata($errOTP); 
-        ?>
         <?= 
             $userModel->update($user['id'], [
                 'otp' => NULL,
@@ -44,6 +39,11 @@
                     if (session()->getFlashdata('errToken')) {
                         echo '<div id="validationServer03Feedback" class="invalid-feedback">
                             '.session()->getFlashdata('errToken').'
+                        </div>';
+                    }
+                    if (session()->getFlashdata('errTokenInvalid')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            '.session()->getFlashdata('errTokenInvalid').'
                         </div>';
                     }
                 ?>

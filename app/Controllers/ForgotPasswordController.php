@@ -102,7 +102,7 @@ class ForgotPasswordController extends BaseController
         $kode_otp = $this->request->getPost('kode_otp');
         $new_password = $this->request->getPost('new_password');
         $confirm_password = $this->request->getPost('confirm_password');
-        $verify = $userModel->where('otp', $kode_otp)->first();
+        $verify = $userModel->where('email', session()->get('email_access'))->first();
         $otpExpirationDateTime = new \DateTime($verify['otp_expiration']); // Waktu kadaluarsa OTP
         if($verify) {
             if ($currentDateTime > $otpExpirationDateTime) {
@@ -121,6 +121,12 @@ class ForgotPasswordController extends BaseController
             } else if ($confirm_password != $new_password) {
                 $sessError = [
                     'errRepassword' => 'Maaf Re-Password Anda Tidak Sama !',
+                ];
+                session()->setFlashdata($sessError);
+                return redirect()->to(base_url('password_baru'));
+            } else if ($kode_otp != $verify['otp']) {
+                $sessError = [
+                    'errTokenInvalid' => 'Maaf Token Anda Salah !',
                 ];
                 session()->setFlashdata($sessError);
                 return redirect()->to(base_url('password_baru'));
