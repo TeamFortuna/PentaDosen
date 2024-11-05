@@ -1,38 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('css/sidebar.css'); ?>">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Link CSS DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+    <script src="<?= base_url('js/animasi.js'); ?>"></script>
+    <!-- Link JS DataTables dan jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    
     <title>Publikasi</title>
     <style>
-        /* Styling form */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 220px; 
+            top: 0;
+            width: calc(100% - 250px); 
+            height: 100%;
+            overflow-y: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 40px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
         #publicationForm {
-            background: #f9f9f9;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            max-width: 400px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 100%; 
+        }
+
+        #publicationForm h2 {
+            text-align: left;
+            margin-top: 0;
         }
 
         #publicationForm label {
             font-weight: bold;
             margin-top: 10px;
             display: block;
+            text-align: left;
         }
 
         #publicationForm input[type="text"],
         #publicationForm input[type="date"],
         #publicationForm input[type="file"] {
-            width: 100%;
-            padding: 8px;
+            width: 100%; 
+            padding: 10px;
             margin-top: 5px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 13px;
+            box-sizing: border-box;
         }
 
         #publicationForm button {
@@ -40,65 +89,97 @@
             color: #fff;
             padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 13px;
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease;
+            margin-top: 20px;
         }
 
         #publicationForm button:hover {
             background-color: #0056b3;
         }
 
-        /* Styling tabel publikasi */
-        .full-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .full-table th,
-        .full-table td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        .full-table th {
-            background-color: #f2f2f2;
-        }
-
-        /* Layout utama */
-        .container {
-            display: flex;
-        }
-
-        main {
-            flex: 1;
-            padding: 20px;
-        }
-
-        .right-section {
-            width: 400px;
-            position: relative;
+        #statusPencapaian {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 13px;
+        box-sizing: border-box;
+        font-size: 14px;
+        font-family: 'Montserrat';
         }
     </style>
 </head>
-
 <body>
     <div class="container">
-        <!-- Sidebar Section -->
         <?= $this->include('partials/sidebar'); ?>
-        <!-- End of Sidebar Section -->
 
-        <!-- Main Content -->
         <main>
             <h1>Publikasi</h1>
-            <p>Ini adalah halaman untuk publikasi.</p>
+            <p>Ini adalah halaman untuk Publikasi.</p>
 
-            <!-- Tabel Publikasi -->
+            <button id="openModalBtn" style="margin-bottom: 20px; margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 13px; cursor: pointer; font-family: 'Montserrat';">Tambah Publikasi</button>
+
+            <!-- Modal untuk form Publikasi -->
+            <div id="publicationModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <form id="publicationForm" action="<?= base_url('Publikasi/upload'); ?>" method="post" enctype="multipart/form-data">
+                        <h2>Tambah Publikasi</h2>
+                        
+                        <label for="publicationName">Judul Penelitian:</label>
+                        <input type="text" id="publicationName" name="publicationName" placeholder="Masukkan nama Publikasi" required>
+                        
+                        <label for="statusPencapaian">Nama Jurnal/Media:</label>
+                        <select id="statusPencapaian" name="statusPencapaian" required>
+                            <option value="pending">Buku</option>
+                            <option value="sedang_dikerjakan">Artikel</option>
+                            <option value="selesai">Majalah</option>
+                        </select>
+
+                        <label for="jadwalPenelitian">Tanggal Publikasi:</label>
+                        <input type="date" id="jadwalPenelitian" name="jadwalPenelitian" required>
+
+                        <label for="latarBelakang">Volume dan Edisi Jurnal:</label>
+                        <textarea id="latarBelakang" name="latarBelakang" required></textarea>
+
+                        <label for="tujuanPenelitian">Link Publikasi:</label>
+                        <textarea id="tujuanPenelitian" name="tujuanPenelitian" required></textarea>
+
+                        <label for="anggaranBiaya">Link Publikasi:</label>
+                        <input type="text" id="anggaranBiaya" name="anggaranBiaya" placeholder="Masukkan Link" required>
+
+                        <label for="berkas_proposal">File Publikasi:</label>
+                        <input type="file" name="berkas_proposal" id="berkas_proposal" required>
+
+                        <button type="submit">Unggah</button>
+                    </form>
+
+        <style>
+    
+    textarea {
+        width: 100%;
+        height: 150px; 
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 13px;
+        box-sizing: border-box;
+        resize: none; 
+    }
+</style>
+
+
+                </div>
+            </div>
+
             <div class="recent-orders" style="width: 100%; height: auto; overflow-x: auto;">
                 <h2>Daftar Publikasi</h2>
-                <table class="full-table">
+                <table id="publicationTable" class="display full-table">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -109,12 +190,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Contoh Data Publikasi -->
                         <tr>
                             <td>1</td>
                             <td>Contoh Judul Publikasi 1</td>
                             <td>01/01/2024</td>
-                            <td><a href="<?= base_url('uploads/publikasi1.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
+                            <td><a href="<?= base_url('uploads/Publikasi1.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
                             <td>
                                 <button>Edit</button>
                                 <button>Delete</button>
@@ -124,37 +204,52 @@
                             <td>2</td>
                             <td>Contoh Judul Publikasi 2</td>
                             <td>06/01/2024</td>
-                            <td><a href="<?= base_url('uploads/publikasi2.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
+                            <td><a href="<?= base_url('uploads/Publikasi2.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
                             <td>
                                 <button>Edit</button>
                                 <button>Delete</button>
                             </td>
                         </tr>
-                        <!-- Tambahkan baris sesuai kebutuhan -->
                     </tbody>
                 </table>
             </div>
-            <!-- End of Publikasi Table -->
         </main>
-        <!-- End of Main Content -->
-
-        <!-- Right Section -->
-            <!-- Form untuk menambah publikasi -->
-            <form id="publicationForm" action="<?= base_url('publikasi/upload'); ?>" method="post" enctype="multipart/form-data">
-                <label for="publicationName">Nama Publikasi:</label>
-                <input type="text" id="publicationName" name="publicationName" placeholder="Masukkan nama publikasi" required>
-
-                <label for="publicationDate">Tanggal Publikasi:</label>
-                <input type="date" id="publicationDate" name="publicationDate" required>
-
-                <label for="berkas_publikasi">Unggah File:</label>
-                <input type="file" name="berkas_publikasi" id="berkas_publikasi" required>
-
-                <button type="submit">Unggah</button>
-            </form>
     </div>
 
-    <script src="<?= base_url('js/index.js') ?>"></script>
-</body>
+    <script>
+        $(document).ready(function() {
+            $('#publicationTable').DataTable();
 
+            var modal = document.getElementById("publicationModal");
+            var btn = document.getElementById("openModalBtn");
+            var span = document.getElementsByClassName("close")[0];
+
+            btn.onclick = function() {
+                modal.style.display = "block";
+            }
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+             // Menutup modal saat tombol 'X' diklik
+            document.querySelector('.close').onclick = function() {
+                document.getElementById('publicationModal').style.display = 'none';
+            };
+
+            // Menutup modal jika pengguna mengklik di luar konten modal
+            window.onclick = function(event) {
+                const modal = document.getElementById('publicationModal');
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        });
+    </script>
+</body>
 </html>

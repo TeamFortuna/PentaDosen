@@ -5,6 +5,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ambil elemen link "Ingat password Anda?"
     const registerLink = document.getElementById('register');
 
+     // Mendapatkan elemen modal dan tombol
+     const modal = document.getElementById("publicationModal");
+     const openModalBtn = document.getElementById("openModalBtn");
+     const closeModalBtn = document.querySelector(".close");
+     
+
+     // Membuka modal saat tombol ditekan
+     openModalBtn.onclick = function() {
+         modal.style.display = "block";
+     }
+
+     // Menutup modal saat tombol close ditekan
+     closeModalBtn.onclick = function() {
+         modal.style.display = "none";
+     }
+
     // Tambahkan event listener pada link
     registerLink.addEventListener('click', function(event) {
         // Cegah link berpindah halaman seketika

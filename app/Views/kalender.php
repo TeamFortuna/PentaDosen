@@ -13,7 +13,7 @@
         /* Styling form */
         #eventForm {
             background: #f9f9f9;
-            border-radius: 8px;
+            border-radius: 13px;
             padding: 20px;
             margin-bottom: 20px;
             max-width: 400px;
@@ -33,7 +33,7 @@
             margin-top: 5px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 13px;
         }
         
         #eventForm button {
@@ -41,7 +41,7 @@
             color: #fff;
             padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 13px;
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease;
@@ -57,7 +57,7 @@
             margin: 0 auto;
             background-color: #fff;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 13px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
     </style>

@@ -15,7 +15,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     
-    <title>Laporan Kemajuan</title>
+    <title>Proposal Penelitian</title>
     <style>
         .modal {
             display: none;
@@ -55,26 +55,26 @@
             text-decoration: none;
         }
 
-        #laporanKemajuanForm {
+        #proposalPenelitianForm {
             width: 100%;
             max-width: 100%; 
         }
 
-        #laporanKemajuanForm h2 {
+        #proposalPenelitianForm h2 {
             text-align: left;
             margin-top: 0;
         }
 
-        #laporanKemajuanForm label {
+        #proposalPenelitianForm label {
             font-weight: bold;
             margin-top: 10px;
             display: block;
             text-align: left;
         }
 
-        #laporanKemajuanForm input[type="text"],
-        #laporanKemajuanForm input[type="date"],
-        #laporanKemajuanForm input[type="file"] {
+        #proposalPenelitianForm input[type="text"],
+        #proposalPenelitianForm input[type="date"],
+        #proposalPenelitianForm input[type="file"] {
             width: 100%; 
             padding: 10px;
             margin-top: 5px;
@@ -84,7 +84,7 @@
             box-sizing: border-box;
         }
 
-        #laporanKemajuanForm button {
+        #proposalPenelitianForm button {
             background-color: #007bff;
             color: #fff;
             padding: 10px 20px;
@@ -96,20 +96,8 @@
             margin-top: 20px;
         }
 
-        #laporanKemajuanForm button:hover {
+        #proposalPenelitianForm button:hover {
             background-color: #0056b3;
-        }
-
-        #statusPencapaian {
-        width: 100%;
-        padding: 10px;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 13px;
-        box-sizing: border-box;
-        font-size: 14;
-        font-family: 'Montserrat';
         }
     </style>
 </head>
@@ -118,42 +106,46 @@
         <?= $this->include('partials/sidebar'); ?>
 
         <main>
-            <h1>Laporan Kemajuan</h1>
-            <p>Ini adalah halaman untuk Laporan Kemajuan.</p>
+            <h1>Proposal Penelitian</h1>
+            <p>Ini adalah halaman untuk Proposal Penelitian.</p>
 
-            <button id="openModalBtn" style="margin-bottom: 20px; margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 13px; cursor: pointer; font-family: 'Montserrat';">Tambah Laporan Kemajuan</button>
+            <button id="openModalBtn" style="margin-bottom: 20px; margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 13px; cursor: pointer; font-family: 'Montserrat';">Tambah Proposal Penelitian</button>
 
-            <!-- Modal untuk form Laporan Kemajuan -->
-            <div id="laporanKemajuanModal" class="modal">
+            <!-- Modal untuk form Proposal Penelitian -->
+            <div id="proposalPenelitianModal" class="modal">
                 <div class="modal-content">
                     <span class="close">&times;</span>
-                    <form id="laporanKemajuanForm" action="<?= base_url('Laporan Kemajuan/upload'); ?>" method="post" enctype="multipart/form-data">
-                        <h2>Tambah Laporan Kemajuan</h2>
+                    <form id="proposalPenelitianForm" action="<?= base_url('Proposal Penelitian/upload'); ?>" method="post" enctype="multipart/form-data">
+                        <h2>Tambah Proposal Penelitian</h2>
                         
-                        <label for="laporanKemajuanName">Judul Penelitian:</label>
-                        <input type="text" id="laporanKemajuanName" name="laporanKemajuanName" placeholder="Masukkan nama Laporan Kemajuan" required>
+                        <label for="proposalPenelitianName">Nama Proposal Penelitian:</label>
+                        <input type="text" id="proposalPenelitianName" name="proposalPenelitianName" placeholder="Masukkan nama Proposal Penelitian" required>
                         
-                        <label for="statusPencapaian">Status Pencapaian:</label>
-                        <select id="statusPencapaian" name="statusPencapaian" required>
-                            <option value="pending">Pending</option>
-                            <option value="sedang_dikerjakan">Sedang Dikerjakan</option>
-                            <option value="selesai">Selesai</option>
-                        </select>
+                        <label for="proposalPenelitianDate">Tanggal Proposal Penelitian:</label>
+                        <input type="date" id="proposalPenelitianDate" name="proposalPenelitianDate" required>
 
-                        <!-- dirubah -->
-                        <label for="judulPenelitian">Hasil Sementara:</label>
+                        <label for="judulPenelitian">Judul Penelitian:</label>
                         <input type="text" id="judulPenelitian" name="judulPenelitian" placeholder="Masukkan judul penelitian" required>
 
-                        <label for="deskripsiSingkat">Hambatan/Kendala:</label>
+                        <label for="deskripsiSingkat">Deskripsi Singkat:</label>
                         <textarea id="deskripsiSingkat" name="deskripsiSingkat" required></textarea>
 
-                        <label for="latarBelakang">Rekomendasi atau Tindakan Lanjutan:</label>
+                        <label for="latarBelakang">Latar Belakang:</label>
                         <textarea id="latarBelakang" name="latarBelakang" required></textarea>
 
-                        <label for="jadwalPenelitian">Tanggal Pembaruan:</label>
+                        <label for="tujuanPenelitian">Tujuan Penelitian:</label>
+                        <textarea id="tujuanPenelitian" name="tujuanPenelitian" required></textarea>
+
+                        <label for="metodologi">Metodologi:</label>
+                        <textarea id="metodologi" name="metodologi" required></textarea>
+
+                        <label for="anggaranBiaya">Anggaran Biaya:</label>
+                        <input type="text" id="anggaranBiaya" name="anggaranBiaya" placeholder="Masukkan anggaran biaya" required>
+
+                        <label for="jadwalPenelitian">Jadwal Penelitian:</label>
                         <input type="date" id="jadwalPenelitian" name="jadwalPenelitian" required>
 
-                        <label for="berkas_proposal">File Laporan Kemajuan:</label>
+                        <label for="berkas_proposal">Unggah File Proposal:</label>
                         <input type="file" name="berkas_proposal" id="berkas_proposal" required>
 
                         <button type="submit">Unggah</button>
@@ -179,13 +171,13 @@
             </div>
 
             <div class="recent-orders" style="width: 100%; height: auto; overflow-x: auto;">
-                <h2>Daftar Laporan Kemajuan</h2>
-                <table id="laporanKemajuanTable" class="display full-table">
+                <h2>Daftar Proposal Penelitian</h2>
+                <table id="proposalPenelitianTable" class="display full-table">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Judul Laporan Kemajuan</th>
-                            <th>Tanggal Laporan Kemajuan</th>
+                            <th>Judul Proposal Penelitian</th>
+                            <th>Tanggal Proposal Penelitian</th>
                             <th>File</th>
                             <th>Aksi</th>
                         </tr>
@@ -193,9 +185,9 @@
                     <tbody>
                         <tr>
                             <td>1</td>
-                            <td>Contoh Judul Laporan Kemajuan 1</td>
+                            <td>Contoh Judul Proposal Penelitian 1</td>
                             <td>01/01/2024</td>
-                            <td><a href="<?= base_url('uploads/Laporan Kemajuan1.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
+                            <td><a href="<?= base_url('uploads/Proposal Penelitian1.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
                             <td>
                                 <button>Edit</button>
                                 <button>Delete</button>
@@ -203,9 +195,9 @@
                         </tr>
                         <tr>
                             <td>2</td>
-                            <td>Contoh Judul Laporan Kemajuan 2</td>
+                            <td>Contoh Judul Proposal Penelitian 2</td>
                             <td>06/01/2024</td>
-                            <td><a href="<?= base_url('uploads/Laporan Kemajuan2.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
+                            <td><a href="<?= base_url('uploads/Proposal Penelitian2.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
                             <td>
                                 <button>Edit</button>
                                 <button>Delete</button>
@@ -219,9 +211,9 @@
 
     <script>
         $(document).ready(function() {
-            $('#laporanKemajuanTable').DataTable();
+            $('#proposalPenelitianTable').DataTable();
 
-            var modal = document.getElementById("laporanKemajuanModal");
+            var modal = document.getElementById("proposalPenelitianModal");
             var btn = document.getElementById("openModalBtn");
             var span = document.getElementsByClassName("close")[0];
 
@@ -240,12 +232,12 @@
             }
              // Menutup modal saat tombol 'X' diklik
             document.querySelector('.close').onclick = function() {
-                document.getElementById('laporanKemajuanModal').style.display = 'none';
+                document.getElementById('proposalPenelitianModal').style.display = 'none';
             };
 
             // Menutup modal jika pengguna mengklik di luar konten modal
             window.onclick = function(event) {
-                const modal = document.getElementById('laporanKemajuanModal');
+                const modal = document.getElementById('proposalPenelitianModal');
                 if (event.target == modal) {
                     modal.style.display = 'none';
                 }

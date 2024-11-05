@@ -28,8 +28,10 @@ $routes->get('/password_baru', 'ForgotPasswordController::newPassword');
 # Menu
 $routes->get('/dashboard', 'DashboardController::index');
 $routes->get('/kalender', 'KalenderController::kalender');
+$routes->get('/proposal_penelitian', 'ProposalPenelitianController::ProposalPenelitian');
 $routes->get('/laporan_kemajuan', 'LaporanKemajuanController::LaporanKemajuan');
 $routes->get('/laporan_akhir', 'LaporanAkhirController::LaporanAkhir');
 $routes->get('/publikasi', 'PublikasiController::publikasi');
+$routes->get('/Haki', 'HakiController::Haki');
 $routes->get('/setting', 'SettingController::setting');
 $routes->get('/profile', 'ProfileController::profile');

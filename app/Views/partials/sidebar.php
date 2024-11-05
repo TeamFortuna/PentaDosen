@@ -18,6 +18,10 @@
             <span class="material-icons-sharp">person_outline</span>
             <h3>Kalender</h3>
         </a>
+        <a href="<?= site_url('/proposal_penelitian'); ?>" class="<?= uri_string() == 'proposal_penelitian' ? 'active' : ''; ?>">
+            <span class="material-icons-sharp">receipt_long</span>
+            <h3>Proposal Penelitian</h3>
+        </a>
         <a href="<?= site_url('/laporan_kemajuan'); ?>" class="<?= uri_string() == 'laporan_kemajuan' ? 'active' : ''; ?>">
             <span class="material-icons-sharp">receipt_long</span>
             <h3>Laporan Kemajuan</h3>
@@ -29,6 +33,11 @@
         <a href="<?= site_url('/publikasi'); ?>" class="<?= uri_string() == 'publikasi' ? 'active' : ''; ?>">
             <span class="material-icons-sharp">mail_outline</span>
             <h3>Publikasi</h3>
+            <!-- <span class="message-count">1</span> -->
+        </a>
+        <a href="<?= site_url('/Haki'); ?>" class="<?= uri_string() == 'Haki' ? 'active' : ''; ?>">
+            <span class="material-icons-sharp">mail_outline</span>
+            <h3>HAKI</h3>
             <!-- <span class="message-count">1</span> -->
         </a>
         <a href="<?= site_url('/setting'); ?>" class="<?= uri_string() == 'setting' ? 'active' : ''; ?>">
