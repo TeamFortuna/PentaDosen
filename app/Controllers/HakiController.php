@@ -7,6 +7,6 @@ class HakiController extends BaseController
 
     public function Haki()
     {
-        return view('Haki');
+        return view('haki');
     }
 }

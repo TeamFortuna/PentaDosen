@@ -25,28 +25,28 @@
     <div class="container" id="container">
         <div class="form-container forgot-password">
             <form action="<?= base_url('/processForgotPassword') ?>" method="post">
-                <?php 
-                    if (session()->getFlashdata('errToken')) {
-                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
-                            '.session()->getFlashdata('errToken').'
+                <?php
+                if (session()->getFlashdata('errToken')) {
+                    echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            ' . session()->getFlashdata('errToken') . '
                         </div>';
-                    } 
+                }
                 ?>
-                <?php  
-                    if (session()->getFlashdata('errOTP')) {
-                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
-                            '.session()->getFlashdata('errOTP').'
+                <?php
+                if (session()->getFlashdata('errOTP')) {
+                    echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            ' . session()->getFlashdata('errOTP') . '
                         </div>';
-                    }
+                }
                 ?>
                 <h1>Forgot Password</h1>
                 <input type="email" name="email" placeholder="Email" required>
-                <?php 
-                    if (session()->getFlashdata('errEmail')) {
-                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
-                            '.session()->getFlashdata('errEmail').'
+                <?php
+                if (session()->getFlashdata('errEmail')) {
+                    echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            ' . session()->getFlashdata('errEmail') . '
                         </div>';
-                    } 
+                }
                 ?>
                 <button type="submit">Reset Password</button>
             </form>
@@ -56,9 +56,9 @@
                 <div class="toggle-panel toggle-right">
                     <h1>Pemberitahuan</h1>
                     <ol>
-                        <li>Gunakan kata sandi yang terdiri dari huruf, angka, dan simbol.</li>
-                        <li>Jangan beritahu password anda kepada siapapun termasuk kami.</li>
-                        <li>Pastikan Anda mencatat kata sandi baru Anda supaya tidak terlupakan.</li>
+                        <li>Masukkan email yang sudah didaftarkan.</li>
+                        <li>Silahkan cek email anda untuk melihat kode otp yang dikirimkan.</li>
+                        <li>Kode otp hanya 1 kali pakai serta berlaku selama 15 menit.</li>
                     </ol>
                     <a href="#" class="button hidden" id="register">Ingat password Anda?</a>
                 </div>

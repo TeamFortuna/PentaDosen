@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,16 +15,16 @@
     <!-- Link JS DataTables dan jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    
+
     <title>Laporan Kemajuan</title>
     <style>
         .modal {
             display: none;
             position: fixed;
             z-index: 1;
-            left: 220px; 
+            left: 220px;
             top: 0;
-            width: calc(100% - 250px); 
+            width: calc(100% - 250px);
             height: 100%;
             overflow-y: auto;
             background-color: rgba(0, 0, 0, 0.5);
@@ -57,7 +58,7 @@
 
         #laporanKemajuanForm {
             width: 100%;
-            max-width: 100%; 
+            max-width: 100%;
         }
 
         #laporanKemajuanForm h2 {
@@ -75,7 +76,7 @@
         #laporanKemajuanForm input[type="text"],
         #laporanKemajuanForm input[type="date"],
         #laporanKemajuanForm input[type="file"] {
-            width: 100%; 
+            width: 100%;
             padding: 10px;
             margin-top: 5px;
             margin-bottom: 10px;
@@ -101,18 +102,26 @@
         }
 
         #statusPencapaian {
-        width: 100%;
-        padding: 10px;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 13px;
-        box-sizing: border-box;
-        font-size: 14;
-        font-family: 'Montserrat';
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 13px;
+            box-sizing: border-box;
+            font-size: 14;
+            font-family: 'Montserrat';
         }
     </style>
+
+    <!-- Script untuk langsung menerapkan dark mode jika statusnya disimpan di localStorage -->
+    <script>
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.documentElement.classList.add('dark-mode-variables');
+        }
+    </script>
 </head>
+
 <body>
     <div class="container">
         <?= $this->include('partials/sidebar'); ?>
@@ -129,10 +138,10 @@
                     <span class="close">&times;</span>
                     <form id="laporanKemajuanForm" action="<?= base_url('Laporan Kemajuan/upload'); ?>" method="post" enctype="multipart/form-data">
                         <h2>Tambah Laporan Kemajuan</h2>
-                        
+
                         <label for="laporanKemajuanName">Judul Penelitian:</label>
                         <input type="text" id="laporanKemajuanName" name="laporanKemajuanName" placeholder="Masukkan nama Laporan Kemajuan" required>
-                        
+
                         <label for="statusPencapaian">Status Pencapaian:</label>
                         <select id="statusPencapaian" name="statusPencapaian" required>
                             <option value="pending">Pending</option>
@@ -159,20 +168,19 @@
                         <button type="submit">Unggah</button>
                     </form>
 
-        <style>
-    
-    textarea {
-        width: 100%;
-        height: 150px; 
-        padding: 10px;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 13px;
-        box-sizing: border-box;
-        resize: none; 
-    }
-</style>
+                    <style>
+                        textarea {
+                            width: 100%;
+                            height: 150px;
+                            padding: 10px;
+                            margin-top: 5px;
+                            margin-bottom: 10px;
+                            border: 1px solid #ccc;
+                            border-radius: 13px;
+                            box-sizing: border-box;
+                            resize: none;
+                        }
+                    </style>
 
 
                 </div>
@@ -238,7 +246,7 @@
                     modal.style.display = "none";
                 }
             }
-             // Menutup modal saat tombol 'X' diklik
+            // Menutup modal saat tombol 'X' diklik
             document.querySelector('.close').onclick = function() {
                 document.getElementById('laporanKemajuanModal').style.display = 'none';
             };
@@ -253,4 +261,5 @@
         });
     </script>
 </body>
+
 </html>

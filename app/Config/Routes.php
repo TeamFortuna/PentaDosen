@@ -32,6 +32,6 @@ $routes->get('/proposal_penelitian', 'ProposalPenelitianController::ProposalPene
 $routes->get('/laporan_kemajuan', 'LaporanKemajuanController::LaporanKemajuan');
 $routes->get('/laporan_akhir', 'LaporanAkhirController::LaporanAkhir');
 $routes->get('/publikasi', 'PublikasiController::publikasi');
-$routes->get('/Haki', 'HakiController::Haki');
+$routes->get('/haki', 'HakiController::Haki');
 $routes->get('/setting', 'SettingController::setting');
 $routes->get('/profile', 'ProfileController::profile');

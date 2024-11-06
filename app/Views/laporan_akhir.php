@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,16 +15,16 @@
     <!-- Link JS DataTables dan jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    
+
     <title>Laporan Akhir</title>
     <style>
         .modal {
             display: none;
             position: fixed;
             z-index: 1;
-            left: 220px; 
+            left: 220px;
             top: 0;
-            width: calc(100% - 250px); 
+            width: calc(100% - 250px);
             height: 100%;
             overflow-y: auto;
             background-color: rgba(0, 0, 0, 0.5);
@@ -57,7 +58,7 @@
 
         #laporanAkhirForm {
             width: 100%;
-            max-width: 100%; 
+            max-width: 100%;
         }
 
         #laporanAkhirForm h2 {
@@ -75,7 +76,7 @@
         #laporanAkhirForm input[type="text"],
         #laporanAkhirForm input[type="date"],
         #laporanAkhirForm input[type="file"] {
-            width: 100%; 
+            width: 100%;
             padding: 10px;
             margin-top: 5px;
             margin-bottom: 10px;
@@ -100,7 +101,15 @@
             background-color: #0056b3;
         }
     </style>
+
+    <!-- Script untuk langsung menerapkan dark mode jika statusnya disimpan di localStorage -->
+    <script>
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.documentElement.classList.add('dark-mode-variables');
+        }
+    </script>
 </head>
+
 <body>
     <div class="container">
         <?= $this->include('partials/sidebar'); ?>
@@ -117,10 +126,10 @@
                     <span class="close">&times;</span>
                     <form id="laporanAkhirForm" action="<?= base_url('Laporan Akhir/upload'); ?>" method="post" enctype="multipart/form-data">
                         <h2>Tambah Laporan Akhir</h2>
-                        
+
                         <label for="laporanAkhirName">Judul Penelitian:</label>
                         <input type="text" id="laporanAkhirName" name="laporanAkhirName" placeholder="Masukkan nama Laporan Akhir" required>
-                        
+
                         <label for="laporanAkhirDate">Kesimpulan Penelitian:</label>
                         <input type="date" id="laporanAkhirDate" name="laporanAkhirDate" required>
 
@@ -142,20 +151,19 @@
                         <button type="submit">Unggah</button>
                     </form>
 
-        <style>
-    
-    textarea {
-        width: 100%;
-        height: 150px; 
-        padding: 10px;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 13px;
-        box-sizing: border-box;
-        resize: none; 
-    }
-</style>
+                    <style>
+                        textarea {
+                            width: 100%;
+                            height: 150px;
+                            padding: 10px;
+                            margin-top: 5px;
+                            margin-bottom: 10px;
+                            border: 1px solid #ccc;
+                            border-radius: 13px;
+                            box-sizing: border-box;
+                            resize: none;
+                        }
+                    </style>
 
 
                 </div>
@@ -221,7 +229,7 @@
                     modal.style.display = "none";
                 }
             }
-             // Menutup modal saat tombol 'X' diklik
+            // Menutup modal saat tombol 'X' diklik
             document.querySelector('.close').onclick = function() {
                 document.getElementById('laporanAkhirModal').style.display = 'none';
             };
@@ -236,4 +244,5 @@
         });
     </script>
 </body>
+
 </html>

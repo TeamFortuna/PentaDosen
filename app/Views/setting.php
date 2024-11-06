@@ -7,6 +7,13 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('css/sidebar.css'); ?>">
     <title>Laporan Kemajuan</title>
+
+    <!-- Script untuk langsung menerapkan dark mode jika statusnya disimpan di localStorage -->
+    <script>
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.documentElement.classList.add('dark-mode-variables');
+        }
+    </script>
 </head>
 
 <body>

@@ -71,6 +71,7 @@ body{
     border-color: #fff;
 }
 
+/* Buat di forgot password */
 .container a.button {
     display: inline-block;
     background-color: #512da8;
@@ -85,6 +86,60 @@ body{
     margin-top: 10px;
     cursor: pointer;
     text-decoration: none; 
+}
+
+/* Memusatkan tombol Daftar */
+.daftar-btn {
+    display: block;            /* Membuat tombol sebagai elemen block */
+    margin: 20px auto;         /* Mengatur margin kiri dan kanan menjadi auto */
+    padding: 10px 50px;        /* Mengatur padding agar tombol terlihat proporsional */
+    background-color: #512da8; /* Warna latar belakang tombol */
+    color: #fff;               /* Warna teks */
+    border: none;              /* Menghilangkan border */
+    border-radius: 8px;        /* Menambahkan sedikit lengkungan di sudut */
+    font-size: 14px;           /* Ukuran font */
+    font-weight: 600;          /* Ketebalan font */
+    cursor: pointer;           /* Mengubah kursor saat diarahkan ke tombol */
+}
+
+
+
+/* Override gaya tombol umum di dalam .container */
+.container .button-next{
+    width: 40px;                  
+    height: 40px;                  
+    background-color: #cf1a7e;   
+    color: #ffffff;              
+    border: none;                 
+    border-radius: 50%;           
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;                 
+    margin-left: 87%;
+}
+
+.container .button-back {
+    width: 40px;                  
+    height: 40px;                  
+    background-color: #cf1a7e;      
+    color: #ffffff;              
+    border: none;                 
+    border-radius: 50%;           
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;             
+    margin-top: 20px;       
+}
+
+/* Gaya ikon di dalam tombol Next dan Back */
+.container .button-next .material-icons-sharp, 
+.container .button-back .material-icons-sharp {
+    color: #ffffff;             
+    font-size: 15px;             
 }
 
 .container a.button.hidden{

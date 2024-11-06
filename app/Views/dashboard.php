@@ -11,13 +11,18 @@ if (session()->get('logged_in')):
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
         <!-- <link rel="stylesheet" href="dashboard.css"> -->
         <link rel="stylesheet" href="<?= base_url('css/dashboard.css'); ?>">
+        <link rel="stylesheet" href="<?= base_url('css/sidebar.css'); ?>">
         <title>Penta Dosen</title>
+
+        <!-- Script untuk langsung menerapkan dark mode jika statusnya disimpan di localStorage -->
+        <script>
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.documentElement.classList.add('dark-mode-variables');
+            }
+        </script>
     </head>
 
     <body>
-        <a>SELAMAT DATANG <?= session()->get('username'); ?></a>
-        <a><?= session()->get('logged_in'); ?></a>
-        <a> Anda adalah <?= session()->get('user_type'); ?></a>
         <div class="container">
             <!-- Sidebar Section -->
             <?= $this->include('partials/sidebar'); ?> <!-- Include file sidebar.php -->
@@ -30,8 +35,8 @@ if (session()->get('logged_in')):
                     <div class="sales">
                         <div class="status">
                             <div class="info">
-                                <h3>Total Sales</h3>
-                                <h1>$65,024</h1>
+                                <h3>Jumlah Proposal</h3>
+                                <h1>8</h1>
                             </div>
                             <div class="progresss">
                                 <svg>
@@ -46,8 +51,8 @@ if (session()->get('logged_in')):
                     <div class="visits">
                         <div class="status">
                             <div class="info">
-                                <h3>Site Visit</h3>
-                                <h1>24,981</h1>
+                                <h3>Jumlah paper</h3>
+                                <h1>5</h1>
                             </div>
                             <div class="progresss">
                                 <svg>
@@ -62,8 +67,8 @@ if (session()->get('logged_in')):
                     <div class="searches">
                         <div class="status">
                             <div class="info">
-                                <h3>Searches</h3>
-                                <h1>14,147</h1>
+                                <h3>Jumlah HAKI</h3>
+                                <h1>6</h1>
                             </div>
                             <div class="progresss">
                                 <svg>
@@ -80,22 +85,21 @@ if (session()->get('logged_in')):
 
                 <!-- Recent Orders Table -->
                 <div class="recent-orders">
-                    <h2>Jadwal</h2>
+                    <h2>Rekap</h2>
                     <table>
                         <thead>
                             <tr>
-                                <th>Course Name</th>
-                                <th>Course Number</th>
-                                <th>Payment</th>
-                                <th>Status</th>
-                                <th></th>
+                                <th>Nama Dosen</th>
+                                <th>Judul Laporan</th>
+                                <th>Tanggal Laporan</th>
+                                <th>File</th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- Data Jadwal akan dimasukkan di sini -->
                         </tbody>
                     </table>
-                    <a href="#">Show All</a>
+                    <!-- <a href="#">Show All</a> -->
                 </div>
                 <!-- End of Recent Orders -->
 
@@ -115,7 +119,7 @@ if (session()->get('logged_in')):
 
                     <div class="profile">
                         <div class="info">
-                            <p>Hey, <b><?= session()->get('nama') ? session()->get('nama') : 'Guest'; ?></b></p>
+                            <p>Hello, <b><?= session()->get('nama') ? session()->get('nama') : 'Guest'; ?></b></p>
                             <small class="text-muted"><?= session()->get('user_type'); ?></small>
                         </div>
                         <div class="profile-photo">
@@ -132,7 +136,7 @@ if (session()->get('logged_in')):
                     <div class="logo">
                         <img src="<?= base_url('images/Logo Web Fortuna.png'); ?>" alt="Logo Web Fortuna">
                         <h2>Penta Dosen</h2>
-                        <p>Fullstack Web Developer</p>
+                        <p>Teams Fortuna</p>
                     </div>
                 </div>
             </div>

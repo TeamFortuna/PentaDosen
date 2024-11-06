@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class RegisterLogin_Model extends Model
 {
-    protected $table = 'dosen'; // Sesuaikan dengan nama tabel Anda
+    protected $table = 'akundosen'; // Sesuaikan dengan nama tabel Anda
     protected $primaryKey = 'id';
     protected $allowedFields = ['nama', 'inisial_nama', 'program_studi', 'email', 'username', 'password', 'otp', 'otp_expiration', 'user_type'];
 
