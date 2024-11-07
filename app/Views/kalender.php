@@ -33,22 +33,25 @@
 
             <!-- Pop-Up Form untuk menambah acara -->
             <div id="eventForm">
+            <form action="<?= base_url('/addJadwal'); ?>" method="post">
+
                 <label for="eventTitle">Judul Acara:</label>
-                <input type="text" id="eventTitle" placeholder="Masukkan judul acara" required>
+                <input type="text" id="eventTitle" placeholder="Masukkan judul acara" name="judul_kegiatan" required>
 
                 <label for="eventDescription">Deskripsi:</label>
                 <textarea id="eventDescription" placeholder="Masukkan deskripsi acara"></textarea>
 
                 <label for="eventStart">Tanggal Mulai:</label>
-                <input type="date" id="eventStart" required min="<?= date('Y-m-d'); ?>">
+                <input type="date" id="eventStart" name="batas_awal" required min="<?= date('Y-m-d'); ?>">
 
                 <label for="eventEnd">Tanggal Selesai:</label>
-                <input type="date" id="eventEnd">
+                <input type="date" id="eventEnd" name="batas_akhir">
 
-                <button type="button" onclick="addEvent()">Tambahkan Acara</button>
+                <button type="submit">Tambahkan Acara</button>
                 <button type="button" onclick="closeEventForm()">Batal</button>
-            </div>
+                </form>            
 
+            </div>
             <!-- Modal Overlay -->
             <div class="modal-overlay" onclick="closeEventForm()"></div>
 
@@ -68,8 +71,49 @@
         <!-- Right Section -->
         <?= $this->include('partials/topprofile'); ?> <!-- Include file profile.php -->
         <!-- End of Nav -->
-
         <script src="<?= base_url('js/kalender.js'); ?>"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var calendarEl = document.getElementById("calendar");
+            var calendarConfig = {
+                initialView: "dayGridMonth",
+                events: [
+                    {
+
+                    }
+                    <?php foreach($jadwal as $event): ?>
+                    ,{
+                        title: '<?= $event['judul_kegiatan']; ?>',
+                        start: '<?= $event['batas_awal']; ?>',
+                        end: '<?= date('Y-m-d', strtotime($event['batas_akhir'] . ' +1 day')); ?>'
+                    }
+                    <?php endforeach; ?>
+                ],
+                eventClick: function(info) {
+                    // Tampilkan detail acara dalam modal
+                    showEventDetails(info.event);
+                }
+            };
+            // Menambahkan customButtons dan headerToolbar jika user_type bukan 'dosen'
+            <?php if(session()->get('user_type') !== 'dosen'): ?>
+                calendarConfig.customButtons = {
+                    addEventButton: {
+                        text: "Tambah Acara",
+                        click: openEventForm
+                    }
+                };
+                calendarConfig.headerToolbar = {
+                    left: "addEventButton",
+                    center: "title",
+                    right: "today prev,next"
+                };
+            <?php endif; ?>
+            // Membuat dan merender kalender
+            var calendar = new FullCalendar.Calendar(calendarEl, calendarConfig);
+            calendar.render();
+        });
+    </script>
+
         <script src="<?= base_url('js/index.js'); ?>"></script>
     </div>
 </body>

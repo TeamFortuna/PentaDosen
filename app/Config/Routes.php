@@ -28,6 +28,7 @@ $routes->get('/password_baru', 'ForgotPasswordController::newPassword');
 # Menu
 $routes->get('/dashboard', 'DashboardController::index');
 $routes->get('/kalender', 'KalenderController::kalender');
+$routes->post('/addJadwal', 'KalenderController::addJadwal');
 $routes->get('/proposal_penelitian', 'ProposalPenelitianController::ProposalPenelitian');
 $routes->get('/laporan_kemajuan', 'LaporanKemajuanController::LaporanKemajuan');
 $routes->get('/laporan_akhir', 'LaporanAkhirController::LaporanAkhir');

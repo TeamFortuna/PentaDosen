@@ -4,11 +4,11 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class RegisterLogin_Model extends Model
+class Kalender_Model extends Model
 {
-    protected $table = 'dosen'; // Sesuaikan dengan nama tabel Anda
+    protected $table = 'kalender'; // Sesuaikan dengan nama tabel Anda
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama', 'inisial_nama', 'program_studi', 'email', 'username', 'password', 'otp', 'otp_expiration', 'user_type'];
+    protected $allowedFields = ['judul_kegiatan', 'batas_awal', 'batas_akhir'];
 
     public function getUserById($userId)
     {

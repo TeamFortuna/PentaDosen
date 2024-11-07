@@ -1,27 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    var calendarEl = document.getElementById("calendar");
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "dayGridMonth",
-        customButtons: {
-            addEventButton: {
-                text: "Tambah Acara",
-                click: openEventForm
-            }
-        },
-        headerToolbar: {
-            left: "addEventButton",
-            center: "title",
-            right: "today prev,next"
-        },
-        
-        // Event listener untuk klik acara
-        eventClick: function(info) {
-            // Tampilkan detail acara dalam modal
-            showEventDetails(info.event);
-        }
-    });
-    calendar.render();
-
     const eventStartInput = document.getElementById("eventStart");
     const eventEndInput = document.getElementById("eventEnd");
 
