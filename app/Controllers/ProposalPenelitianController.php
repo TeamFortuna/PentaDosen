@@ -5,6 +5,9 @@ namespace App\Controllers;
 use App\Models\RegisterLogin_Model;
 use App\Models\Proposal_Model;
 use App\Models\Anggota_Model;
+use DateTime;
+
+date_default_timezone_set('Asia/Jakarta');
 
 class ProposalPenelitianController extends BaseController
 {
@@ -17,7 +20,7 @@ class ProposalPenelitianController extends BaseController
         $userData = $userModel->find($userId);
 
         // Mengambil data proposal dari database
-        $proposals = $proposalModel->where('id', $userId)->findAll();
+        $proposals = $proposalModel->findAll();
 
         return view('proposal_penelitian', [
             'userData' => $userData,
@@ -44,8 +47,7 @@ class ProposalPenelitianController extends BaseController
             return redirect()->back()->with('error', 'File upload gagal.');
         }
 
-        // Ambil data form
-        $data = [
+        $result = $proposalModel->save([
             'judul_penelitian' => $this->request->getPost('judulPenelitian'),
             'skema' => $this->request->getPost('skema'),
             'skema_lainnya' => $this->request->getPost('skema_lainnya'),
@@ -54,11 +56,13 @@ class ProposalPenelitianController extends BaseController
             'sumber_dana' => $this->request->getPost('sumberDana'),
             'dana_lainnya' => $this->request->getPost('dana_lainnya'),
             'file_proposal' => $fileName,
-            'tanggal_upload' => date('Y-m-d H:i:s')
-        ];
+            'tanggal_upload' => date('Y-m-d')
+        ]);
 
-        // Simpan data proposal dan anggota
-        $anggota = [];
+        // Mendapatkan ID proposal terakhir yang disimpan
+        $proposal_id = $proposalModel->getInsertID();
+
+        // Menyimpan data anggota ke tabel anggota_proposal
         $namaAnggota = $this->request->getPost('nama_anggota');
         $nidnAnggota = $this->request->getPost('nidn_anggota');
         $jabatanAnggota = $this->request->getPost('jabatan_anggota');
@@ -67,7 +71,8 @@ class ProposalPenelitianController extends BaseController
         $prodiAnggota = $this->request->getPost('prodi_anggota');
 
         foreach ($namaAnggota as $index => $nama) {
-            $anggota[] = [
+            $anggotaData = [
+                'proposal_id' => $proposal_id,
                 'nama_anggota' => $nama,
                 'nidn_anggota' => $nidnAnggota[$index],
                 'jabatan_anggota' => $jabatanAnggota[$index],
@@ -75,11 +80,18 @@ class ProposalPenelitianController extends BaseController
                 'fakultas_anggota' => $fakultasAnggota[$index],
                 'prodi_anggota' => $prodiAnggota[$index]
             ];
+
+            $anggotaModel->insert($anggotaData);
         }
 
-        // Simpan proposal dan anggota
-        $proposal_id = $proposalModel->simpanProposal($data, $anggota);
+        if ($result === false) {
+            echo "Data gagal disimpan. Kesalahan: " . implode(', ', $proposalModel->errors());
+        } else {
+            echo "Data berhasil disimpan!";
+            // Redirect ke halaman login setelah sukses
+            return redirect()->to('proposal_penelitian')->with('success', 'Proposal berhasil diunggah!');
+        }
 
-        return redirect()->to('/proposal_penelitian')->with('message', 'Proposal berhasil diunggah!');
+
     }
 }

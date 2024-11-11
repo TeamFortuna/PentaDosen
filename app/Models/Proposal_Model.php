@@ -17,25 +17,8 @@ class Proposal_Model extends Model
         'biaya_diusulkan',
         'biaya_didanai',
         'sumber_dana',
-        'dana_lainnya'
+        'dana_lainnya',
+        'tanggal_upload'
     ];
 
-    // Fungsi untuk menyimpan data proposal dan anggota
-    public function simpanProposal($data, $anggota)
-    {
-        // Simpan data proposal ke tabel 'proposals'
-        $this->insert($data);
-        $proposal_id = $this->insertID();
-
-        // Simpan data anggota jika ada
-        if (!empty($anggota)) {
-            $anggotaModel = new \App\Models\Anggota_Model();
-            foreach ($anggota as $anggotaData) {
-                $anggotaData['proposal_id'] = $proposal_id;
-                $anggotaModel->insert($anggotaData);
-            }
-        }
-
-        return $proposal_id;
-    }
 }

@@ -51,7 +51,7 @@
             <div id="proposalPenelitianModal" class="modal">
                 <div class="modal-content">
                     <span class="close-modal" onclick="closeproposalPenelitianModal()">&times;</span>
-                    <form id="proposalPenelitianForm" action="<?= base_url('Proposal Penelitian/upload'); ?>" method="post" enctype="multipart/form-data">
+                    <form id="proposalPenelitianForm" action="<?= base_url('uploadProposal'); ?>" method="post" enctype="multipart/form-data">
                         <h2>Tambah Proposal Penelitian</h2>
                         <!-- 1.1 Identitas -->
                         <h4>1.1 Identitas Ketua</h4>

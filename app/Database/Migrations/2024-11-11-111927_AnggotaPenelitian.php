@@ -3,8 +3,9 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use PHPUnit\Framework\Constraint\Constraint;
 
-class Penelitian extends Migration
+class AnggotaPenelitian extends Migration
 {
     public function up()
     {
@@ -15,42 +16,49 @@ class Penelitian extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true
             ],
-            'judul_penelitian' => [
+            'proposal_id' => [
+                'type'           => 'INT',
+                'unsigned'       => true,
+                'constraint'     => 100,
+            ],
+            'nama_anggota' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
             ],
-            'skema' => [
+            'nidn_anggota' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 50,
             ],
-            'skema_lainnya' => [
+            'jabatan_anggota' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+            ],
+            'perguruan_anggota' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+            ],
+            'perguruan_lainnya' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
                 'null'       => true,
             ],
-            'biaya_diusulkan' => [
-                'type'       => 'DECIMAL',
-                'constraint' => '15,2',
-            ],
-            'biaya_didanai' => [
-                'type'       => 'DECIMAL',
-                'constraint' => '15,2',
-            ],
-            'sumber_dana' => [
+            'fakultas_anggota' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 50,
+                'constraint' => 255,
             ],
-            'dana_lainnya' => [
+            'fakultas_lainnya' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
                 'null'       => true,
             ],
-            'tanggal_proposal' => [
-                'type' => 'DATE',
-            ],
-            'file_proposal' => [
+            'prodi_anggota' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
+            ],
+            'prodi_lainnya' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+                'null'       => true,
             ],
             'created_at' => [
                 'type'    => 'DATETIME',
@@ -61,13 +69,17 @@ class Penelitian extends Migration
                 'null'    => true,
             ]
         ]);
+
         $this->forge->addKey('id', true);
-        $this->forge->createTable('proposal');  // Nama tabel diubah menjadi 'proposals'
+        $this->forge->addForeignKey('proposal_id', 'proposal', 'id', 'CASCADE', 'CASCADE', 'fk_proposal_id');
+        // Pastikan nama tabel benar
+        $this->forge->createTable('anggota_proposal');  // Nama tabel diubah menjadi 'anggota_proposals'
     }
 
 
     public function down()
     {
-        $this->forge->dropTable('proposal');
+        $this->forge->dropForeignKey('anggota_proposal', 'fk_proposal_id');
+        $this->forge->dropTable('anggota_proposal');
     }
 }
