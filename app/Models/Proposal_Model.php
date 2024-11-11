@@ -20,5 +20,5 @@ class Proposal_Model extends Model
         'dana_lainnya',
         'tanggal_upload'
     ];
-
+    protected $useTimestamps = true; // Aktifkan fitur timestamps otomatis
 }

@@ -85,7 +85,7 @@
 
                     <!-- Salin elemen-elemen dari form tambah acara -->
                     <label for="updateEventTitle">Judul Acara:</label>
-                    <input type="text" id="updateEventTitle" name="judul_kegiatan" required>
+                    <input type="text" id="updateEventTitle" name="judul_kegiatan" value="<?= old('judul_kegiatan'); ?>">
 
                     <label for="updateEventDescription">Deskripsi:</label>
                     <textarea id="updateEventDescription" name="deskripsi" required></textarea>

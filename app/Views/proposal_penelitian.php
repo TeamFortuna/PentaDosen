@@ -84,7 +84,7 @@
                         <!-- 1.2 Proposal Penelitian -->
                         <h4>1.2 Proposal Penelitian</h4>
                         <label for="judulPenelitian">Judul Penelitian:</label>
-                        <input type="text" id="judulPenelitian" name="judulPenelitian" required>
+                        <input type="text" id="judulPenelitian" name="judulPenelitian" value="<?= old('judulPenelitian'); ?>" required>
 
                         <label for="skema">Skema:</label>
                         <select id="skema" name="skema">
@@ -98,10 +98,10 @@
                         <input type="text" id="skema_lainnya" name="skema_lainnya" placeholder="Isi skema lainnya jika dipilih" style="display:none;">
 
                         <label for="biayaYangDiusulkan">Biaya yang diusulkan:</label>
-                        <input type="text" id="biayaDiusulkan" name="biayaDiusulkan" required oninput="formatCurrency(this)">
+                        <input type="text" id="biayaDiusulkan" name="biayaDiusulkan" value="<?= old('biayaDiusulkan'); ?>" required oninput="formatCurrency(this)">
 
                         <label for="biayaYangDidanai">Biaya yang didanai:</label>
-                        <input type="text" id="biayaDidanai" name="biayaDidanai" required oninput="formatCurrency(this)">
+                        <input type="text" id="biayaDidanai" name="biayaDidanai" value="<?= old('biayaDidanai'); ?>" required oninput="formatCurrency(this)">
 
 
                         <label for="sumberDana">Sumber Dana:</label>
@@ -119,13 +119,20 @@
                         <div id="anggotaContainer">
                             <div class="anggota">
                                 <label>Nama Anggota:</label>
-                                <input type="text" name="nama_anggota[]" placeholder="Nama anggota" required>
+                                <?php if(old('nama_anggota')): ?>
+                                <?php foreach(old('nama_anggota') as $nama): ?>
+                                    <input type="text" name="nama_anggota[]" placeholder="Nama anggota" value="<?= esc($nama); ?>" required>
+                                <?php endforeach; ?>
+                                <?php else: ?>
+                                    <input type="text" name="nama_anggota[]" placeholder="Nama anggota" required>
+                                <?php endif; ?> 
+
 
                                 <label>NIDN Anggota:</label>
-                                <input type="text" name="nidn_anggota[]" placeholder="NIDN" required>
+                                <input type="text" name="nidn_anggota[]" placeholder="NIDN" value="<?= old('nidn_anggota[]'); ?>" required>
 
                                 <label>Jabatan Akademik:</label>
-                                <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" required>
+                                <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" value="<?= old('jabatan_anggota[]'); ?>" required>
 
                                 <label for="perguruan_anggota">Perguruan Tinggi:</label>
                                 <select id="perguruan_anggota" name="perguruan_anggota[]">
@@ -165,6 +172,13 @@
                         <div class="button_bawah">
                             <label for="berkas_proposal">Unggah File Proposal:</label>
                             <input type="file" id="berkas_proposal" name="berkas_proposal">
+                            <?php
+                            if (session()->getFlashdata('errFile')) {
+                                echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                            ' . session()->getFlashdata('errFile') . '
+                            </div>';
+                            }
+                            ?>
                             <button type="submit">Unggah</button>
                         </div>
 
@@ -181,7 +195,9 @@
                             <th>Judul Proposal Penelitian</th>
                             <th>Tanggal Proposal Penelitian</th>
                             <th>File</th>
+                            <?php if(session()->get('user_type') == 'dosen'): ?>
                             <th>Aksi</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -191,10 +207,12 @@
                                 <td><?= $proposal['judul_penelitian']; ?></td>
                                 <td><?= $proposal['tanggal_upload']; ?></td>
                                 <td><a href="<?= base_url('uploads/' . $proposal['file_proposal']); ?>" target="_blank">Unduh/Preview</a></td>
+                                <?php if(session()->get('user_type') == 'dosen'): ?>
                                 <td>
                                     <button>Edit</button>
                                     <button>Delete</button>
                                 </td>
+                                <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

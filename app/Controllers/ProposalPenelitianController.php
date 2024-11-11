@@ -30,22 +30,36 @@ class ProposalPenelitianController extends BaseController
 
     public function uploadProposal()
     {
+        
+        $validation = \Config\Services::validation();
+        $valid = $this->validate([
+            'berkas_proposal' => [
+                'rules' => 'uploaded[berkas_proposal]|max_size[berkas_proposal,10048]|ext_in[berkas_proposal,pdf]',
+                'errors' => [
+                    'uploaded' => 'File Tidak Boleh Kosong!',
+                    'max_size' => 'Ukuran File Besar!',
+                    'ext_in' => 'File Harus Berformat PDF!',
+                ],
+            ],
+        ]);
+
+        if (!$valid) {
+            $sessError = [
+                'errFile' => $validation->getError('berkas_proposal'),
+            ];
+            session()->setFlashdata($sessError);
+            return redirect()->back()->withInput();
+        }
         $proposalModel = new Proposal_Model();
         $anggotaModel = new Anggota_Model();
 
         // Validasi data yang diterima dari form
-        $validation = \Config\Services::validation();
 
         // Validasi file
         $file = $this->request->getFile('berkas_proposal');
-        if ($file->isValid() && !$file->hasMoved()) {
-            // Pindahkan file ke folder 'uploads'
-            $filePath = $file->store('uploads');
-            $fileName = $file->getName();
-        } else {
-            // Error jika file gagal diupload
-            return redirect()->back()->with('error', 'File upload gagal.');
-        }
+        // Pindahkan file ke folder 'uploads'
+        $file->move('uploads');
+        $fileName = $file->getName();
 
         $result = $proposalModel->save([
             'judul_penelitian' => $this->request->getPost('judulPenelitian'),
