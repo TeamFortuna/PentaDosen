@@ -50,34 +50,36 @@
             <!-- Modal untuk form Proposal Penelitian -->
             <div id="proposalPenelitianModal" class="modal">
                 <div class="modal-content">
-                    <span class="close">&times;</span>
+                    <span class="close-modal" onclick="closeproposalPenelitianModal()">&times;</span>
                     <form id="proposalPenelitianForm" action="<?= base_url('Proposal Penelitian/upload'); ?>" method="post" enctype="multipart/form-data">
                         <h2>Tambah Proposal Penelitian</h2>
                         <!-- 1.1 Identitas -->
                         <h4>1.1 Identitas Ketua</h4>
+
                         <label for="nama">Nama:</label>
-                        <input type="text" id="nama" name="nama" required>
+                        <input type="text" id="nama" name="nama" value="<?= esc($userData['nama']) ?>" readonly>
 
                         <label for="nidn">NIDN:</label>
-                        <input type="text" id="nidn" name="nidn" required>
+                        <input type="text" id="nidn" name="nidn" value="<?= esc($userData['nidn']) ?>" readonly>
 
                         <label for="nip">NIP:</label>
-                        <input type="text" id="nip" name="nip">
+                        <input type="text" id="nip" name="nip" value="<?= esc($userData['nip']) ?>" readonly>
 
                         <label for="jabatanAkademik">Jabatan Akademik:</label>
-                        <input type="text" id="jabatanAkademik" name="jabatanAkademik">
+                        <input type="text" id="jabatanAkademik" name="jabatanAkademik" value="<?= esc($userData['jabatan_akademik']) ?>" readonly>
 
                         <label for="perguruanTinggi">Perguruan Tinggi:</label>
-                        <input type="text" id="perguruanTinggi" name="perguruanTinggi" required>
+                        <input type="text" id="perguruanTinggi" name="perguruanTinggi" value="<?= esc($userData['perguruan_tinggi']) ?>" readonly>
 
                         <label for="fakultas">Fakultas:</label>
-                        <input type="text" id="fakultas" name="fakultas" required>
+                        <input type="text" id="fakultas" name="fakultas" value="<?= esc($userData['fakultas']) ?>" readonly>
 
                         <label for="programStudi">Program Studi:</label>
-                        <input type="text" id="programStudi" name="programStudi" required>
+                        <input type="text" id="programStudi" name="programStudi" value="<?= esc($userData['program_studi']) ?>" readonly>
 
                         <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" value="<?= esc($userData['email']) ?>" readonly>
+
 
                         <!-- 1.2 Proposal Penelitian -->
                         <h4>1.2 Proposal Penelitian</h4>
@@ -126,32 +128,32 @@
                                 <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" required>
 
                                 <label for="perguruan_anggota">Perguruan Tinggi:</label>
-                                <select id="perguruan_anggota" name="perguruan_anggota">
+                                <select id="perguruan_anggota[]" name="perguruan_anggota">
                                     <option value="" disabled selected>Silahkan Pilih</option>
                                     <option value="Universitas YARSI">Universitas YARSI</option>
                                     <option value="lainnya">Lainnya (isi sendiri)</option>
                                 </select>
                                 <!-- Field untuk skema lainnya, tampil jika "lainnya" dipilih -->
-                                <input type="text" class="perguruan_lainnya" name="perguruan_lainnya" placeholder="Isi perguruan yang lainnya" style="display:none;">
+                                <input type="text" class="perguruan_lainnya" name="perguruan_lainnya[]" placeholder="Isi perguruan yang lainnya" style="display:none;">
 
                                 <label for="fakultas_anggota">Fakultas:</label>
-                                <select id="fakultas_anggota" name="fakultas_anggota">
+                                <select id="fakultas_anggota" name="fakultas_anggota[]">
                                     <option value="" disabled selected>Silahkan Pilih</option>
                                     <option value="Fakultas Teknologi Informasi (FTI)">Fakultas Teknologi Informasi (FTI)</option>
                                     <option value="lainnya">Lainnya (isi sendiri)</option>
                                 </select>
                                 <!-- Field untuk skema lainnya, tampil jika "lainnya" dipilih -->
-                                <input type="text" class="fakultas_lainnya" name="fakultas_lainnya" placeholder="Isi fakultas yang lainnya" style="display:none;">
+                                <input type="text" class="fakultas_lainnya" name="fakultas_lainnya[]" placeholder="Isi fakultas yang lainnya" style="display:none;">
 
                                 <label for="prodi_anggota">Program Studi:</label>
-                                <select id="prodi_anggota" name="prodi_anggota">
+                                <select id="prodi_anggota" name="prodi_anggota[]">
                                     <option value="" disabled selected>Silahkan Pilih</option>
                                     <option value="Teknik Informatika">Teknik Informatika</option>
                                     <option value="Perpustakaan dan Sains Informasi">Perpustakaan dan Sains Informasi</option>
                                     <option value="lainnya">Lainnya (isi sendiri)</option>
                                 </select>
                                 <!-- Field untuk skema lainnya, tampil jika "lainnya" dipilih -->
-                                <input type="text" class="prodi_lainnya" name="prodi_lainnya" placeholder="Isi program studi yang lainnya" style="display:none;">
+                                <input type="text" class="prodi_lainnya" name="prodi_lainnya[]" placeholder="Isi program studi yang lainnya" style="display:none;">
 
                                 <button type="button" class="hapusAnggotaBtn">Hapus Anggota</button>
                             </div>
@@ -162,13 +164,20 @@
 
                         <div class="button_bawah">
                             <label for="berkas_proposal">Unggah File Proposal:</label>
-                            <input type="file" id="berkas_proposal" name="berkas_proposal" required>
+                            <input type="file" id="berkas_proposal" name="berkas_proposal">
                             <button type="submit">Unggah</button>
                         </div>
 
                     </form>
                 </div>
             </div>
+
+            <?php if (session()->getFlashdata('message')): ?>
+                <div class="alert alert-success">
+                    <?= session()->getFlashdata('message'); ?>
+                </div>
+            <?php endif; ?>
+
 
             <div class="recent-orders">
                 <h2>Daftar Proposal Penelitian</h2>
@@ -183,17 +192,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Contoh Judul Proposal Penelitian 1</td>
-                            <td>01/01/2024</td>
-                            <td><a href="<?= base_url('uploads/Proposal Penelitian1.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
-                            <td>
-                                <button>Edit</button>
-                                <button>Delete</button>
-                            </td>
-                        </tr>
+                        <?php foreach ($proposals as $proposal): ?>
+                            <tr>
+                                <td><?= $proposal['id']; ?></td>
+                                <td><?= $proposal['judul_penelitian']; ?></td>
+                                <td><?= $proposal['tanggal_upload']; ?></td>
+                                <td><a href="<?= base_url('uploads/' . $proposal['file_proposal']); ?>" target="_blank">Unduh/Preview</a></td>
+                                <td>
+                                    <button>Edit</button>
+                                    <button>Delete</button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
+
                 </table>
             </div>
         </main>

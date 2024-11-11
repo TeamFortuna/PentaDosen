@@ -20,7 +20,7 @@
     position: relative;
 }
 
-.close {
+.close-modal {
     color: #aaa;
     font-size: 28px;
     position: absolute;
@@ -29,9 +29,10 @@
     cursor: pointer;
 }
 
-.close:hover {
+.close-modal:hover {
     color: black;
 }
+
 
 #proposalPenelitianForm input[type="text"],
 #proposalPenelitianForm input[type="email"], /* Tambahkan ini */

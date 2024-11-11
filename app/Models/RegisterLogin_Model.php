@@ -6,15 +6,26 @@ use CodeIgniter\Model;
 
 class RegisterLogin_Model extends Model
 {
-    protected $table = 'dosen'; // Sesuaikan dengan nama tabel Anda
+    protected $table = 'akundosen';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama', 'inisial_nama', 'program_studi', 'email', 'username', 'password', 'otp', 'otp_expiration', 'user_type'];
+    protected $allowedFields = [
+        'nama',
+        'nidn',
+        'nip',
+        'inisial_nama',
+        'jabatan_akademik',
+        'perguruan_tinggi',
+        'fakultas',
+        'program_studi',
+        'email',
+        'username',
+        'password',
+        'user_type',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
-    public function getUserById($userId)
-    {
-        return $this->where('id', $userId)->first();
-    }
 
-    // Jika Anda ingin menggunakan fitur timestamp (created_at, updated_at)
-    // protected $useTimestamps = true;
+    protected $useTimestamps = true; // Mengaktifkan timestamps
 }

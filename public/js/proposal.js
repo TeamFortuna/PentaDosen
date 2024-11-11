@@ -3,7 +3,8 @@ $(document).ready(function() {
 
     var modal = document.getElementById("proposalPenelitianModal");
     var btn = document.getElementById("openModalBtn");
-    var span = document.getElementsByClassName("close")[0];
+    var span = document.getElementsByClassName("close-modal")[0];
+
 
     // Membuka modal
     btn.onclick = function() {
@@ -17,7 +18,7 @@ $(document).ready(function() {
 
     // Menutup modal ketika klik di luar modal
     window.onclick = function(event) {
-        if (event.target == modal) {
+        if (event.target == modal) {    
             modal.style.display = "none";
         }
     }

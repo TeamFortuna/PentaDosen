@@ -63,13 +63,18 @@ class RegisterLoginController extends BaseController
         }
 
         $result = $userModel->save([
-            'nama'          => $this->request->getPost('nama'),
-            'inisial_nama'  => $this->request->getPost('nama_inisial'),
-            'program_studi' => $this->request->getPost('program_studi'),
-            'email'         => $this->request->getPost('email'),
-            'username'      => $this->request->getPost('username'),
-            'password'      => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'user_type'     => 'user',
+            'nama'               => $this->request->getPost('nama'),
+            'nidn'               => $this->request->getPost('nidn'),
+            'nip'                => $this->request->getPost('nip'),
+            'inisial_nama'       => $this->request->getPost('nama_inisial'),
+            'jabatan_akademik'   => $this->request->getPost('jabatan_akademik'),
+            'perguruan_tinggi'   => $this->request->getPost('perguruan_tinggi'),
+            'fakultas'           => $this->request->getPost('fakultas'),
+            'program_studi'      => $this->request->getPost('program_studi'),
+            'email'              => $this->request->getPost('email'),
+            'username'           => $this->request->getPost('username'),
+            'password'           => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'user_type'          => 'dosen',
         ]);
 
         if ($result === false) {

@@ -27,9 +27,15 @@ $routes->get('/password_baru', 'ForgotPasswordController::newPassword');
 
 # Menu
 $routes->get('/dashboard', 'DashboardController::index');
+## Kalender
 $routes->get('/kalender', 'KalenderController::kalender');
 $routes->post('/addJadwal', 'KalenderController::addJadwal');
+$routes->post('/updateJadwal/(:num)', 'KalenderController::updateJadwal/$1');
+$routes->delete('/deleteJadwal/(:num)', 'KalenderController::deleteJadwal/$1');
+## Proposal
 $routes->get('/proposal_penelitian', 'ProposalPenelitianController::ProposalPenelitian');
+$routes->post('/uploadProposal', 'ProposalPenelitianController::upload');
+## Laporan Kemajuan
 $routes->get('/laporan_kemajuan', 'LaporanKemajuanController::LaporanKemajuan');
 $routes->get('/laporan_akhir', 'LaporanAkhirController::LaporanAkhir');
 $routes->get('/publikasi', 'PublikasiController::publikasi');

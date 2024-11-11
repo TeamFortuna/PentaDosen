@@ -36,7 +36,6 @@ if (!session()->get('logged_in')):
                     <button type="button" class="button-next" onclick="showNextPart()">
                         <span class="material-icons-sharp">arrow_forward_ios</span>
                     </button>
-
                 </div>
 
                 <!-- Bagian Kedua Registrasi -->
@@ -52,7 +51,26 @@ if (!session()->get('logged_in')):
                     </select>
                     <input type="email" name="email" placeholder="Email" required>
                     <input type="text" name="username" placeholder="Username" required>
+
+                    <!-- Validasi Username -->
+                    <?php
+                    if (session()->getFlashdata('errUsernameRegister')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                    ' . session()->getFlashdata('errUsernameRegister') . '
+                </div>';
+                    }
+                    ?>
+
                     <input type="password" name="password" placeholder="Password" required>
+
+                    <!-- Validasi Password -->
+                    <?php
+                    if (session()->getFlashdata('errors')) {
+                        echo '<div id="validationServer03Feedback" class="invalid-feedback">
+                    ' . session()->getFlashdata('errors')['password'] . '
+                </div>';
+                    }
+                    ?>
 
                     <!-- Tombol Daftar -->
                     <button type="submit" class="daftar-btn">Daftar</button>
@@ -61,10 +79,10 @@ if (!session()->get('logged_in')):
                     <button type="button" class="button-back" onclick="showPreviousPart()">
                         <span class="material-icons-sharp">arrow_back_ios</span>
                     </button>
-
                 </div>
                 <?= form_close(); ?>
             </div>
+
             <div class="form-container sign-in">
                 <?php
                 if (session()->getFlashdata('errUsernameLogin')) {
