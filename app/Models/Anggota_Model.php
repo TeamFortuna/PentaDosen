@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class Anggota_Model extends Model
 {
-    protected $table = 'anggota_proposals';
+    protected $table = 'anggota_proposal';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'proposal_id',

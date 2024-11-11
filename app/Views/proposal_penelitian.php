@@ -128,7 +128,7 @@
                                 <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" required>
 
                                 <label for="perguruan_anggota">Perguruan Tinggi:</label>
-                                <select id="perguruan_anggota[]" name="perguruan_anggota">
+                                <select id="perguruan_anggota" name="perguruan_anggota[]">
                                     <option value="" disabled selected>Silahkan Pilih</option>
                                     <option value="Universitas YARSI">Universitas YARSI</option>
                                     <option value="lainnya">Lainnya (isi sendiri)</option>
@@ -171,13 +171,6 @@
                     </form>
                 </div>
             </div>
-
-            <?php if (session()->getFlashdata('message')): ?>
-                <div class="alert alert-success">
-                    <?= session()->getFlashdata('message'); ?>
-                </div>
-            <?php endif; ?>
-
 
             <div class="recent-orders">
                 <h2>Daftar Proposal Penelitian</h2>

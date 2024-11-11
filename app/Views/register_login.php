@@ -29,7 +29,7 @@ if (!session()->get('logged_in')):
                     <input type="text" name="nama_inisial" placeholder="Inisial Nama" required>
                     <input type="text" name="jabatan_akademik" placeholder="Jabatan Akademik" required>
                     <select name="perguruan_tinggi" required>
-                        <option value="Univ Yarsi" selected>Universitas YARSI</option>
+                        <option value="Universitas Yarsi" selected>Universitas YARSI</option>
                         <option value="Lainnya">Lainnya</option>
                     </select>
                     <!-- Tombol Next dengan ikon -->
@@ -91,7 +91,7 @@ if (!session()->get('logged_in')):
                     $isInvalidUser = '';
                 }
                 ?>
-            <?= form_open('registerlogincontroller/processLogin'); ?>
+                <?= form_open('registerlogincontroller/processLogin'); ?>
                 <?php
                 if (session()->getFlashdata('gmailC')) {
                     echo '<div id="validationServer03Feedback" class="invalid-feedback">
@@ -132,7 +132,7 @@ if (!session()->get('logged_in')):
                 ?>
                 <a href="<?= base_url('/forgot_password'); ?>">Forgot Your Password?</a>
                 <button type="submit">Login</button>
-            <?= form_close(); ?>
+                <?= form_close(); ?>
             </div>
             <div class="toggle-container">
                 <div class="toggle">
