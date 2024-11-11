@@ -3,20 +3,23 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use PHPUnit\Framework\Constraint\Constraint;
 
-class CreateAnggotaProposalTable extends Migration
+class AnggotaPenelitian extends Migration
 {
     public function up()
     {
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
+                'constraint'     => 100,
                 'unsigned'       => true,
                 'auto_increment' => true
             ],
             'proposal_id' => [
-                'type'       => 'INT',
-                'unsigned'   => true,
+                'type'           => 'INT',
+                'unsigned'       => true,
+                'constraint'     => 100,
             ],
             'nama_anggota' => [
                 'type'       => 'VARCHAR',
@@ -28,7 +31,7 @@ class CreateAnggotaProposalTable extends Migration
             ],
             'jabatan_anggota' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 100,
+                'constraint' => 255,
             ],
             'perguruan_anggota' => [
                 'type'       => 'VARCHAR',
@@ -70,12 +73,13 @@ class CreateAnggotaProposalTable extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('proposal_id', 'proposal', 'id', 'CASCADE', 'CASCADE');
         // Pastikan nama tabel benar
-        $this->forge->createTable('anggota_proposals');  // Nama tabel diubah menjadi 'anggota_proposals'
+        $this->forge->createTable('anggota_proposal');  // Nama tabel diubah menjadi 'anggota_proposals'
     }
 
 
     public function down()
     {
+        $this->forge->dropForeignKey('anggota_proposal', 'proposal_id');
         $this->forge->dropTable('anggota_proposal');
     }
 }

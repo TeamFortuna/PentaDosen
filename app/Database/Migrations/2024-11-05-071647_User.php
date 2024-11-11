@@ -17,16 +17,18 @@ class User extends Migration
             ],
             'nama' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '255',
             ],
             'nidn' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '50',
+                'unique'     => true,
                 'null'       => true,
             ],
             'nip' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '50',
+                'unique'     => true,
                 'null'       => true,
             ],
             'inisial_nama' => [
@@ -35,36 +37,36 @@ class User extends Migration
             ],
             'jabatan_akademik' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '255',
                 'null'       => true,
             ],
             'perguruan_tinggi' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '255',
                 'null'       => true,
             ],
             'fakultas' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '255',
                 'null'       => true,
             ],
             'program_studi' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '255',
             ],
             'email' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '255',
                 'unique'     => true,
             ],
             'username' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '255',
                 'unique'     => true,
             ],
             'password' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '255',
             ],
             'user_type' => [
                 'type'       => 'ENUM',
@@ -73,7 +75,7 @@ class User extends Migration
             ],
             'otp' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '255',
                 'null'       => true,
             ],
             'otp_expiration' => [

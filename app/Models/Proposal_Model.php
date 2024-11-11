@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class Proposal_Model extends Model
 {
-    protected $table = 'proposals';
+    protected $table = 'proposal';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'judul_penelitian',

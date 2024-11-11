@@ -221,7 +221,6 @@
                     }
                 };
                 // Menambahkan customButtons dan headerToolbar jika user_type bukan 'dosen'
-                <?php if (session()->get('user_type') !== 'dosen'): ?>
                     calendarConfig.customButtons = {
                         addEventButton: {
                             text: "Tambah Acara",
@@ -233,7 +232,6 @@
                         center: "title",
                         right: "today prev,next"
                     };
-                <?php endif; ?>
                 // Membuat dan merender kalender
                 var calendar = new FullCalendar.Calendar(calendarEl, calendarConfig);
                 calendar.render();

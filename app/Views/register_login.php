@@ -91,7 +91,7 @@ if (!session()->get('logged_in')):
                     $isInvalidUser = '';
                 }
                 ?>
-                <?= form_open('registerlogincontroller/processLogin'); ?>
+            <?= form_open('registerlogincontroller/processLogin'); ?>
                 <?php
                 if (session()->getFlashdata('gmailC')) {
                     echo '<div id="validationServer03Feedback" class="invalid-feedback">
@@ -132,7 +132,7 @@ if (!session()->get('logged_in')):
                 ?>
                 <a href="<?= base_url('/forgot_password'); ?>">Forgot Your Password?</a>
                 <button type="submit">Login</button>
-                <?= form_close(); ?>
+            <?= form_close(); ?>
             </div>
             <div class="toggle-container">
                 <div class="toggle">

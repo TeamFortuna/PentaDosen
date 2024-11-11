@@ -4,13 +4,14 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateAnggotaProposalsTable extends Migration
+class Penelitian extends Migration
 {
     public function up()
     {
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
+                'constraint'     => 100,
                 'unsigned'       => true,
                 'auto_increment' => true
             ],
@@ -61,12 +62,12 @@ class CreateAnggotaProposalsTable extends Migration
             ]
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('proposals');  // Nama tabel diubah menjadi 'proposals'
+        $this->forge->createTable('proposal');  // Nama tabel diubah menjadi 'proposals'
     }
 
 
     public function down()
     {
-        $this->forge->dropTable('proposals');
+        $this->forge->dropTable('proposal');
     }
 }
