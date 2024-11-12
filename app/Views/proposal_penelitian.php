@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('css/sidebar.css'); ?>">
@@ -46,6 +47,14 @@
             <p>Ini adalah halaman untuk Proposal Penelitian.</p>
 
             <button id="openModalBtn" class="button-primary">Tambah Proposal Penelitian</button>
+            <?php if(session()->getFlashdata('success') || session()->getFlashdata('errProposal')): ?>
+                    <div class="success-feedback">
+                        <?php echo session()->getFlashdata('success') ?>
+                    </div>
+                    <div class="invalid-feedback">
+                        <?php echo session()->getFlashdata('errProposal') ?>
+                    </div>
+            <?php endif; ?> 
 
             <!-- Modal untuk form Proposal Penelitian -->
             <div id="proposalPenelitianModal" class="modal">
@@ -172,13 +181,11 @@
                         <div class="button_bawah">
                             <label for="berkas_proposal">Unggah File Proposal:</label>
                             <input type="file" id="berkas_proposal" name="berkas_proposal">
-                            <?php
-                            if (session()->getFlashdata('errFile')) {
-                                echo '<div id="validationServer03Feedback" class="invalid-feedback">
-                            ' . session()->getFlashdata('errFile') . '
-                            </div>';
-                            }
-                            ?>
+                            <?php if(session()->getFlashdata('errFile')): ?>
+                            <div class="invalid-feedback">
+                                <?php echo session()->getFlashdata('errFile') ?>
+                            </div>
+                            <?php endif; ?>    
                             <button type="submit">Unggah</button>
                         </div>
 
@@ -206,7 +213,14 @@
                                 <td><?= $proposal['id']; ?></td>
                                 <td><?= $proposal['judul_penelitian']; ?></td>
                                 <td><?= $proposal['tanggal_upload']; ?></td>
-                                <td><a href="<?= base_url('uploads/' . $proposal['file_proposal']); ?>" target="_blank">Unduh/Preview</a></td>
+                                <td>
+                                <div>
+                                    <a href="<?= base_url(); ?>ProposalPenelitianController/download/<?= $proposal['id']; ?>" >Unduh</a>
+                                </div>
+                                <div>
+                                    <a href="<?= base_url(); ?>PreviewPdfController/previewPdf/<?= $proposal['id']; ?>" id="preview"  ?>>Preview</a>
+                                </div>
+                                </td>
                                 <?php if(session()->get('user_type') == 'dosen'): ?>
                                 <td>
                                     <button>Edit</button>

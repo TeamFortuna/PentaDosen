@@ -44,10 +44,8 @@ class ProposalPenelitianController extends BaseController
         ]);
 
         if (!$valid) {
-            $sessError = [
-                'errFile' => $validation->getError('berkas_proposal'),
-            ];
-            session()->setFlashdata($sessError);
+            session()->setFlashdata('errFile', $validation->getError('berkas_proposal'));
+            session()->setFlashdata('errProposal', 'Data yang Anda kirim ada yang salah !');
             return redirect()->back()->withInput();
         }
         $proposalModel = new Proposal_Model();
@@ -103,9 +101,14 @@ class ProposalPenelitianController extends BaseController
         } else {
             echo "Data berhasil disimpan!";
             // Redirect ke halaman login setelah sukses
+            session()->setFlashdata('success', 'Proposal Berhasil Diupload !');
             return redirect()->to('proposal_penelitian')->with('success', 'Proposal berhasil diunggah!');
         }
+    }
 
-
+    public function download($id) {
+        $proposalModel = new Proposal_Model();
+        $nama_file = $proposalModel->find($id);
+        return $this->response->download('uploads/' . $nama_file['file_proposal'], null);
     }
 }

@@ -35,6 +35,7 @@ $routes->delete('/deleteJadwal/(:num)', 'KalenderController::deleteJadwal/$1');
 ## Proposal
 $routes->get('/proposal_penelitian', 'ProposalPenelitianController::ProposalPenelitian');
 $routes->post('/uploadProposal', 'ProposalPenelitianController::uploadProposal');
+$routes->get('/preview_pdf', 'PreviewPdfController::previewPdf');
 ## Laporan Kemajuan
 $routes->get('/laporan_kemajuan', 'LaporanKemajuanController::LaporanKemajuan');
 $routes->get('/laporan_akhir', 'LaporanAkhirController::LaporanAkhir');

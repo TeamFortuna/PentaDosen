@@ -34,6 +34,12 @@ body{
     margin-right: auto;
 }
 
+.success-feedback {
+    color: greenyellow;
+    font-size: 13px;
+    margin-right: auto;
+}
+
 .container p{
     font-size: 14px;
     line-height: 20px;
