@@ -300,8 +300,8 @@
                             <th>No</th>
                             <th>Judul Proposal Penelitian</th>
                             <th>Tanggal Proposal Penelitian</th>
-                            <th>Skema</th>
-                            <th>Sumber Dana</th>
+                            <th>Nama Anggota</th>
+                            <th>Nama Dosen</th>
                             <th>Dana yang Didanai</th>
                             <th>File</th>
                             <?php if (session()->get('user_type') == 'dosen'): ?>
@@ -316,8 +316,8 @@
                                 <td><?= $no++; ?></td>
                                 <td><?= esc($proposal['judul_penelitian']); ?></td>
                                 <td><?= date('d-m-Y', strtotime($proposal['tanggal_upload'])); ?></td>
-                                <td><?= esc($proposal['skema'] ?? ''); ?></td>
-                                <td><?= esc($proposal['sumber_dana'] ?? ''); ?></td>
+                                <td><?= esc($proposal['nama_anggota'] ?? ''); ?></td>
+                                <td><?= esc($proposal['nama'] ?? ''); ?></td>
                                 <td>Rp. <?= number_format($proposal['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
                                 <td>
                                     <div>
@@ -335,7 +335,6 @@
                                         '<?= $proposal['biaya_diusulkan']; ?>',
                                         '<?= $proposal['biaya_didanai']; ?>',
                                         '<?= $proposal['sumber_dana']; ?>',">edit</span>
-
                                     </td>
                                 <?php endif; ?>
                             </tr>

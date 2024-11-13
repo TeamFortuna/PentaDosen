@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\RegisterLogin_Model;
+use App\Models\Intersection_Dosen_Proposal;
 use App\Models\Proposal_Model;
 use App\Models\Anggota_Model;
 use DateTime;
@@ -11,6 +12,7 @@ date_default_timezone_set('Asia/Jakarta');
 
 class ProposalPenelitianController extends BaseController
 {
+    
     public function ProposalPenelitian()
     {
         $userModel = new RegisterLogin_Model();
@@ -20,11 +22,11 @@ class ProposalPenelitianController extends BaseController
         $userData = $userModel->find($userId);
 
         // Mengambil data proposal dari database
-        $proposals = $proposalModel->findAll();
-
+        $proposals = $proposalModel->getProposalsWithAnggota();
+        $proposalsFinal = $proposalModel->getProposalsWithDosenAndAnggota();
         return view('proposal_penelitian', [
             'userData' => $userData,
-            'proposals' => $proposals
+            'proposals' => $proposalsFinal
         ]);
     }
 
@@ -50,6 +52,7 @@ class ProposalPenelitianController extends BaseController
         }
         $proposalModel = new Proposal_Model();
         $anggotaModel = new Anggota_Model();
+        $dosen_id_model = new Intersection_Dosen_Proposal();
 
         // Validasi data yang diterima dari form
 
@@ -73,7 +76,7 @@ class ProposalPenelitianController extends BaseController
 
         // Mendapatkan ID proposal terakhir yang disimpan
         $proposal_id = $proposalModel->getInsertID();
-
+        $id_dosen = session()->get('user_id');
         // Menyimpan data anggota ke tabel anggota_proposal
         $namaAnggota = $this->request->getPost('nama_anggota');
         $nidnAnggota = $this->request->getPost('nidn_anggota');
@@ -92,9 +95,12 @@ class ProposalPenelitianController extends BaseController
                 'fakultas_anggota' => $fakultasAnggota[$index],
                 'prodi_anggota' => $prodiAnggota[$index]
             ];
-
             $anggotaModel->insert($anggotaData);
         }
+        $dosen_id_model->save([
+            'dosen_id' => $id_dosen,
+            'proposal_id' => $proposal_id
+        ]);
 
         if ($result === false) {
             echo "Data gagal disimpan. Kesalahan: " . implode(', ', $proposalModel->errors());

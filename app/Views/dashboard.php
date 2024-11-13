@@ -147,6 +147,6 @@
 
 <?php else: ?>
     <script>
-        window.location.href = "<?= base_url('\register_login'); ?>";
+        window.location.href = "<?= base_url('register_login'); ?>";
     </script>
 <?php endif; ?>

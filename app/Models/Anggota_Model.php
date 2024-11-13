@@ -21,4 +21,6 @@ class Anggota_Model extends Model
         'prodi_lainnya'
     ];
     protected $useTimestamps = true; // Aktifkan fitur timestamps otomatis
+
+    
 }
