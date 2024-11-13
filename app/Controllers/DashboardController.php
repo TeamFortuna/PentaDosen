@@ -4,13 +4,14 @@ namespace App\Controllers;
 
 use CodeIgniter\Controller;
 use App\Models\RegisterLogin_Model;
+use App\Models\Proposal_Model;
 
 class DashboardController extends BaseController
 {
     public function index()
     {
 
-        return view('dashboard');
+        return view("dashboard");
     }
 
     // public function logout() {

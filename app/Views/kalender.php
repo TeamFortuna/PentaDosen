@@ -173,7 +173,6 @@
                     <h2>Reminders</h2>
                     <span class="material-icons-sharp">notifications_none</span>
                 </div>
-
                 <?php foreach ($jadwal as $event): ?>
                     <div class="notification" onclick="showEventDetailFromReminder('<?= $event['judul_kegiatan']; ?>', '<?= $event['deskripsi']; ?>', '<?= $event['batas_awal']; ?>', '<?= $event['batas_akhir']; ?>')">
                         <div class="icon">
@@ -184,12 +183,14 @@
                                 <h3><?= $event['judul_kegiatan']; ?></h3>
                                 <small class="text-muted"><?= date("d M Y", strtotime($event['batas_awal'])); ?> - <?= date("d M Y", strtotime($event['batas_akhir'])); ?></small>
                             </div>
-                            <span class="material-icons-sharp" onclick="openEventActionModal(
+                            <?php if (session()->get('user_type') !== 'dosen'): ?>
+                                <span class="material-icons-sharp" onclick="openEventActionModal(
                             '<?= $event['id']; ?>', 
                             '<?= $event['judul_kegiatan']; ?>', 
                             '<?= $event['deskripsi']; ?>', 
                             '<?= $event['batas_awal']; ?>', 
                             '<?= $event['batas_akhir']; ?>')">more_vert</span>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -221,6 +222,7 @@
                     }
                 };
                 // Menambahkan customButtons dan headerToolbar jika user_type bukan 'dosen'
+                <?php if (session()->get('user_type') !== 'dosen'): ?>
                     calendarConfig.customButtons = {
                         addEventButton: {
                             text: "Tambah Acara",
@@ -232,6 +234,7 @@
                         center: "title",
                         right: "today prev,next"
                     };
+                <?php endif; ?>
                 // Membuat dan merender kalender
                 var calendar = new FullCalendar.Calendar(calendarEl, calendarConfig);
                 calendar.render();

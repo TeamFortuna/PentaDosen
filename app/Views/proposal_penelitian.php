@@ -47,14 +47,14 @@
             <p>Ini adalah halaman untuk Proposal Penelitian.</p>
 
             <button id="openModalBtn" class="button-primary">Tambah Proposal Penelitian</button>
-            <?php if(session()->getFlashdata('success') || session()->getFlashdata('errProposal')): ?>
-                    <div class="success-feedback">
-                        <?php echo session()->getFlashdata('success') ?>
-                    </div>
-                    <div class="invalid-feedback">
-                        <?php echo session()->getFlashdata('errProposal') ?>
-                    </div>
-            <?php endif; ?> 
+            <?php if (session()->getFlashdata('success') || session()->getFlashdata('errProposal')): ?>
+                <div class="success-feedback">
+                    <?php echo session()->getFlashdata('success') ?>
+                </div>
+                <div class="invalid-feedback">
+                    <?php echo session()->getFlashdata('errProposal') ?>
+                </div>
+            <?php endif; ?>
 
             <!-- Modal untuk form Proposal Penelitian -->
             <div id="proposalPenelitianModal" class="modal">
@@ -100,7 +100,7 @@
                             <option value="" disabled selected>Silahkan Pilih</option>
                             <option value="Hibah Eksternal">Hibah Eksternal</option>
                             <option value="Hibah Internal">Hibah Internal</option>
-                            <option value="mandiri">Mandiri</option>
+                            <option value="Mandiri">Mandiri</option>
                             <option value="lainnya">Lainnya (isi sendiri)</option>
                         </select>
                         <!-- Field untuk skema lainnya, tampil jika "lainnya" dipilih -->
@@ -128,13 +128,13 @@
                         <div id="anggotaContainer">
                             <div class="anggota">
                                 <label>Nama Anggota:</label>
-                                <?php if(old('nama_anggota')): ?>
-                                <?php foreach(old('nama_anggota') as $nama): ?>
-                                    <input type="text" name="nama_anggota[]" placeholder="Nama anggota" value="<?= esc($nama); ?>" required>
-                                <?php endforeach; ?>
+                                <?php if (old('nama_anggota')): ?>
+                                    <?php foreach (old('nama_anggota') as $nama): ?>
+                                        <input type="text" name="nama_anggota[]" placeholder="Nama anggota" value="<?= esc($nama); ?>" required>
+                                    <?php endforeach; ?>
                                 <?php else: ?>
                                     <input type="text" name="nama_anggota[]" placeholder="Nama anggota" required>
-                                <?php endif; ?> 
+                                <?php endif; ?>
 
 
                                 <label>NIDN Anggota:</label>
@@ -181,15 +181,114 @@
                         <div class="button_bawah">
                             <label for="berkas_proposal">Unggah File Proposal:</label>
                             <input type="file" id="berkas_proposal" name="berkas_proposal">
-                            <?php if(session()->getFlashdata('errFile')): ?>
-                            <div class="invalid-feedback">
-                                <?php echo session()->getFlashdata('errFile') ?>
-                            </div>
-                            <?php endif; ?>    
+                            <?php if (session()->getFlashdata('errFile')): ?>
+                                <div class="invalid-feedback">
+                                    <?php echo session()->getFlashdata('errFile') ?>
+                                </div>
+                            <?php endif; ?>
                             <button type="submit">Unggah</button>
                         </div>
 
                     </form>
+                </div>
+            </div>
+
+
+            <!-- Modal untuk Edit Proposal Penelitian -->
+            <div id="editProposalModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal" onclick="closeEditProposalModal()">&times;</span>
+                    <form id="editProposalForm" onsubmit="submitUpdateProposal(event)">
+                        <h2>Edit Proposal Penelitian</h2>
+                        <input type="hidden" id="updateProposalId" name="proposalId">
+
+                        <label for="judulPenelitianEdit">Judul Penelitian:</label>
+                        <input type="text" id="judulPenelitianEdit" name="judulPenelitian" required>
+
+                        <label for="skemaEdit">Skema:</label>
+                        <select id="skemaEdit" name="skema">
+                            <option value="" disabled selected>Silahkan Pilih</option>
+                            <option value="Hibah Eksternal">Hibah Eksternal</option>
+                            <option value="Hibah Internal">Hibah Internal</option>
+                            <option value="Mandiri">Mandiri</option>
+                            <option value="lainnya">Lainnya (isi sendiri)</option>
+                        </select>
+                        <input type="text" id="skema_lainnya_edit" name="skema_lainnya" placeholder="Isi skema lainnya jika dipilih" style="display:none;">
+
+                        <label for="biayaDiusulkanEdit">Biaya yang diusulkan:</label>
+                        <input type="text" id="biayaDiusulkanEdit" name="biayaDiusulkan" required oninput="formatCurrency(this)">
+
+                        <label for="biayaDidanaiEdit">Biaya yang didanai:</label>
+                        <input type="text" id="biayaDidanaiEdit" name="biayaDidanai" required oninput="formatCurrency(this)">
+
+                        <label for="sumberDanaEdit">Sumber Dana:</label>
+                        <select id="sumberDanaEdit" name="sumberDana">
+                            <option value="" disabled selected>Silahkan Pilih</option>
+                            <option value="DIKTI">DIKTI</option>
+                            <option value="BRIN">BRIN</option>
+                            <option value="Yayasan YARSI">Yayasan YARSI</option>
+                            <option value="lainnya">Lainnya (isi sendiri)</option>
+                        </select>
+                        <input type="text" id="dana_lainnya_edit" name="dana_lainnya" placeholder="Isi dana lainnya jika dipilih" style="display:none;">
+
+                        <div id="editAnggotaContainer">
+                            <div class="anggota">
+                                <label>Nama Anggota:</label>
+                                <input type="text" name="nama_anggota[]" placeholder="Nama anggota" required>
+
+                                <label>NIDN Anggota:</label>
+                                <input type="text" name="nidn_anggota[]" placeholder="NIDN" required>
+
+                                <label>Jabatan Akademik:</label>
+                                <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" required>
+
+                                <label for="perguruan_anggota_edit">Perguruan Tinggi:</label>
+                                <select id="perguruan_anggota_edit" name="perguruan_anggota[]">
+                                    <option value="" disabled selected>Silahkan Pilih</option>
+                                    <option value="Universitas YARSI">Universitas YARSI</option>
+                                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                                </select>
+                                <input type="text" class="perguruan_lainnya_edit" name="perguruan_lainnya[]" placeholder="Isi perguruan yang lainnya" style="display:none;">
+
+                                <label for="fakultas_anggota_edit">Fakultas:</label>
+                                <select id="fakultas_anggota_edit" name="fakultas_anggota[]">
+                                    <option value="" disabled selected>Silahkan Pilih</option>
+                                    <option value="Fakultas Teknologi Informasi (FTI)">Fakultas Teknologi Informasi (FTI)</option>
+                                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                                </select>
+                                <input type="text" class="fakultas_lainnya_edit" name="fakultas_lainnya[]" placeholder="Isi fakultas yang lainnya" style="display:none;">
+
+                                <label for="prodi_anggota_edit">Program Studi:</label>
+                                <select id="prodi_anggota_edit" name="prodi_anggota[]">
+                                    <option value="" disabled selected>Silahkan Pilih</option>
+                                    <option value="Teknik Informatika">Teknik Informatika</option>
+                                    <option value="Perpustakaan dan Sains Informasi">Perpustakaan dan Sains Informasi</option>
+                                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                                </select>
+                                <input type="text" class="prodi_lainnya_edit" name="prodi_lainnya[]" placeholder="Isi program studi yang lainnya" style="display:none;">
+
+                                <button type="button" class="hapusAnggotaBtn">Hapus Anggota</button>
+                            </div>
+                        </div>
+
+                        <button type="button" id="tambahAnggotaBtnEdit">Tambah Anggota</button>
+                        <div class="button_bawah">
+                            <label for="berkas_proposal_edit">Unggah File Proposal:</label>
+                            <input type="file" id="berkas_proposal_edit" name="berkas_proposal">
+                            <button type="submit">Update Proposal</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+
+
+            <!-- Modal untuk Preview PDF -->
+            <div id="pdfPreviewModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal" onclick="closePreviewModal()">&times;</span>
+                    <iframe id="pdfViewer" src=""></iframe>
                 </div>
             </div>
 
@@ -201,35 +300,48 @@
                             <th>No</th>
                             <th>Judul Proposal Penelitian</th>
                             <th>Tanggal Proposal Penelitian</th>
+                            <th>Skema</th>
+                            <th>Sumber Dana</th>
+                            <th>Dana yang Didanai</th>
                             <th>File</th>
-                            <?php if(session()->get('user_type') == 'dosen'): ?>
-                            <th>Aksi</th>
+                            <?php if (session()->get('user_type') == 'dosen'): ?>
+                                <th>Aksi</th>
                             <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
+                        <?php $no = 1; ?>
                         <?php foreach ($proposals as $proposal): ?>
                             <tr>
-                                <td><?= $proposal['id']; ?></td>
-                                <td><?= $proposal['judul_penelitian']; ?></td>
-                                <td><?= $proposal['tanggal_upload']; ?></td>
+                                <td><?= $no++; ?></td>
+                                <td><?= esc($proposal['judul_penelitian']); ?></td>
+                                <td><?= date('d-m-Y', strtotime($proposal['tanggal_upload'])); ?></td>
+                                <td><?= esc($proposal['skema'] ?? ''); ?></td>
+                                <td><?= esc($proposal['sumber_dana'] ?? ''); ?></td>
+                                <td>Rp. <?= number_format($proposal['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
                                 <td>
-                                <div>
-                                    <a href="<?= base_url(); ?>ProposalPenelitianController/download/<?= $proposal['id']; ?>" >Unduh</a>
-                                </div>
-                                <div>
-                                    <a href="<?= base_url(); ?>PreviewPdfController/previewPdf/<?= $proposal['id']; ?>" id="preview"  ?>>Preview</a>
-                                </div>
+                                    <div>
+                                        <a href="<?= base_url(); ?>ProposalPenelitianController/download/<?= $proposal['id']; ?>">Unduh</a>
+                                    </div>
+                                    <div>
+                                        <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/' . $proposal['file_proposal']); ?>')">Preview</a>
+                                    </div>
                                 </td>
-                                <?php if(session()->get('user_type') == 'dosen'): ?>
-                                <td>
-                                    <button>Edit</button>
-                                    <button>Delete</button>
-                                </td>
+                                <?php if (session()->get('user_type') == 'dosen'): ?>
+                                    <td>
+                                        <span class="material-icons-sharp" onclick="openeditProposalModal(
+                                        '<?= $proposal['id']; ?>',
+                                        '<?= $proposal['skema']; ?>',
+                                        '<?= $proposal['biaya_diusulkan']; ?>',
+                                        '<?= $proposal['biaya_didanai']; ?>',
+                                        '<?= $proposal['sumber_dana']; ?>',">edit</span>
+
+                                    </td>
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
+
 
                 </table>
             </div>

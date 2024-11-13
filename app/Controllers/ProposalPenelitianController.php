@@ -30,7 +30,7 @@ class ProposalPenelitianController extends BaseController
 
     public function uploadProposal()
     {
-        
+
         $validation = \Config\Services::validation();
         $valid = $this->validate([
             'berkas_proposal' => [
@@ -106,7 +106,8 @@ class ProposalPenelitianController extends BaseController
         }
     }
 
-    public function download($id) {
+    public function download($id)
+    {
         $proposalModel = new Proposal_Model();
         $nama_file = $proposalModel->find($id);
         return $this->response->download('uploads/' . $nama_file['file_proposal'], null);

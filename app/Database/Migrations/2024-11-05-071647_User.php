@@ -70,7 +70,7 @@ class User extends Migration
             ],
             'user_type' => [
                 'type'       => 'ENUM',
-                'constraint' => ['admin', 'dosen', 'user'],
+                'constraint' => ['admin', 'dosen', 'fakultas'],
                 'default'    => 'dosen',
             ],
             'otp' => [

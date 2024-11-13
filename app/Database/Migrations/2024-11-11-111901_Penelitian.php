@@ -62,7 +62,7 @@ class Penelitian extends Migration
             ]
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('proposal');  // Nama tabel diubah menjadi 'proposals'
+        $this->forge->createTable('proposal');
     }
 
 

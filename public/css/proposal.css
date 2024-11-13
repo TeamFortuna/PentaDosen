@@ -33,9 +33,8 @@
     color: black;
 }
 
-
 #proposalPenelitianForm input[type="text"],
-#proposalPenelitianForm input[type="email"], /* Tambahkan ini */
+#proposalPenelitianForm input[type="email"],
 #proposalPenelitianForm input[type="date"],
 #proposalPenelitianForm input[type="file"],
 #proposalPenelitianForm select {
@@ -47,6 +46,18 @@
     border-radius: 13px;
 }
 
+#editProposalModal input[type="text"],
+#editProposalModal input[type="email"],
+#editProposalModal input[type="date"],
+#editProposalModal input[type="file"],
+#editProposalModal select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 13px;
+}
 
 .button-primary {
     background-color: #007bff;
@@ -74,24 +85,28 @@
     background-color: #0056b3;
 }
 
+#editProposalModal button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 13px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+#editProposalModalbutton:hover {
+    background-color: #0056b3;
+}
+
 #skema_lainnya,
 #dana_lainnya,
 #prodi_lainnya,
 #fakultas_lainnya,
 #perguruan_lainnya {
     display: none;
-}
-
-.invalid-feedback {
-    color: crimson;
-    font-size: 13px;
-    margin-right: auto;
-}
-
-.success-feedback {
-    color: greenyellow;
-    font-size: 13px;
-    margin-right: auto;
 }
 
 .anggota {
@@ -106,7 +121,9 @@
    margin-bottom: 20px;
 }
 
-
+#tambahAnggotaBtnEdit {
+    margin-bottom: 20px;
+ }
 
 .hapusAnggotaBtn {
     margin-top: 5px;
@@ -117,10 +134,84 @@
     cursor: pointer;
 }
 
-
 h4{
     font-weight: 600;
     font-size: 1.4rem;
     margin-bottom: 10px;
     margin-top: 25px;
+}
+
+.recent-orders h2 {
+margin-top: 20px;
+}
+
+#openModalBtn {
+    margin-top: 20px; 
+}
+
+main {
+    width: 110%; /* Agar elemen main selebar halaman */
+    padding: 0;  /* Hapus padding */
+    margin: 0;   /* Hapus margin */
+    box-sizing: border-box;
+}
+
+.recent-orders {
+    width: 110%; /* Agar container tabel selebar main */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#proposalPenelitianTable {
+    width: 100%; /* Buat tabel selebar halaman */
+    border-collapse: collapse; /* Hapus jarak antar border */
+}
+
+#proposalPenelitianTable th,
+#proposalPenelitianTable td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+/* Memberikan jarak antara fitur search dan data table length */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 20px;
+    margin-right: 15px;
+}
+
+/* Atur agar search dan length lebih lebar dari default */
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_filter input {
+    padding: 8px;
+    border-radius: 5px;
+}
+
+/* Baru */
+
+
+/* Styling Modal */
+#pdfPreviewModal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* Black background with opacity */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styling iframe */
+#pdfViewer {
+    width: 100%;
+    height: 100vh;
+    border: none;
 }

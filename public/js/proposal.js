@@ -92,3 +92,41 @@ $(document).ready(function() {
         $(this).closest('.anggota').remove();
     });
 });
+
+// Fungsi untuk membuka modal dan menampilkan preview PDF
+function openPreviewModal(filePath) {
+    const modal = document.getElementById("pdfPreviewModal");
+    const pdfViewer = document.getElementById("pdfViewer");
+
+    // Set file path ke src iframe untuk menampilkan PDF
+    pdfViewer.src = filePath;
+    
+    // Tampilkan modal
+    modal.style.display = "block";
+}
+
+// Fungsi untuk menutup modal
+function closePreviewModal() {
+    const modal = document.getElementById("pdfPreviewModal");
+    const pdfViewer = document.getElementById("pdfViewer");
+
+    // Sembunyikan modal dan reset src iframe
+    modal.style.display = "none";
+    pdfViewer.src = "";
+}
+
+// Tutup modal ketika pengguna mengklik di luar area modal
+window.onclick = function(event) {
+    const modal = document.getElementById("pdfPreviewModal");
+    if (event.target == modal) {
+        closePreviewModal();
+    }
+};
+
+
+
+
+
+
+
+
