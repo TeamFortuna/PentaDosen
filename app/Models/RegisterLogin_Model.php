@@ -21,6 +21,8 @@ class RegisterLogin_Model extends Model
         'username',
         'password',
         'user_type',
+        'otp', 
+        'otp_expiration',
         'created_at',
         'updated_at',
         'deleted_at'

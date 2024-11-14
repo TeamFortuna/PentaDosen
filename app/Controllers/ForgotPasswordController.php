@@ -24,9 +24,9 @@ class ForgotPasswordController extends BaseController
         $token = session()->get('token');
         $user = $userModel->where('email', $email)->first();
         $currentDateTime = new \DateTime(); // Waktu saat ini
-        $otpExpirationDateTime = new \DateTime($user['otp_expiration']); // Waktu kadaluarsa OTP
         // Cek apakah email ada di database dan ambil OTP serta waktu kadaluwarsanya
         if($token) {
+            $otpExpirationDateTime = new \DateTime($user['otp_expiration']); // Waktu kadaluarsa OTP
             $data = [
                 'currentDateTime' => $currentDateTime,
                 'otpExpirationDateTime' => $otpExpirationDateTime,

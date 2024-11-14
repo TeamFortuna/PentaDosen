@@ -22,7 +22,7 @@ class ProposalPenelitianController extends BaseController
         $userData = $userModel->find($userId);
 
         // Mengambil data proposal dari database
-        $proposals = $proposalModel->getProposalsWithAnggota();
+        // $proposals = $proposalModel->getProposalsWithAnggota();
         $proposalsFinal = $proposalModel->getProposalsWithDosenAndAnggota();
         return view('proposal_penelitian', [
             'userData' => $userData,
@@ -43,10 +43,19 @@ class ProposalPenelitianController extends BaseController
                     'ext_in' => 'File Harus Berformat PDF!',
                 ],
             ],
+            'nidn_anggota.*' => [
+            'rules' => 'required|min_length[6]|is_unique[anggota_proposal.nidn_anggota]',
+            'errors' => [
+                'required' => 'NIDN tidak boleh kosong.',
+                'min_length' => 'NIDN harus minimal 6 karakter.',
+                'is_unique' => 'NIDN sudah terdaftar.',
+            ],
+        ],
         ]);
 
         if (!$valid) {
             session()->setFlashdata('errFile', $validation->getError('berkas_proposal'));
+            session()->setFlashdata('errNIDN', $validation->getError('nidn_anggota.*'));
             session()->setFlashdata('errProposal', 'Data yang Anda kirim ada yang salah !');
             return redirect()->back()->withInput();
         }

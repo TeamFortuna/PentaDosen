@@ -31,10 +31,12 @@ class Proposal_Model extends Model
 
     public function getProposalsWithDosenAndAnggota()
 {
-    return $this->select('proposal.*, akundosen.*, anggota_proposal.*, id_dosen_proposal.*')
+    return $this->select('proposal.*, akundosen.*, id_dosen_proposal.*, 
+                          GROUP_CONCAT(anggota_proposal.nama_anggota SEPARATOR ", ") AS anggota_nama')
                 ->join('id_dosen_proposal', 'id_dosen_proposal.proposal_id = proposal.id', 'left')
                 ->join('akundosen', 'akundosen.id = id_dosen_proposal.dosen_id', 'left')
                 ->join('anggota_proposal', 'anggota_proposal.proposal_id = proposal.id', 'left')
+                ->groupBy('proposal.id')
                 ->findAll();
 }
 

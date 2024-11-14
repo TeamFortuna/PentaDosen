@@ -139,7 +139,11 @@
 
                                 <label>NIDN Anggota:</label>
                                 <input type="text" name="nidn_anggota[]" placeholder="NIDN" value="<?= old('nidn_anggota[]'); ?>" required>
-
+                                <?php if (session()->getFlashdata('errNIDN')): ?>
+                                <div class="success-feedback">
+                                    <?php echo session()->getFlashdata('errNIDN') ?>
+                                </div>
+                                <?php endif; ?>
                                 <label>Jabatan Akademik:</label>
                                 <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" value="<?= old('jabatan_anggota[]'); ?>" required>
 
@@ -316,7 +320,7 @@
                                 <td><?= $no++; ?></td>
                                 <td><?= esc($proposal['judul_penelitian']); ?></td>
                                 <td><?= date('d-m-Y', strtotime($proposal['tanggal_upload'])); ?></td>
-                                <td><?= esc($proposal['nama_anggota'] ?? ''); ?></td>
+                                <td><?= esc($proposal['anggota_nama'] ?? ''); ?></td>
                                 <td><?= esc($proposal['nama'] ?? ''); ?></td>
                                 <td>Rp. <?= number_format($proposal['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
                                 <td>

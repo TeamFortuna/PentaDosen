@@ -122,11 +122,3 @@ window.onclick = function(event) {
         closePreviewModal();
     }
 };
-
-
-
-
-
-
-
-
