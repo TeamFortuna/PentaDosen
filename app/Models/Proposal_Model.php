@@ -22,12 +22,12 @@ class Proposal_Model extends Model
     ];
     protected $useTimestamps = true; // Aktifkan fitur timestamps otomatis
 
-//     public function getProposalsWithAnggota()
-// {
-//     return $this->select('proposal.*, anggota_proposal.*')
-//                 ->join('anggota_proposal', 'anggota_proposal.proposal_id = proposal.id', 'left')
-//                 ->findAll();
-// }
+    public function getProposalsWithAnggota()
+{
+    return $this->select('proposal.*, anggota_proposal.*')
+                ->join('anggota_proposal', 'anggota_proposal.proposal_id = proposal.id', 'left')
+                ->findAll();
+}
 
     public function getProposalsWithDosenAndAnggota()
 {

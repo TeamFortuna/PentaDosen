@@ -44,7 +44,6 @@
             <div class="profile-info">
                 <label>Password:</label>
                 <p>********</p>
-                <button class="edit-btn">Ubah Password</button>
             </div>
         </div>
     </div>

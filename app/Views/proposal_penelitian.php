@@ -96,13 +96,14 @@
                         <input type="text" id="judulPenelitian" name="judulPenelitian" value="<?= old('judulPenelitian'); ?>" required>
 
                         <label for="skema">Skema:</label>
-                        <select id="skema" name="skema">
+                        <select id="skema" name="skema" onchange="updateSumberDana()">
                             <option value="" disabled selected>Silahkan Pilih</option>
-                            <option value="Hibah Eksternal">Hibah Eksternal</option>
                             <option value="Hibah Internal">Hibah Internal</option>
+                            <option value="Hibah Eksternal">Hibah Eksternal</option>
                             <option value="Mandiri">Mandiri</option>
-                            <option value="lainnya">Lainnya (isi sendiri)</option>
                         </select>
+
+
                         <!-- Field untuk skema lainnya, tampil jika "lainnya" dipilih -->
                         <input type="text" id="skema_lainnya" name="skema_lainnya" placeholder="Isi skema lainnya jika dipilih" style="display:none;">
 
