@@ -4,12 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('css/sidebar.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('css/proposal.css'); ?>">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- jQuery (jika belum terinstal) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Proposal Penelitian</title>
 
     <!-- Dark Mode Script -->
@@ -125,7 +131,27 @@
                         <!-- Field untuk skema lainnya, tampil jika "lainnya" dipilih -->
                         <input type="text" id="dana_lainnya" name="dana_lainnya" placeholder="Isi dana lainnya jika dipilih" style="display:none;">
 
-                        <!-- Kontainer untuk biodata anggota -->
+
+                        <!-- anggota internal -->
+                        <div id="anggotaInternalContainer">
+                            <h4>Anggota Kegiatan (Dosen Internal)</h4>
+                            <div class="anggota-internal">
+                                <label for="namaDosen">Nama Dosen:</label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="anggotaInternal" name="nama_dosen_internal[]" placeholder="Masukkan nama dosen" autocomplete="off" required>
+                                    <div id="suggestions" class="suggestions"></div>
+                                    <span class="hapusAnggotaInternalIcon material-icons-sharp">remove</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Tombol untuk menambah anggota internal -->
+                        <button type="button" id="tambahAnggotaInternalBtn">Tambah Anggota</button>
+
+
+
+
+
+                        <!-- Kontainer untuk biodata anggota eksternal -->
                         <div id="anggotaContainer">
                             <div class="anggota">
                                 <label>Nama Anggota:</label>
@@ -141,9 +167,9 @@
                                 <label>NIDN Anggota:</label>
                                 <input type="text" name="nidn_anggota[]" placeholder="NIDN" value="<?= old('nidn_anggota[]'); ?>" required>
                                 <?php if (session()->getFlashdata('errNIDN')): ?>
-                                <div class="success-feedback">
-                                    <?php echo session()->getFlashdata('errNIDN') ?>
-                                </div>
+                                    <div class="success-feedback">
+                                        <?php echo session()->getFlashdata('errNIDN') ?>
+                                    </div>
                                 <?php endif; ?>
                                 <label>Jabatan Akademik:</label>
                                 <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" value="<?= old('jabatan_anggota[]'); ?>" required>
@@ -179,20 +205,17 @@
                                 <button type="button" class="hapusAnggotaBtn">Hapus Anggota</button>
                             </div>
                         </div>
-
                         <!-- Tombol untuk menambah anggota -->
                         <button type="button" id="tambahAnggotaBtn">Tambah Anggota</button>
 
-                        <div class="button_bawah">
-                            <label for="berkas_proposal">Unggah File Proposal:</label>
-                            <input type="file" id="berkas_proposal" name="berkas_proposal">
-                            <?php if (session()->getFlashdata('errFile')): ?>
-                                <div class="invalid-feedback">
-                                    <?php echo session()->getFlashdata('errFile') ?>
-                                </div>
-                            <?php endif; ?>
-                            <button type="submit">Unggah</button>
+
+                        <div class="form-group">
+                            <label for="berkas_proposal">Unggah File Proposal (PDF):</label>
+                            <input type="file" id="berkas_proposal" name="berkas_proposal" accept=".pdf">
+                            <small class="form-text text-muted">Maksimal ukuran file: 10 MB</small>
+                            <div id="uploadAlert" class="alert alert-danger d-none" role="alert"></div>
                         </div>
+                        <button type="submit" class="btn btn-primary">Unggah</button>
 
                     </form>
                 </div>
@@ -286,29 +309,43 @@
                 </div>
             </div>
 
-
-
-
-            <!-- Modal untuk Preview PDF -->
-            <div id="pdfPreviewModal" class="modal">
+            <!-- Delete -->
+            <div id="deleteModal" class="modal">
                 <div class="modal-content">
-                    <span class="close-modal" onclick="closePreviewModal()">&times;</span>
-                    <iframe id="pdfViewer" src=""></iframe>
+                    <h3>Konfirmasi Penghapusan</h3>
+                    <p>Apakah Anda yakin ingin menghapus proposal ini?</p>
+                    <input type="hidden" id="deleteProposalId">
+                    <button onclick="confirmDelete()">Ya, Hapus</button>
+                    <button onclick="closeDeleteModal()">Batal</button>
                 </div>
             </div>
 
+            <!-- Modal untuk Preview PDF -->
+            <div id="pdfPreviewModal" class="modal">
+                <span class="close-modal" onclick="closePreviewModal()">&times;</span>
+                <div class="pdf-modal-content">
+                    <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+                    <div class="modal-actions">
+                        <a id="downloadButton" href="#" download>Download</a>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="recent-orders">
-                <h2>Daftar Proposal Penelitian</h2>
+                <h2>Daftar Penelitian</h2>
                 <table id="proposalPenelitianTable" class="display full-table">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Judul Proposal Penelitian</th>
-                            <th>Tanggal Proposal Penelitian</th>
-                            <th>Nama Anggota</th>
-                            <th>Nama Dosen</th>
-                            <th>Dana yang Didanai</th>
-                            <th>File</th>
+                            <th>Judul Penelitian</th>
+                            <th>Ketua Pengusul</th>
+                            <th>Anggota Pengusul</th>
+                            <th>Dana yang Disetujui</th>
+                            <th>Tanggal Pengisian</th>
+                            <th>Proposal</th>
+                            <th>Laporan Kemajuan</th>
+                            <th>Laporan Akhir</th>
                             <?php if (session()->get('user_type') == 'dosen'): ?>
                                 <th>Aksi</th>
                             <?php endif; ?>
@@ -320,32 +357,34 @@
                             <tr>
                                 <td><?= $no++; ?></td>
                                 <td><?= esc($proposal['judul_penelitian']); ?></td>
-                                <td><?= date('d-m-Y', strtotime($proposal['tanggal_upload'])); ?></td>
-                                <td><?= esc($proposal['anggota_nama'] ?? ''); ?></td>
                                 <td><?= esc($proposal['nama'] ?? ''); ?></td>
+                                <td><?= esc($proposal['anggota_nama'] ?? ''); ?></td>
                                 <td>Rp. <?= number_format($proposal['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
+                                <td><?= date('d-m-Y', strtotime($proposal['tanggal_upload'])); ?></td>
                                 <td>
                                     <div>
-                                        <a href="<?= base_url(); ?>ProposalPenelitianController/download/<?= $proposal['id']; ?>">Unduh</a>
+                                        <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/' . $proposal['file_proposal']); ?>')">
+                                            <span class="material-icons-sharp">picture_as_pdf</span>
+                                        </a>
                                     </div>
-                                    <div>
-                                        <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/' . $proposal['file_proposal']); ?>')">Preview</a>
-                                    </div>
+                                </td>
+                                <td>
+                                    <!-- laporan kemajuan -->
+
+                                </td>
+                                <td>
+                                    <!-- laporan akhir -->
+
                                 </td>
                                 <?php if (session()->get('user_type') == 'dosen'): ?>
                                     <td>
-                                        <span class="material-icons-sharp" onclick="openeditProposalModal(
-                                        '<?= $proposal['id']; ?>',
-                                        '<?= $proposal['skema']; ?>',
-                                        '<?= $proposal['biaya_diusulkan']; ?>',
-                                        '<?= $proposal['biaya_didanai']; ?>',
-                                        '<?= $proposal['sumber_dana']; ?>',">edit</span>
+                                        <span class="material-icons-sharp" onclick="openEditProposalModal('<?= $proposal['id']; ?>')">edit</span>
+                                        <span class="material-icons-sharp" onclick="openDeleteModal('<?= $proposal['id']; ?>')">delete</span>
                                     </td>
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
-
 
                 </table>
             </div>

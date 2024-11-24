@@ -53,7 +53,7 @@
                 <span class="material-icons-sharp">book</span>
                 <h3>Publikasi</h3>
             </a>
-            <a href="<?= site_url('/haki'); ?>" class="<?= uri_string() == 'Haki' ? 'active' : ''; ?>">
+            <a href="<?= site_url('/haki'); ?>" class="<?= uri_string() == 'haki' ? 'active' : ''; ?>">
                 <span class="material-icons-sharp">import_contacts</span>
                 <h3>HAKI</h3>
             </a>
