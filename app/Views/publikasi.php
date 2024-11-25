@@ -11,115 +11,16 @@
     <!-- Link CSS DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 
-    <script src="<?= base_url('js/animasi.js'); ?>"></script>
+    <!-- Link ke publikasi.css -->
+    <link rel="stylesheet" href="<?= base_url('css/publikasi.css'); ?>">
     <!-- Link JS DataTables dan jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
+    <!-- Link ke publikasi.js -->
+    <script src="<?= base_url('js/publikasi.js'); ?>"></script>
+
     <title>Publikasi</title>
-    <style>
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 220px;
-            top: 0;
-            width: calc(100% - 250px);
-            height: 100%;
-            overflow-y: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 40px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .close {
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-        }
-
-        #publicationForm {
-            width: 100%;
-            max-width: 100%;
-        }
-
-        #publicationForm h2 {
-            text-align: left;
-            margin-top: 0;
-        }
-
-        #publicationForm label {
-            font-weight: bold;
-            margin-top: 10px;
-            display: block;
-            text-align: left;
-        }
-
-        #publicationForm input[type="text"],
-        #publicationForm input[type="date"],
-        #publicationForm input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 13px;
-            box-sizing: border-box;
-        }
-
-        #publicationForm button {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 13px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-        }
-
-        #publicationForm button:hover {
-            background-color: #0056b3;
-        }
-
-        #statusPencapaian {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 13px;
-            box-sizing: border-box;
-            font-size: 14px;
-            font-family: 'Montserrat';
-        }
-    </style>
-
-    <!-- Script untuk langsung menerapkan dark mode jika statusnya disimpan di localStorage -->
-    <script>
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.documentElement.classList.add('dark-mode-variables');
-        }
-    </script>
 </head>
 
 <body>
@@ -130,69 +31,93 @@
             <h1>Publikasi</h1>
             <p>Ini adalah halaman untuk Publikasi.</p>
 
-            <button id="openModalBtn" style="margin-bottom: 20px; margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 13px; cursor: pointer; font-family: 'Montserrat';">Tambah Publikasi</button>
+            <button id="openModalBtn" class="button-primary">Tambah Publikasi</button>
+            <?php if (session()->getFlashdata('success') || session()->getFlashdata('errProposal')): ?>
+                <div class="success-feedback">
+                    <?php echo session()->getFlashdata('success') ?>
+                </div>
+                <div class="invalid-feedback">
+                    <?php echo session()->getFlashdata('errProposal') ?>
+                </div>
+            <?php endif; ?>
 
             <!-- Modal untuk form Publikasi -->
             <div id="publicationModal" class="modal">
                 <div class="modal-content">
-                    <span class="close">&times;</span>
+                    <span class="close-modal" onclick="closepublicationModal()">&times;</span>
                     <form id="publicationForm" action="<?= base_url('Publikasi/upload'); ?>" method="post" enctype="multipart/form-data">
-                        <h2>Tambah Publikasi</h2>
+                        <h4>Tambah Publikasi</h4>
 
-                        <label for="publicationName">Judul Penelitian:</label>
-                        <input type="text" id="publicationName" name="publicationName" placeholder="Masukkan nama Publikasi" required>
-
-                        <label for="statusPencapaian">Nama Jurnal/Media:</label>
-                        <select id="statusPencapaian" name="statusPencapaian" required>
-                            <option value="pending">Buku</option>
-                            <option value="sedang_dikerjakan">Artikel</option>
-                            <option value="selesai">Majalah</option>
+                        <!-- Kategori Kegiatan -->
+                        <label for="kategoriKegiatan">Kategori Kegiatan:</label>
+                        <select id="kategoriKegiatan" name="kategoriKegiatan" required>
+                            <option value="publikasi_karya_ilmiah">Publikasi Karya Ilmiah</option>
+                            <option value="publikasi_buku_ilmiah">Publikasi Buku Ilmiah</option>
                         </select>
 
-                        <label for="jadwalPenelitian">Tanggal Publikasi:</label>
-                        <input type="date" id="jadwalPenelitian" name="jadwalPenelitian" required>
+                        <!-- Jenis -->
+                        <label for="jenis">Jenis:</label>
+                        <select id="jenis" name="jenis" required>
+                            <option value="artikel">Artikel</option>
+                            <option value="buku">Buku</option>
+                            <option value="majalah">Majalah</option>
+                        </select>
 
-                        <label for="latarBelakang">Volume dan Edisi Jurnal:</label>
-                        <textarea id="latarBelakang" name="latarBelakang" required></textarea>
+                        <!-- Judul -->
+                        <label for="judul" class="required">Judul:</label>
+                        <input type="text" id="judul" name="judul" placeholder="Masukkan judul publikasi" required>
 
-                        <label for="tujuanPenelitian">Link Publikasi:</label>
-                        <textarea id="tujuanPenelitian" name="tujuanPenelitian" required></textarea>
+                        <!-- Tanggal Terbit -->
+                        <label for="tanggalTerbit">Tanggal Terbit:</label>
+                        <input type="date" id="tanggalTerbit" name="tanggalTerbit" required>
 
-                        <label for="anggaranBiaya">Link Publikasi:</label>
-                        <input type="text" id="anggaranBiaya" name="anggaranBiaya" placeholder="Masukkan Link" required>
+                        <!-- Jumlah Halaman -->
+                        <label for="jumlahHalaman">Jumlah Halaman:</label>
+                        <input type="text" id="jumlahHalaman" name="jumlahHalaman" placeholder="Masukkan jumlah halaman" required>
 
-                        <label for="berkas_proposal">File Publikasi:</label>
-                        <input type="file" name="berkas_proposal" id="berkas_proposal" required>
+                        <!-- Penerbit -->
+                        <label for="penerbit">Penerbit:</label>
+                        <input type="text" id="penerbit" name="penerbit" placeholder="Masukkan nama penerbit" required>
+
+                        <!-- ISBN -->
+                        <label for="isbn">ISBN:</label>
+                        <input type="text" id="isbn" name="isbn" placeholder="Masukkan ISBN" required>
+
+                        <!-- Penulis Dosen -->
+                        <h4>1.1 Penulis Dosen</h4>
+                        <div id="penulisDosenContainer">
+                            <label for="penulisDosen">Penulis Dosen:</label>
+                            <div class="penulis-dosen">
+                                <div class="input-wrapper">
+                                    <input type="text" id="penulisDosen" name="penulisDosen[]" placeholder="Masukkan nama penulis dosen" autocomplete="off" required>
+                                    <div id="suggestions" class="suggestions"></div>
+                                    <span class="hapusPenulisDosenIcon material-icons-sharp">remove</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tombol untuk menambah anggota internal -->
+                        <button type="button" id="tambahPenulisDosenBtn" class="button-tambah-dosen">Tambah</button>
+
+                        <!-- Upload File -->
+                        <label for="berkasPublikasi">File Publikasi:</label>
+                        <input type="file" name="berkasPublikasi" id="berkasPublikasi" required>
 
                         <button type="submit">Unggah</button>
                     </form>
-
-                    <style>
-                        textarea {
-                            width: 100%;
-                            height: 150px;
-                            padding: 10px;
-                            margin-top: 5px;
-                            margin-bottom: 10px;
-                            border: 1px solid #ccc;
-                            border-radius: 13px;
-                            box-sizing: border-box;
-                            resize: none;
-                        }
-                    </style>
-
-
                 </div>
             </div>
 
-            <div class="recent-orders" style="width: 100%; height: auto; overflow-x: auto;">
+
+            <div class="recent-orders">
                 <h2>Daftar Publikasi</h2>
                 <table id="publicationTable" class="display full-table">
                     <thead>
                         <tr>
                             <th>No</th>
                             <th>Judul Publikasi</th>
-                            <th>Tanggal Publikasi</th>
+                            <th>Penulis Dosen</th>
+                            <th>Tanggal Terbit</th>
                             <th>File</th>
                             <th>Aksi</th>
                         </tr>
@@ -200,19 +125,10 @@
                     <tbody>
                         <tr>
                             <td>1</td>
-                            <td>Contoh Judul Publikasi 1</td>
+                            <td>Contoh Judul Publikasi </td>
+                            <td>Fuad</td>
                             <td>01/01/2024</td>
                             <td><a href="<?= base_url('uploads/Publikasi1.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
-                            <td>
-                                <button>Edit</button>
-                                <button>Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Contoh Judul Publikasi 2</td>
-                            <td>06/01/2024</td>
-                            <td><a href="<?= base_url('uploads/Publikasi2.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
                             <td>
                                 <button>Edit</button>
                                 <button>Delete</button>
@@ -223,42 +139,6 @@
             </div>
         </main>
     </div>
-
-    <script>
-        $(document).ready(function() {
-            $('#publicationTable').DataTable();
-
-            var modal = document.getElementById("publicationModal");
-            var btn = document.getElementById("openModalBtn");
-            var span = document.getElementsByClassName("close")[0];
-
-            btn.onclick = function() {
-                modal.style.display = "block";
-            }
-
-            span.onclick = function() {
-                modal.style.display = "none";
-            }
-
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
-            // Menutup modal saat tombol 'X' diklik
-            document.querySelector('.close').onclick = function() {
-                document.getElementById('publicationModal').style.display = 'none';
-            };
-
-            // Menutup modal jika pengguna mengklik di luar konten modal
-            window.onclick = function(event) {
-                const modal = document.getElementById('publicationModal');
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            };
-        });
-    </script>
 </body>
 
 </html>

@@ -6,101 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('css/sidebar.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('css/laporan_akhir.css'); ?>"> <!-- Link CSS eksternal -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- Link CSS DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-
-    <script src="<?= base_url('js/animasi.js'); ?>"></script>
-    <!-- Link JS DataTables dan jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-
-    <title>Laporan Akhir</title>
-    <style>
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 220px;
-            top: 0;
-            width: calc(100% - 250px);
-            height: 100%;
-            overflow-y: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 40px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .close {
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-        }
-
-        #laporanAkhirForm {
-            width: 100%;
-            max-width: 100%;
-        }
-
-        #laporanAkhirForm h2 {
-            text-align: left;
-            margin-top: 0;
-        }
-
-        #laporanAkhirForm label {
-            font-weight: bold;
-            margin-top: 10px;
-            display: block;
-            text-align: left;
-        }
-
-        #laporanAkhirForm input[type="text"],
-        #laporanAkhirForm input[type="date"],
-        #laporanAkhirForm input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 13px;
-            box-sizing: border-box;
-        }
-
-        #laporanAkhirForm button {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 13px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-        }
-
-        #laporanAkhirForm button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 
     <!-- Script untuk langsung menerapkan dark mode jika statusnya disimpan di localStorage -->
     <script>
@@ -108,6 +18,8 @@
             document.documentElement.classList.add('dark-mode-variables');
         }
     </script>
+
+    <title>Laporan Akhir</title>
 </head>
 
 <body>
@@ -148,24 +60,13 @@
                         <label for="berkas_proposal">File Laporan Akhir:</label>
                         <input type="file" name="berkas_proposal" id="berkas_proposal" required>
 
+                        <label for="grupFavoritKpop">Grup Favorit Kpop:</label>
+                        <input type="text" id="grupFavoritKpop" name="grupFavoritKpop" placeholder="Ketik nama grup Kpop" autocomplete="off" required>
+                        <div id="suggestions" class="suggestions"></div>
+
+
                         <button type="submit">Unggah</button>
                     </form>
-
-                    <style>
-                        textarea {
-                            width: 100%;
-                            height: 150px;
-                            padding: 10px;
-                            margin-top: 5px;
-                            margin-bottom: 10px;
-                            border: 1px solid #ccc;
-                            border-radius: 13px;
-                            box-sizing: border-box;
-                            resize: none;
-                        }
-                    </style>
-
-
                 </div>
             </div>
 
@@ -195,7 +96,7 @@
                         <tr>
                             <td>2</td>
                             <td>Contoh Judul Laporan Akhir 2</td>
-                            <td>06/01/2024</td>
+                            <td>02/01/2024</td>
                             <td><a href="<?= base_url('uploads/Laporan Akhir2.pdf'); ?>" target="_blank">Unduh/Preview</a></td>
                             <td>
                                 <button>Edit</button>
@@ -208,7 +109,10 @@
         </main>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Pastikan jQuery dimuat terlebih dahulu -->
     <script>
+        var searchKpopUrl = "<?= base_url('LaporanAkhirController/searchKpop'); ?>"; // PHP echo base_url here
+
         $(document).ready(function() {
             $('#laporanAkhirTable').DataTable();
 
@@ -229,6 +133,7 @@
                     modal.style.display = "none";
                 }
             }
+
             // Menutup modal saat tombol 'X' diklik
             document.querySelector('.close').onclick = function() {
                 document.getElementById('laporanAkhirModal').style.display = 'none';
@@ -241,8 +146,46 @@
                     modal.style.display = 'none';
                 }
             };
+
+            // Pencarian grup Kpop menggunakan AJAX
+            $('#grupFavoritKpop').on('input', function() {
+                let inputVal = $(this).val().toLowerCase();
+                let suggestions = $('#suggestions');
+                suggestions.empty().hide(); // Kosongkan dan sembunyikan dropdown
+
+                if (inputVal) {
+                    $.ajax({
+                        url: searchKpopUrl, // Menggunakan variabel searchKpopUrl yang sudah didefinisikan
+                        method: 'GET',
+                        data: {
+                            query: inputVal
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log(response); // Debugging untuk melihat apa yang dikembalikan dari server
+                            if (response.length > 0) {
+                                response.forEach(function(group) {
+                                    suggestions.append(`<div class="suggestion-item">${group.nama}</div>`); // Pastikan field yang dipanggil sesuai dengan nama kolom di DB
+                                });
+                                suggestions.show();
+                            }
+                        }
+
+
+                    });
+                }
+            });
+
+            // Menangani klik pada suggestion
+            $(document).on('click', '.suggestion-item', function() {
+                $('#grupFavoritKpop').val($(this).text());
+                $('#suggestions').empty().hide();
+            });
         });
     </script>
+
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
 </body>
 
 </html>

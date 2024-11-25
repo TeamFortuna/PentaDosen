@@ -76,16 +76,39 @@
     }
 
     function openEventActionModal(eventId, title, description, startDate, endDate) {
-        event.stopPropagation(); // Mencegah event bubbling agar modal tidak tertutup karena overlay
+        event.stopPropagation(); // Mencegah event bubbling agar modal tidak tertutup
+        const updateEventStart = document.getElementById("updateEventStart");
+        const updateEventEnd = document.getElementById("updateEventEnd");
+    
+        // Set nilai default
         document.getElementById("updateEventId").value = eventId;
         document.getElementById("updateEventTitle").value = title;
         document.getElementById("updateEventDescription").value = description;
-        document.getElementById("updateEventStart").value = startDate;
-        document.getElementById("updateEventEnd").value = endDate;
-
-        document.getElementById("eventActionModal").style.display = "block"; // Pastikan modal terbuka
-        document.querySelector(".modal-overlay").style.display = "block"; // Overlay untuk backdrop modal
+        updateEventStart.value = startDate;
+        updateEventEnd.value = endDate;
+    
+        // Set batas minimum tanggal mulai
+        const today = new Date().toISOString().split("T")[0];
+        updateEventStart.setAttribute("min", today);
+    
+        // Set batas minimum tanggal selesai berdasarkan tanggal mulai
+        updateEventStart.addEventListener("change", function () {
+            updateEventEnd.setAttribute("min", updateEventStart.value);
+        });
+    
+        // Validasi jika tanggal selesai kurang dari tanggal mulai
+        updateEventEnd.addEventListener("change", function () {
+            if (updateEventEnd.value < updateEventStart.value) {
+                alert("Tanggal selesai tidak boleh sebelum tanggal mulai.");
+                updateEventEnd.value = ""; // Reset nilai jika tidak valid
+            }
+        });
+    
+        // Tampilkan modal
+        document.getElementById("eventActionModal").style.display = "block";
+        document.querySelector(".modal-overlay").style.display = "block";
     }
+    
 
 
     function closeEventActionModal() {
@@ -96,45 +119,62 @@
 
     function submitUpdate(event) {
         event.preventDefault();
-
+    
         const id = document.getElementById("updateEventId").value;
+        const title = document.getElementById("updateEventTitle").value;
+        const description = document.getElementById("updateEventDescription").value;
+        const startDate = document.getElementById("updateEventStart").value;
+        const endDate = document.getElementById("updateEventEnd").value;
+    
+        // Validasi tanggal
+        if (!title || !startDate) {
+            alert("Judul dan tanggal mulai wajib diisi.");
+            return;
+        }
+        if (endDate && endDate < startDate) {
+            alert("Tanggal selesai tidak boleh sebelum tanggal mulai.");
+            return;
+        }
+    
+        // Kirim data ke server
         const data = {
-            judul_kegiatan: document.getElementById("updateEventTitle").value,
-            deskripsi: document.getElementById("updateEventDescription").value,
-            batas_awal: document.getElementById("updateEventStart").value,
-            batas_akhir: document.getElementById("updateEventEnd").value
+            judul_kegiatan: title,
+            deskripsi: description,
+            batas_awal: startDate,
+            batas_akhir: endDate
         };
-
-        fetch(`${updateJadwalUrl}/${id}`, {  // gunakan updateJadwalUrl
+    
+        fetch(`${updateJadwalUrl}/${id}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         })
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Acara berhasil diperbarui!',
-                    showConfirmButton: false,
-                    timer: 1500 // Notifikasi akan hilang setelah 1.5 detik
-                }).then(() => {
-                    closeEventActionModal();
-                    location.reload(); // Refresh halaman setelah pembaruan
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal memperbarui acara',
-                    text: 'Silakan coba lagi.',
-                    showConfirmButton: true
-                });
-            }
-        }) 
+            .then(response => {
+                if (!response.ok) throw new Error("Network response was not ok");
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Acara berhasil diperbarui!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        closeEventActionModal();
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Gagal memperbarui acara",
+                        text: "Silakan coba lagi.",
+                        showConfirmButton: true
+                    });
+                }
+            });
     }
+    
 
 
     function deleteEvent() {

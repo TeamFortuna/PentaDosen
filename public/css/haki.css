@@ -1,0 +1,181 @@
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 220px;
+    top: 0;
+    width: calc(100% - 250px);
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.close-modal {
+    color: #aaa;
+    font-size: 28px;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: black;
+}
+
+#hakiForm {
+    width: 100%;
+    max-width: 100%;
+}
+
+#hakiForm h2 {
+    text-align: left;
+    margin-top: 0;
+}
+
+#hakiForm label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+    text-align: left;
+}
+
+#hakiForm input[type="text"],
+#hakiForm input[type="date"],
+#hakiForm input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 13px;
+    box-sizing: border-box;
+}
+
+#hakiForm select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 13px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.button-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 13px;
+    cursor: pointer;
+    font-family: 'Montserrat';
+}
+
+#openModalBtn {
+    margin-top: 20px;
+}
+
+#hakiForm button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 13px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.recent-orders {
+    width: 110%; /* Agar container tabel selebar main */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.recent-orders h2 {
+    margin-top: 20px;
+    
+}
+
+#hakiTable {
+    width: 120%; /* Buat tabel selebar halaman */
+    border-collapse: collapse; /* Hapus jarak antar border */
+}
+
+#hakiTable th,
+#hakiTable td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+/* Memberikan jarak antara fitur search dan data table length */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 20px;
+    margin-right: 20px;
+}
+
+/* Atur agar search dan length lebih lebar dari default */
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_filter input {
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.hapusNamaPencipta,
+.hapusNamaPemegang {
+    cursor: pointer;
+    color: red;
+    font-size: 20px;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.hapusNamaPencipta:hover,
+.hapusNamaPemegang:hover {
+    color: darkred;
+}
+
+/* Gaya untuk grup input */
+.input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.input-group input {
+    flex: 1; /* Ukuran input menyesuaikan ruang */
+    padding: 5px 10px; /* Kurangi padding untuk ukuran lebih kecil */
+    font-size: 14px; /* Perkecil font */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px; /* Jarak antara input dan tombol hapus */
+}
+
+.input-group span {
+    cursor: pointer;
+    color: red;
+    font-size: 20px;
+}
+
+.input-group span:hover {
+    color: darkred;
+}
+
+

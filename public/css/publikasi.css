@@ -1,0 +1,240 @@
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 220px;
+    top: 0;
+    width: calc(100% - 250px);
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.close-modal {
+    color: #aaa;
+    font-size: 28px;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: black;
+}
+
+#publicationForm {
+    width: 100%;
+    max-width: 100%;
+}
+
+#publicationForm h2 {
+    text-align: left;
+    margin-top: 0;
+}
+
+#publicationForm label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+    text-align: left;
+}
+
+#publicationForm label.required::after {
+    content: " *";
+    color: red;
+    font-weight: bold;
+}
+
+#publicationForm input[type="text"],
+#publicationForm input[type="date"],
+#publicationForm input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 13px;
+    box-sizing: border-box;
+}
+
+#publicationForm select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 13px;
+    box-sizing: border-box;
+    font-size: 14px;
+    /* font-family: 'Montserrat'; */
+}
+
+#openModalBtn {
+    margin-top: 20px;
+}
+
+.button-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 13px;
+    cursor: pointer;
+    font-family: 'Montserrat';
+}
+
+#publicationForm button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 13px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 13px;
+    box-sizing: border-box;
+    resize: none;
+}
+
+#publicationForm input[type="file"] {
+    padding: 10px;
+}
+
+#publicationForm input[type="text"]:focus,
+#publicationForm input[type="date"]:focus,
+#publicationForm select:focus,
+#publicationForm textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+h4{
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    margin-top: 25px;
+}
+
+
+#penulisDosenContainer {
+    margin: 20px 0;
+}
+
+.penulis-dosen {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px; 
+}
+
+.penulis-dosen input {
+    flex: 1; 
+    margin-top: 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 13px;
+    box-sizing: border-box;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center; 
+    gap: 10px; 
+    width: 30%; 
+}
+
+.input-wrapper input {
+    flex: 1; 
+}
+
+.hapusPenulisDosenIcon {
+    color: red;
+    font-size: 24px;
+    cursor: pointer;
+    display: inline-block; 
+}
+
+.hapusPenulisDosenIcon:hover {
+    color: darkred; 
+}
+
+/* Untuk tombol Tambah Penulis Dosen */
+#publicationForm #tambahPenulisDosenBtn {
+    background-color: #289441; /* Warna hijau */
+    color: white;
+    padding: 6px 12px; /* Ukuran sedikit lebih besar */
+    border: 2px solid #289441; /* Border berbeda */
+    border-radius: 13px; /* Rounded corners */
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 10px;
+}
+
+#publicationForm #tambahPenulisDosenBtn:hover {
+    background-color: #218838; /* Warna lebih gelap saat hover */
+    transform: scale(1.05); /* Efek zoom */
+}
+
+.recent-orders {
+    width: 110%; /* Agar container tabel selebar main */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.recent-orders h2 {
+    margin-top: 20px;
+    
+}
+
+#publicationTable {
+    width: 120%; /* Buat tabel selebar halaman */
+    border-collapse: collapse; /* Hapus jarak antar border */
+}
+
+#publicationTable th,
+#publicationTable td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+/* Memberikan jarak antara fitur search dan data table length */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 20px;
+    margin-right: 20px;
+}
+
+/* Atur agar search dan length lebih lebar dari default */
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_filter input {
+    padding: 8px;
+    border-radius: 5px;
+}
+
