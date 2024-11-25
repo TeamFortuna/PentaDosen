@@ -184,7 +184,7 @@
 
                         <div class="button_bawah">
                             <label for="berkas_proposal">Unggah File Proposal:</label>
-                            <input type="file" id="berkas_proposal" name="berkas_proposal">
+                            <input type="file" id="berkas_proposal" name="berkas_proposal" accept=".pdf">
                             <?php if (session()->getFlashdata('errFile')): ?>
                                 <div class="invalid-feedback">
                                     <?php echo session()->getFlashdata('errFile') ?>
@@ -289,7 +289,7 @@
 
 
             <!-- Modal untuk Preview PDF -->
-            <div id="pdfPreviewModal" class="modal">
+            <div id="pdfPreviewModal" class="modal" style="display: none;">
                 <div class="modal-content">
                     <span class="close-modal" onclick="closePreviewModal()">&times;</span>
                     <iframe id="pdfViewer" src=""></iframe>
@@ -328,7 +328,7 @@
                                         <a href="<?= base_url(); ?>ProposalPenelitianController/download/<?= $proposal['id']; ?>">Unduh</a>
                                     </div>
                                     <div>
-                                        <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/' . $proposal['file_proposal']); ?>')">Preview</a>
+                                        <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/' . $proposal['file_proposal']);?>')">Preview</a>
                                     </div>
                                 </td>
                                 <?php if (session()->get('user_type') == 'dosen'): ?>
