@@ -25,10 +25,10 @@
         <?= $this->include('partials/sidebar'); ?>
 
         <main>
-            <h1>HAKI</h1>
-            <p>Ini adalah halaman untuk HAKI.</p>
+            <h1>HKI</h1>
+            <p>Ini adalah halaman untuk HKI.</p>
 
-            <button id="openModalBtn" class="button-primary">Tambah Haki</button>
+            <button id="openModalBtn" class="button-primary">Tambah Hki</button>
             <?php if (session()->getFlashdata('success') || session()->getFlashdata('errProposal')): ?>
                 <div class="success-feedback">
                     <?php echo session()->getFlashdata('success') ?>
@@ -43,7 +43,7 @@
                 <div class="modal-content">
                     <span class="close-modal" onclick="closehakiModal()">&times;</span>
                     <form id="hakiForm" action="<?= base_url('HAKI/upload'); ?>" method="post" enctype="multipart/form-data">
-                        <h2>Tambah HAKI</h2>
+                        <h2>Tambah HKI</h2>
 
                         <!-- Judul Ciptaan -->
                         <label for="judulCiptaan">Judul Ciptaan:</label>

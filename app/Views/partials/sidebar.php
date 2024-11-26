@@ -55,7 +55,7 @@
             </a>
             <a href="<?= site_url('/haki'); ?>" class="<?= uri_string() == 'haki' ? 'active' : ''; ?>">
                 <span class="material-icons-sharp">import_contacts</span>
-                <h3>HAKI</h3>
+                <h3>HKI</h3>
             </a>
             <a href="<?= site_url('/setting'); ?>" class="<?= uri_string() == 'setting' ? 'active' : ''; ?>">
                 <span class="material-icons-sharp">settings</span>

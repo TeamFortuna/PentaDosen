@@ -109,26 +109,15 @@
     display: none;
 }
 
-#anggotaInternalContainer {
-    margin: 20px 0;
-}
-
-.anggota-internal {
+/* Setiap anggota kegiatan */
+.anggota-kegiatan {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px; 
+    align-items: center; 
+    gap: 10px; 
+    margin-bottom: 10px; 
 }
 
-.anggota-internal input {
-    flex: 1; 
-    margin-top: 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 13px;
-    box-sizing: border-box;
-}
-
+/* Input wrapper */
 .input-wrapper {
     display: flex;
     align-items: center; 
@@ -140,62 +129,34 @@
     flex: 1; 
 }
 
-/* Ikon hapus untuk anggota internal */
-.hapusAnggotaInternalIcon {
-    color: red; /* Warna merah untuk ikon */
-    font-size: 24px; /* Ukuran ikon */
-    cursor: pointer; /* Ubah cursor menjadi pointer */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Warna ikon saat di-hover */
-.hapusAnggotaInternalIcon:hover {
-    color: darkred; /* Merah lebih gelap saat di-hover */
-}
-
-/* Tombol untuk menambah anggota internal */
-#tambahAnggotaInternalBtn {
-    background-color: #27ae60; /* Warna hijau */
-    color: white; /* Warna teks putih */
-    border: none; /* Hapus border */
-    border-radius: 5px; /* Tombol dengan sudut melengkung */
-    padding: 7px 15px; /* Padding tombol */
-    font-size: 14px; /* Ukuran font */
-    cursor: pointer; /* Ganti cursor menjadi pointer */
-}
-
-/* Warna tombol tambah saat di-hover */
-#tambahAnggotaInternalBtn:hover {
-    background-color: #1e8449; /* Warna hijau gelap saat di-hover */
-}
-
-
-
-.anggota {
-    margin-top: 20px;
-    margin-bottom: 30px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-#tambahAnggotaBtn {
-   margin-bottom: 20px;
-}
-
-#tambahAnggotaBtnEdit {
-    margin-bottom: 20px;
- }
-
-.hapusAnggotaBtn {
-    margin-top: 5px;
-    color: white;
-    background-color: red;
-    border: none;
-    padding: 5px 10px;
+.hapusAnggotaKegiatanIcon
+.hapusAnggotaKegiatanIcon {
+    color: red;
+    font-size: 24px;
     cursor: pointer;
+    display: inline-block; 
+   
+}
+
+.hapusAnggotaKegiatanIcon:hover
+.hapusAnggotaKegiatanIconhover {
+    color: darkred;
+}
+
+#tambahAnggotaKegiatanBtn
+#hapusAnggotaKegiatanBtn {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+#tambahAnggotaKegiatanBtn:hover
+#hapusAnggotaKegiatanBtn:hover {
+    background-color: #1e8449;
 }
 
 h4{
@@ -213,7 +174,6 @@ margin-bottom: 20px;
 #openModalBtn {
     margin-top: 20px; 
 }
-
 
 .recent-orders {
     width: 110%; /* Agar container tabel selebar main */
@@ -309,6 +269,62 @@ margin-bottom: 20px;
 #uploadAlert {
     margin-bottom: 15px;
 }
+
+#editTambahAnggotaKegiatanBtn {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    margin-bottom: 20px;  /* Menambahkan jarak bawah */
+}
+
+/* Styling untuk bagian File Proposal */
+label[for="editCurrentBerkasProposal"],
+label[for="editBerkasProposal"] {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.file-display {
+    margin-bottom: 10px;
+}
+
+#editCurrentBerkasProposal {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+#editCurrentBerkasProposal:hover {
+    text-decoration: underline;
+}
+
+small {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.file-upload-wrapper {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.file-upload-wrapper input[type="file"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 13px;
+    width: 100%;
+    background-color: #f9f9f9;
+}
+
+.file-upload-wrapper small {
+    margin-top: 5px;
+    display: block;
+}
+
 
 
 

@@ -153,4 +153,55 @@ class ProposalPenelitianController extends BaseController
             return $this->response->setJSON(['success' => false, 'error' => 'Failed to delete related members']);
         }
     }
+
+    public function getProposalById($id)
+    {
+        $proposalModel = new Proposal_Model();
+        $proposal = $proposalModel->find($id);
+
+        if ($proposal) {
+            return $this->response->setJSON($proposal);
+        } else {
+            return $this->response->setJSON(['error' => 'Proposal not found'], 404);
+        }
+    }
+
+    public function updateProposal()
+    {
+        $proposalModel = new Proposal_Model();
+        $id = $this->request->getPost('id');
+
+        $updatedData = [
+            'judul_penelitian' => $this->request->getPost('judulPenelitian'),
+            'skema' => $this->request->getPost('skema'),
+            'skema_lainnya' => $this->request->getPost('skema_lainnya'),
+            'biaya_diusulkan' => str_replace(['Rp.', '.'], '', $this->request->getPost('biayaDiusulkan')),
+            'biaya_didanai' => str_replace(['Rp.', '.'], '', $this->request->getPost('biayaDidanai')),
+            'sumber_dana' => $this->request->getPost('sumberDana'),
+            'dana_lainnya' => $this->request->getPost('dana_lainnya'),
+            'anggota_kegiatan' => json_encode($this->request->getPost('nama_dosen_kegiatan')),
+        ];
+
+        $file = $this->request->getFile('berkas_proposal');
+        if ($file && $file->isValid()) {
+            // Hapus file lama jika ada
+            $existingProposal = $proposalModel->find($id);
+            if ($existingProposal && file_exists("uploads/" . $existingProposal['file_proposal'])) {
+                unlink("uploads/" . $existingProposal['file_proposal']);
+            }
+
+            // Simpan file baru
+            $file->move('uploads');
+            $updatedData['file_proposal'] = $file->getName();
+        }
+
+        try {
+            // Update proposal dengan data yang baru
+            $proposalModel->update($id, $updatedData);
+            return redirect()->to('/proposal_penelitian')->with('success', 'Proposal berhasil diperbarui!');
+        } catch (\Exception $e) {
+            log_message('error', 'Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 }
