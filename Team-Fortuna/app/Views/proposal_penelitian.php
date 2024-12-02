@@ -360,37 +360,65 @@
                     </thead>
                     <tbody>
                         <?php $no = 1; ?>
-                        <?php foreach ($proposals as $proposal): ?>
-                            <tr>
-                                <td><?= $no++; ?></td>
-                                <td><?= esc($proposal['judul_penelitian']); ?></td>
-                                <td><?= esc($proposal['nama'] ?? ''); ?></td>
-                                <td><?= esc($proposal['anggota_nama'] ?? ''); ?></td>
-                                <td>Rp. <?= number_format($proposal['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
-                                <td><?= date('d-m-Y', strtotime($proposal['tanggal_upload'])); ?></td>
-                                <td>
-                                    <div>
-                                        <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/' . $proposal['file_penelitian']); ?>')">
-                                            <span class="material-icons-sharp">picture_as_pdf</span>
-                                        </a>
-                                    </div>
-                                </td>
-                                <td>
-                                    <!-- laporan kemajuan -->
-
-                                </td>
-                                <td>
-                                    <!-- laporan akhir -->
-
-                                </td>
-                                <?php if (session()->get('user_type') == 'dosen'): ?>
+                        <!-- Jika user_type dosen -->
+                        <?php if(session()->get('user_type') == 'dosen'): ?>
+                            <?php foreach ($proposalsFU as $proposalFU): ?>
+                                <tr>
+                                    <td><?= $no++; ?></td>
+                                    <td><?= esc($proposalFU['judul_penelitian']); ?></td>
+                                    <td><?= esc($proposalFU['nama'] ?? ''); ?></td>
+                                    <td><?= esc($proposalFU['anggota_nama'] ?? ''); ?></td>
+                                    <td>Rp. <?= number_format($proposalFU['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
+                                    <td><?= date('d-m-Y', strtotime($proposalFU['tanggal_upload'])); ?></td>
                                     <td>
-                                        <span class="material-icons-sharp" onclick="openEditProposalModal('<?= $proposal['id']; ?>')">edit</span>
-                                        <span class="material-icons-sharp" onclick="openDeleteModal('<?= $proposal['id']; ?>')">delete</span>
+                                        <div>
+                                            <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/' . $proposalFU['file_penelitian']); ?>')">
+                                                <span class="material-icons-sharp">picture_as_pdf</span>
+                                            </a>
+                                        </div>
                                     </td>
-                                <?php endif; ?>
-                            </tr>
-                        <?php endforeach; ?>
+                                    <td>
+                                        <!-- laporan kemajuan -->
+                                        
+                                    </td>
+                                    <td>
+                                        <!-- laporan akhir -->
+                                        
+                                    </td>
+                                    <td>
+                                        <span class="material-icons-sharp" onclick="openEditProposalModal('<?= $proposalFU['id']; ?>')">edit</span>
+                                        <span class="material-icons-sharp" onclick="openDeleteModal('<?= $proposalFU['id']; ?>')">delete</span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <!-- Jika user_type admin -->
+                        <?php else: ?>
+                            <?php foreach ($proposalsFA as $proposalFA): ?>
+                                <tr>
+                                    <td><?= $no++; ?></td>
+                                    <td><?= esc($proposalFA['judul_penelitian']); ?></td>
+                                    <td><?= esc($proposalFA['nama'] ?? ''); ?></td>
+                                    <td><?= esc($proposalFA['anggota_nama'] ?? ''); ?></td>
+                                    <td>Rp. <?= number_format($proposalFA['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
+                                    <td><?= date('d-m-Y', strtotime($proposalFA['tanggal_upload'])); ?></td>
+                                    <td>
+                                        <div>
+                                            <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/' . $proposalFA['file_penelitian']); ?>')">
+                                                <span class="material-icons-sharp">picture_as_pdf</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <!-- laporan kemajuan -->
+
+                                    </td>
+                                    <td>
+                                        <!-- laporan akhir -->
+
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>        
                     </tbody>
 
                 </table>

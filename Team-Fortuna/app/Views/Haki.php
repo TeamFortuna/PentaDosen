@@ -145,7 +145,8 @@
                                 type="text"
                                 list="dosenList" 
                                 name="namaPencipta[]" 
-                                placeholder="Masukkan nama pencipta" 
+                                placeholder="Masukkan nama pencipta"
+                                autocomplete="off" 
                                 required>
 
                                 <datalist id="dosenList">
@@ -177,6 +178,7 @@
                                 list="dosenList" 
                                 name="namaPemegang[]" 
                                 placeholder="Masukkan nama pemegang hak cipta" 
+                                autocomplete="off"
                                 required>
 
                                 <datalist id="dosenList">
@@ -238,35 +240,58 @@
                             <th>Nomor Permohonan</th>
                             <th>Tanggal Upload</th>
                             <th>File</th>
+                            <?php if(session()->get('user_type') == 'dosen'): ?>
                             <th>Aksi</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
-                    <?php $no = 1; ?>
-                        <?php foreach ($haki as $dataHaki): ?>
-                            <tr>
-                                <td><?= $no++; ?></td>
-                                <td><?= esc($dataHaki['judul_ciptaan'] ?? ''); ?></td>
-                                <td><?= esc($dataHaki['nama_pencipta']); ?></td>
-                                <td><?= esc($dataHaki['nama_pemegang']); ?></td>
-                                <td><?= esc($dataHaki['jenis_ciptaan']); ?></td>
-                                <td><?= esc($dataHaki['nomor_permohonan'] ?? ''); ?></td>
-                                <td><?= date('d-m-Y', strtotime($dataHaki['tanggal_upload'])); ?></td>
-                                <td>
-                                    <div>
-                                        <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/HAKI/'. $dataHaki['file_haki']); ?>')">
-                                            <span class="material-icons-sharp">picture_as_pdf</span>
-                                        </a>
-                                    </div>
-                                </td>
-                                <?php if (session()->get('user_type') == 'dosen'): ?>
+                        <?php $no = 1; ?>
+                        <!-- Jika user_type dosen -->
+                        <?php if(session()->get('user_type') == 'dosen'): ?>  
+                                <?php foreach ($hakiFU as $dataHakiFU): ?>
+                                    <tr>
+                                        <td><?= $no++; ?></td>
+                                        <td><?= esc($dataHakiFU['judul_ciptaan'] ?? ''); ?></td>
+                                        <td><?= esc($dataHakiFU['nama_pencipta']); ?></td>
+                                        <td><?= esc($dataHakiFU['nama_pemegang']); ?></td>
+                                        <td><?= esc($dataHakiFU['jenis_ciptaan']); ?></td>
+                                        <td><?= esc($dataHakiFU['nomor_permohonan'] ?? ''); ?></td>
+                                        <td><?= date('d-m-Y', strtotime($dataHakiFU['tanggal_upload'])); ?></td>
+                                        <td>
+                                            <div>
+                                                <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/HAKI/'. $dataHakiFU['file_haki']); ?>')">
+                                                    <span class="material-icons-sharp">picture_as_pdf</span>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="material-icons-sharp" onclick="openEditProposalModal('<?= $dataHakiFU['id']; ?>')">edit</span>
+                                            <span class="material-icons-sharp" onclick="openDeleteModal('<?= $dataHakiFU['id']; ?>')">delete</span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                        <?php else: ?>
+                        <!-- Jika user_type admin     -->
+                            <?php foreach ($hakiFA as $dataHakiFA): ?>
+                                <tr>
+                                    <td><?= $no++; ?></td>
+                                    <td><?= esc($dataHakiFA['judul_ciptaan'] ?? ''); ?></td>
+                                    <td><?= esc($dataHakiFA['nama_pencipta']); ?></td>
+                                    <td><?= esc($dataHakiFA['nama_pemegang']); ?></td>
+                                    <td><?= esc($dataHakiFA['jenis_ciptaan']); ?></td>
+                                    <td><?= esc($dataHakiFA['nomor_permohonan'] ?? ''); ?></td>
+                                    <td><?= date('d-m-Y', strtotime($dataHakiFA['tanggal_upload'])); ?></td>
                                     <td>
-                                        <span class="material-icons-sharp" onclick="openEditProposalModal('<?= $dataHaki['id']; ?>')">edit</span>
-                                        <span class="material-icons-sharp" onclick="openDeleteModal('<?= $dataHaki['id']; ?>')">delete</span>
+                                        <div>
+                                            <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/HAKI/'. $dataHakiFA['file_haki']); ?>')">
+                                                <span class="material-icons-sharp">picture_as_pdf</span>
+                                            </a>
+                                        </div>
                                     </td>
-                                <?php endif; ?>
-                            </tr>
-                        <?php endforeach; ?>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>    
                     </tbody>
                 </table>
             </div>

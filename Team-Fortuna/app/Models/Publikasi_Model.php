@@ -24,7 +24,19 @@ class Publikasi_Model extends Model
     ];
     protected $useTimestamps = true; // Aktifkan fitur timestamps otomatis
 
-    public function getPublikasiWithPenulis()
+    public function getPublikasiWithPenulisForUser($id_dosen)
+{
+    return $this->select('publikasi.*, akundosen.*, id_dosen_publikasi.*, 
+                          GROUP_CONCAT(dosen_penulis.nama_penulis SEPARATOR ", ") AS nama_penulis')
+                ->join('id_dosen_publikasi', 'id_dosen_publikasi.publikasi_id = publikasi.id', 'left')
+                ->join('akundosen', 'akundosen.id = id_dosen_publikasi.dosen_id', 'left')
+                ->join('dosen_penulis', 'dosen_penulis.publikasi_id = publikasi.id', 'left')
+                ->where('akundosen.id', $id_dosen)
+                ->groupBy('publikasi.id')
+                ->findAll();
+}
+
+public function getPublikasiWithPenulisForAdmin()
 {
     return $this->select('publikasi.*, akundosen.*, id_dosen_publikasi.*, 
                           GROUP_CONCAT(dosen_penulis.nama_penulis SEPARATOR ", ") AS nama_penulis')

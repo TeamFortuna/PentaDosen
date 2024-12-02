@@ -26,7 +26,21 @@ class HAKI_Model extends Model
     ];
     protected $useTimestamps = true; // Aktifkan fitur timestamps otomatis
 
-    public function getHakiWithPenciptaAndPemegang()
+    public function getHakiWithPenciptaAndPemegangForUser($id_dosen)
+{
+    return $this->select('haki.*, akundosen.*, id_dosen_haki.*, 
+                          GROUP_CONCAT(dosen_pencipta.nama_pencipta SEPARATOR ", ") AS nama_pencipta, 
+                          GROUP_CONCAT(dosen_pemegang.nama_pemegang SEPARATOR ", ") AS nama_pemegang')
+                ->join('id_dosen_haki', 'id_dosen_haki.haki_id = haki.id', 'left')
+                ->join('akundosen', 'akundosen.id = id_dosen_haki.dosen_id', 'left')
+                ->join('dosen_pencipta', 'dosen_pencipta.haki_id = haki.id', 'left')
+                ->join('dosen_pemegang', 'dosen_pemegang.haki_id = haki.id', 'left')
+                ->where('akundosen.id', $id_dosen)
+                ->groupBy('haki.id')
+                ->findAll();
+}
+
+public function getHakiWithPenciptaAndPemegangForAdmin()
 {
     return $this->select('haki.*, akundosen.*, id_dosen_haki.*, 
                           GROUP_CONCAT(dosen_pencipta.nama_pencipta SEPARATOR ", ") AS nama_pencipta, 

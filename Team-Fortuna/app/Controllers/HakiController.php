@@ -14,11 +14,14 @@ class HakiController extends BaseController
     {
         $userModel = new RegisterLogin_Model();
         $hakiModel = new HAKI_Model();
-        $hakiFinal = $hakiModel->getHakiWithPenciptaAndPemegang();
+        $id_dosen = session()->get('user_id');
+        $hakiFinalUser = $hakiModel->getHakiWithPenciptaAndPemegangForUser($id_dosen);
+        $hakiFinalAdmin = $hakiModel->getHakiWithPenciptaAndPemegangForAdmin();
         $dataDosen = $userModel->select('nama, nidn')->findAll();
         return view('haki', [
             'dataDosenPP' => $dataDosen,
-            'haki' => $hakiFinal
+            'hakiFU' => $hakiFinalUser,
+            'hakiFA' => $hakiFinalAdmin
         ]);
     }
 

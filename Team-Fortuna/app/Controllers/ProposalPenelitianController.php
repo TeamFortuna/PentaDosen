@@ -17,15 +17,16 @@ class ProposalPenelitianController extends BaseController
     {
         $userModel = new RegisterLogin_Model();
         $proposalModel = new Proposal_Model();
-
         $userId = session()->get('user_id');
         $userData = $userModel->find($userId);
 
         // Mengambil data penelitian dari database
-        $proposalsFinal = $proposalModel->getPenelitianWithDosenAndAnggota();
+        $proposalsFinalFU = $proposalModel->getPenelitianWithDosenAndAnggotaFU($userId);
+        $proposalsFinalFA = $proposalModel->getPenelitianWithDosenAndAnggotaFA();
         return view('proposal_penelitian', [
             'userData' => $userData,
-            'proposals' => $proposalsFinal
+            'proposalsFU' => $proposalsFinalFU,
+            'proposalsFA' => $proposalsFinalFA
         ]);
     }
 

@@ -128,13 +128,6 @@
                                         autocomplete="off" 
                                         required
                                         >
-                                        
-                                        <?php if (session()->getFlashdata('errDosenPenulis')): ?>
-                                        <div class="invalid-feedback">
-                                            <?php echo session()->getFlashdata('errDosenPenulis') ?>
-                                        </div>
-                                        <?php endif; ?>
-
                                     <datalist id="dosenList">
                                         <?php foreach ($dataDosen as $dosen): ?>
                                             <option value="<?= $dosen['nama'] . ' - ' . $dosen['nidn'] ?>">
@@ -143,6 +136,19 @@
                                         <?php endforeach; ?>
                                     </datalist>
                                     <span class="hapusPenulisDosenIcon material-icons-sharp">remove</span>
+
+                                        <?php if (session()->getFlashdata('errDosenPenulis')): ?>
+                                        <div class="invalid-feedback">
+                                            <?php echo session()->getFlashdata('errDosenPenulis') ?>
+                                        </div>
+                                        <?php endif; ?>
+
+                                        <?php if (session()->getFlashdata('errEmptyDosenPenulis')): ?>
+                                        <div class="invalid-feedback">
+                                            <?php echo session()->getFlashdata('errEmptyDosenPenulis') ?>
+                                        </div>
+                                        <?php endif; ?>
+
                                 </div>
                             </div>
                         </div>
@@ -192,37 +198,62 @@
                 <th>Penerbit</th>
                 <th>Tanggal Unggah</th>
                 <th>File</th>
+                <?php if(session()->get('user_type') == 'dosen'): ?>
                 <th>Aksi</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody>
-        <?php $no = 1; ?>
-                        <?php foreach ($publikasi as $dataPublikasi): ?>
+            <?php $no = 1; ?>
+            <!-- Jika user_type dosen -->
+            <?php if(session()->get('user_type') == 'dosen'): ?>        
+                        <?php foreach ($publikasiFU as $dataPublikasiFU): ?>
                             <tr>
                                 <td><?= $no++; ?></td>
-                                <td><?= esc($dataPublikasi['judul_publikasi'] ?? ''); ?></td>
-                                <td><?= esc($dataPublikasi['nama_penulis']); ?></td>
-                                <td><?= esc($dataPublikasi['tanggal_terbit']); ?></td>
-                                <td><?= esc($dataPublikasi['kategori_kegiatan']); ?></td>
-                                <td><?= esc($dataPublikasi['jenis_publikasi'] ?? ''); ?></td>
-                                <td><?= esc($dataPublikasi['jumlah_halaman']); ?></td>
-                                <td><?= esc($dataPublikasi['penerbit']); ?></td>
-                                <td><?= date('d-m-Y', strtotime($dataPublikasi['tanggal_upload'])); ?></td>
+                                <td><?= esc($dataPublikasiFU['judul_publikasi'] ?? ''); ?></td>
+                                <td><?= esc($dataPublikasiFU['nama_penulis']); ?></td>
+                                <td><?= esc($dataPublikasiFU['tanggal_terbit']); ?></td>
+                                <td><?= esc($dataPublikasiFU['kategori_kegiatan']); ?></td>
+                                <td><?= esc($dataPublikasiFU['jenis_publikasi'] ?? ''); ?></td>
+                                <td><?= esc($dataPublikasiFU['jumlah_halaman']); ?></td>
+                                <td><?= esc($dataPublikasiFU['penerbit']); ?></td>
+                                <td><?= date('d-m-Y', strtotime($dataPublikasiFU['tanggal_upload'])); ?></td>
                                 <td>
                                     <div>
-                                        <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/publikasi/'. $dataPublikasi['file_publikasi']); ?>')">
+                                        <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/publikasi/'. $dataPublikasiFU['file_publikasi']); ?>')">
                                             <span class="material-icons-sharp">picture_as_pdf</span>
                                         </a>
                                     </div>
                                 </td>
-                                <?php if (session()->get('user_type') == 'dosen'): ?>
-                                    <td>
-                                        <span class="material-icons-sharp" onclick="openEditProposalModal('<?= $dataPublikasi['id']; ?>')">edit</span>
-                                        <span class="material-icons-sharp" onclick="openDeleteModal('<?= $dataPublikasi['id']; ?>')">delete</span>
-                                    </td>
-                                <?php endif; ?>
+                                <td>
+                                    <span class="material-icons-sharp" onclick="openEditProposalModal('<?= $dataPublikasiFU['id']; ?>')">edit</span>
+                                    <span class="material-icons-sharp" onclick="openDeleteModal('<?= $dataPublikasiFU['id']; ?>')">delete</span>
+                                </td> 
                             </tr>
                         <?php endforeach; ?>
+            <?php else: ?>
+            <!-- Jika user_type admin -->    
+                        <?php foreach ($publikasiFA as $dataPublikasiFA): ?>
+                            <tr>
+                                <td><?= $no++; ?></td>
+                                <td><?= esc($dataPublikasiFA['judul_publikasi'] ?? ''); ?></td>
+                                <td><?= esc($dataPublikasiFA['nama_penulis']); ?></td>
+                                <td><?= esc($dataPublikasiFA['tanggal_terbit']); ?></td>
+                                <td><?= esc($dataPublikasiFA['kategori_kegiatan']); ?></td>
+                                <td><?= esc($dataPublikasiFA['jenis_publikasi'] ?? ''); ?></td>
+                                <td><?= esc($dataPublikasiFA['jumlah_halaman']); ?></td>
+                                <td><?= esc($dataPublikasiFA['penerbit']); ?></td>
+                                <td><?= date('d-m-Y', strtotime($dataPublikasiFA['tanggal_upload'])); ?></td>
+                                <td>
+                                    <div>
+                                        <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/publikasi/'. $dataPublikasiFA['file_publikasi']); ?>')">
+                                            <span class="material-icons-sharp">picture_as_pdf</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
     </table>
 </div>

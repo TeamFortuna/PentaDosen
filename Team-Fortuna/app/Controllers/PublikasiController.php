@@ -13,11 +13,14 @@ class PublikasiController extends BaseController
     {
         $userModel = new RegisterLogin_Model();
         $publikasiModel = new Publikasi_Model();
-        $publikasiFinal = $publikasiModel->getPublikasiWithPenulis();
+        $id_dosen = session()->get('user_id');
+        $publikasiFinalUser = $publikasiModel->getPublikasiWithPenulisForUser($id_dosen);
+        $publikasiFinalAdmin = $publikasiModel->getPublikasiWithPenulisForAdmin();
         $dataDosen = $userModel->select('nama, nidn')->findAll();
         return view('publikasi', [
             'dataDosen' => $dataDosen,
-            'publikasi' => $publikasiFinal
+            'publikasiFU' => $publikasiFinalUser,
+            'publikasiFA' => $publikasiFinalAdmin
         ]);
     }
 
@@ -89,6 +92,20 @@ class PublikasiController extends BaseController
         $id_dosen_publikasi = new Intersection_Dosen_Publikasi();
         $dosenPenulis = new Dosen_Penulis_Model();
         $file = $this->request->getFile('berkasPublikasi');
+        $pattern = '/^.+\s-\s\d+$/'; // Pola untuk "Nama - NIDN"
+
+        foreach ($this->request->getPost('penulisDosen') as $penulis) {
+                if (!preg_match($pattern, $penulis)) {
+                    session()->setFlashdata('errEmptyDosenPenulis', 'Dosen Yang Anda Input Tidak Valid !');            
+                    return redirect()->back()->withInput();
+                }
+                list($nama, $nidn) = explode(' - ', $penulis); // Pecah "Nama - NIDN"
+                $dosen = $userModel->where('nama', trim($nama))->where('nidn', trim($nidn))->first();
+                if (!$dosen) {
+                    session()->setFlashdata('errEmptyDosenPenulis', 'Dosen Yang Anda Input Tidak Valid !');       
+                    return redirect()->back()->withInput();
+                }
+        }
 
         try {
             // Pindahkan file ke folder 'uploads/publikasi'

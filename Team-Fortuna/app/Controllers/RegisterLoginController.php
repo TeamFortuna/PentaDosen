@@ -85,45 +85,6 @@ class RegisterLoginController extends BaseController
             return redirect()->to('register_login')->with('success', 'Registrasi berhasil, silakan login.');
         }
 
-        // Tambahkan logika registrasi di sini
-        // Ambil data dari form
-        // $name = $this->request->getPost('nama');
-        // $inisial_nama = $this->request->getPost('nama_inisial');
-        // $program_studi = $this->request->getPost('program_studi');
-        // $email = $this->request->getPost('email');
-        // $username = $this->request->getPost('username');
-        // $password = $this->request->getPost('password');
-
-        // // Validasi input (contoh sederhana, tambahkan validasi sesuai kebutuhan)
-        // if (empty($name) || empty($username) || empty($password) || empty($email)) {
-        //     return redirect()->back()->withInput()->with('error', 'All fields are required.');
-        // }
-
-        // // Hash password
-        // $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // // Inisialisasi model
-        // $registerModel = new \App\Models\RegisterLogin_Model();
-
-        // // Persiapkan data untuk disimpan
-        // $data = [
-        //     'nama' => $name,
-        //     'inisial_nama' => $inisial_nama,
-        //     'program_studi' => $program_studi,
-        //     'email' => $email,
-        //     'username' => $username,
-        //     'password' => $hashedPassword,
-        //     'user_type' => 'dosen' // Set default user type, sesuaikan dengan kebutuhan
-        // ];
-
-        // // Simpan ke database
-        // $registerModel->insert($data);
-
-        // // Redirect ke halaman login atau halaman lain dengan pesan sukses
-        // return redirect()->to('/register_login')->with('success', 'Registration successful. Please log in.');
-
-        // }
-
     }
 
     public function processLogin()
