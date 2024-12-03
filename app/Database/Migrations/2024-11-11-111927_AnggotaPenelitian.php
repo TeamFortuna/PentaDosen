@@ -16,7 +16,7 @@ class AnggotaPenelitian extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true
             ],
-            'proposal_id' => [
+            'penelitian_id' => [
                 'type'           => 'INT',
                 'unsigned'       => true,
                 'constraint'     => 100,
@@ -71,15 +71,15 @@ class AnggotaPenelitian extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('proposal_id', 'proposal', 'id', 'CASCADE', 'CASCADE', 'fk_proposal_id');
+        $this->forge->addForeignKey('penelitian_id', 'penelitian', 'id', 'CASCADE', 'CASCADE', 'fk_penelitian_id');
         // Pastikan nama tabel benar
-        $this->forge->createTable('anggota_proposal');  // Nama tabel diubah menjadi 'anggota_proposals'
+        $this->forge->createTable('anggota_penelitian');  // Nama tabel diubah menjadi 'anggota_penelitians'
     }
 
 
     public function down()
     {
-        $this->forge->dropForeignKey('anggota_proposal', 'fk_proposal_id');
-        $this->forge->dropTable('anggota_proposal');
+        $this->forge->dropForeignKey('anggota_penelitian', 'fk_penelitian_id');
+        $this->forge->dropTable('anggota_penelitian');
     }
 }

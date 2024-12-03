@@ -42,11 +42,6 @@
         }
     </script>
 
-    <script>
-        const flashSuccess = "<?= session('success') ?>";
-        const flashError = "<?= session('error') ?>";
-    </script>
-
 </head>
 
 <body>
@@ -54,10 +49,10 @@
         <?= $this->include('partials/sidebar'); ?>
 
         <main>
-            <h1>Proposal Penelitian</h1>
-            <p>Ini adalah halaman untuk Proposal Penelitian.</p>
+            <h1>Penelitian</h1>
+            <p>Ini adalah halaman untuk Penelitian.</p>
 
-            <button id="openModalBtn" class="button-primary">Tambah Proposal Penelitian</button>
+            <button id="openModalBtn" class="button-primary">Tambah Penelitian</button>
             <?php if (session()->getFlashdata('success') || session()->getFlashdata('errProposal')): ?>
                 <div class="success-feedback">
                     <?php echo session()->getFlashdata('success') ?>
@@ -66,7 +61,6 @@
                     <?php echo session()->getFlashdata('errProposal') ?>
                 </div>
             <?php endif; ?>
-
 
             <!-- Modal untuk form Proposal Penelitian -->
             <div id="proposalPenelitianModal" class="modal">
@@ -138,26 +132,99 @@
                         <input type="text" id="dana_lainnya" name="dana_lainnya" placeholder="Isi dana lainnya jika dipilih" style="display:none;">
 
 
-                        <!-- Anggota Kegiatan -->
-                        <div id="anggotaKegiatanContainer">
-                            <h4>Anggota Kegiatan</h4>
-                            <label for="namaDosen">Nama Dosen:</label>
-                            <div class="anggota-kegiatan">
+                        <!-- anggota internal -->
+                        <div id="anggotaInternalContainer">
+                            <h4>Anggota Kegiatan (Dosen Internal)</h4>
+                            <div class="anggota-internal">
+                                <label for="namaDosen">Nama Dosen:</label>
                                 <div class="input-wrapper">
-                                    <input type="text" id="anggotaKegiatan" name="nama_dosen_kegiatan[]" placeholder="Masukkan nama dosen" autocomplete="off">
+                                    <input type="text" id="anggotaInternal" name="nama_dosen_internal[]" placeholder="Masukkan nama dosen" autocomplete="off" required>
+                                    <div id="suggestions" class="suggestions"></div>
+                                    <span class="hapusAnggotaInternalIcon material-icons-sharp">remove</span>
                                 </div>
-                                <span class="hapusAnggotaKegiatanIcon material-icons-sharp">remove</span>
                             </div>
                         </div>
-                        <!-- Tombol untuk menambah anggota kegiatan -->
-                        <button type="button" id="tambahAnggotaKegiatanBtn">Tambah Anggota</button>
+                        <!-- Tombol untuk menambah anggota internal -->
+                        <button type="button" id="tambahAnggotaInternalBtn">Tambah Anggota</button>
+
+                        
+                        <!-- Kontainer untuk biodata anggota eksternal -->
+                        <div id="anggotaContainer">
+                            <div class="anggota">
+                                
+                                <label>Nama Anggota:</label>
+                                <?php if (old('nama_anggota')): ?>
+                                    <?php foreach (old('nama_anggota') as $nama): ?>
+                                        <input type="text" name="nama_anggota[]" placeholder="Nama anggota" value="<?= esc($nama); ?>" required>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <input type="text" name="nama_anggota[]" placeholder="Nama anggota" required>
+                                <?php endif; ?>
+
+                                <label>NIDN Anggota:</label>
+                                <?php if (old('nidn_anggota')): ?>
+                                    <?php foreach (old('nidn_anggota') as $nidn): ?>
+                                        <input type="text" name="nidn_anggota[]" placeholder="NIDN" value="<?= esc($nidn); ?>" required>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <input type="text" name="nidn_anggota[]" placeholder="NIDN" required>
+                                <?php endif; ?>
+
+                                <label>Jabatan Akademik:</label>
+                                <?php if (old('jabatan_anggota')): ?>
+                                    <?php foreach (old('jabatan_anggota') as $jabatan): ?>
+                                        <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" value="<?= esc($jabatan); ?>" required>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" required>
+                                <?php endif; ?>
+
+                                <label for="perguruan_anggota">Perguruan Tinggi:</label>
+                                <select id="perguruan_anggota" name="perguruan_anggota[]">
+                                    <option value="" disabled selected>Silahkan Pilih</option>
+                                    <option value="Universitas YARSI">Universitas YARSI</option>
+                                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                                </select>
+                                <!-- Field untuk skema lainnya, tampil jika "lainnya" dipilih -->
+                                <input type="text" class="perguruan_lainnya" name="perguruan_lainnya[]" placeholder="Isi perguruan yang lainnya" style="display:none;">
+
+                                <label for="fakultas_anggota">Fakultas:</label>
+                                <select id="fakultas_anggota" name="fakultas_anggota[]">
+                                    <option value="" disabled selected>Silahkan Pilih</option>
+                                    <option value="Fakultas Teknologi Informasi (FTI)">Fakultas Teknologi Informasi (FTI)</option>
+                                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                                </select>
+                                <!-- Field untuk skema lainnya, tampil jika "lainnya" dipilih -->
+                                <input type="text" class="fakultas_lainnya" name="fakultas_lainnya[]" placeholder="Isi fakultas yang lainnya" style="display:none;">
+
+                                <label for="prodi_anggota">Program Studi:</label>
+                                <select id="prodi_anggota" name="prodi_anggota[]">
+                                    <option value="" disabled selected>Silahkan Pilih</option>
+                                    <option value="Teknik Informatika">Teknik Informatika</option>
+                                    <option value="Perpustakaan dan Sains Informasi">Perpustakaan dan Sains Informasi</option>
+                                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                                </select>
+                                <!-- Field untuk skema lainnya, tampil jika "lainnya" dipilih -->
+                                <input type="text" class="prodi_lainnya" name="prodi_lainnya[]" placeholder="Isi program studi yang lainnya" style="display:none;">
+
+                                <button type="button" class="hapusAnggotaBtn">Hapus Anggota</button>
+                            </div>
+                        </div>
+                        <!-- Tombol untuk menambah anggota -->
+                        <button type="button" id="tambahAnggotaBtn">Tambah Anggota</button>
 
 
                         <div class="form-group">
                             <label for="berkas_proposal">Unggah File Proposal (PDF):</label>
                             <input type="file" id="berkas_proposal" name="berkas_proposal" accept=".pdf">
                             <small class="form-text text-muted">Maksimal ukuran file: 10 MB</small>
+                            <?php if (session()->getFlashdata('errFile')): ?>
+                                <div class="invalid-feedback">
+                                    <?php echo session()->getFlashdata('errFile') ?>
+                                </div>
+                            <?php endif; ?>
                             <div id="uploadAlert" class="alert alert-danger d-none" role="alert"></div>
+                            
                         </div>
                         <button type="submit" class="btn btn-primary">Unggah</button>
 
@@ -165,157 +232,198 @@
                 </div>
             </div>
 
-            <!-- Edit Proposal Modal -->
-            <<div id="editProposalModal" class="modal">
+
+            <!-- Modal untuk Edit Proposal Penelitian -->
+            <div id="editProposalModal" class="modal">
                 <div class="modal-content">
                     <span class="close-modal" onclick="closeEditProposalModal()">&times;</span>
-                    <form id="editProposalForm" action="<?= base_url('updateProposal'); ?>" method="post" enctype="multipart/form-data">
+                    <form id="editProposalForm" onsubmit="submitUpdateProposal(event)">
                         <h2>Edit Proposal Penelitian</h2>
-                        <input type="hidden" id="editProposalId" name="id">
+                        <input type="hidden" id="updateProposalId" name="proposalId">
 
-                        <label for="editJudulPenelitian">Judul Penelitian:</label>
-                        <input type="text" id="editJudulPenelitian" name="judulPenelitian" required>
+                        <label for="judulPenelitianEdit">Judul Penelitian:</label>
+                        <input type="text" id="judulPenelitianEdit" name="judulPenelitian" required>
 
-                        <label for="editSkema">Skema:</label>
-                        <select id="editSkema" name="skema" onchange="updateSumberDana()">
-                            <option value="" disabled>Pilih Skema</option>
-                            <option value="Hibah Internal">Hibah Internal</option>
+                        <label for="skemaEdit">Skema:</label>
+                        <select id="skemaEdit" name="skema">
+                            <option value="" disabled selected>Silahkan Pilih</option>
                             <option value="Hibah Eksternal">Hibah Eksternal</option>
+                            <option value="Hibah Internal">Hibah Internal</option>
                             <option value="Mandiri">Mandiri</option>
+                            <option value="lainnya">Lainnya (isi sendiri)</option>
                         </select>
-                        <!-- Field untuk skema lainnya -->
-                        <input type="text" id="editSkemaLainnya" name="skema_lainnya" placeholder="Isi skema lainnya jika dipilih" style="display:none;">
+                        <input type="text" id="skema_lainnya_edit" name="skema_lainnya" placeholder="Isi skema lainnya jika dipilih" style="display:none;">
 
-                        <label for="editBiayaDiusulkan">Biaya yang Diusulkan:</label>
-                        <input type="text" id="editBiayaDiusulkan" name="biayaDiusulkan" required>
+                        <label for="biayaDiusulkanEdit">Biaya yang diusulkan:</label>
+                        <input type="text" id="biayaDiusulkanEdit" name="biayaDiusulkan" required oninput="formatCurrency(this)">
 
-                        <label for="editBiayaDidanai">Biaya yang Didanai:</label>
-                        <input type="text" id="editBiayaDidanai" name="biayaDidanai" required>
+                        <label for="biayaDidanaiEdit">Biaya yang didanai:</label>
+                        <input type="text" id="biayaDidanaiEdit" name="biayaDidanai" required oninput="formatCurrency(this)">
 
-                        <label for="editSumberDana">Sumber Dana:</label>
-                        <select id="editSumberDana" name="sumberDana">
-                            <option value="" disabled>Pilih Sumber Dana</option>
+                        <label for="sumberDanaEdit">Sumber Dana:</label>
+                        <select id="sumberDanaEdit" name="sumberDana">
+                            <option value="" disabled selected>Silahkan Pilih</option>
                             <option value="DIKTI">DIKTI</option>
                             <option value="BRIN">BRIN</option>
                             <option value="Yayasan YARSI">Yayasan YARSI</option>
-                            <option value="lainnya">Lainnya</option>
+                            <option value="lainnya">Lainnya (isi sendiri)</option>
                         </select>
-                        <!-- Field untuk sumber dana lainnya -->
-                        <input type="text" id="editDanaLainnya" name="dana_lainnya" placeholder="Isi dana lainnya jika dipilih" style="display:none;">
+                        <input type="text" id="dana_lainnya_edit" name="dana_lainnya" placeholder="Isi dana lainnya jika dipilih" style="display:none;">
 
-                        <!-- Anggota Kegiatan -->
-                        <div id="editAnggotaKegiatanContainer">
-                            <h4>Anggota Kegiatan</h4>
-                            <div class="anggota-kegiatan">
-                                <div class="input-wrapper">
-                                    <input type="text" id="editAnggotaKegiatan" name="nama_dosen_kegiatan[]" placeholder="Masukkan nama dosen" autocomplete="off">
-                                </div>
-                                <span class="hapusAnggotaKegiatanIcon material-icons-sharp">remove</span>
+                        <div id="editAnggotaContainer">
+                            <div class="anggota">
+                                <label>Nama Anggota:</label>
+                                <input type="text" name="nama_anggota[]" placeholder="Nama anggota" required>
+
+                                <label>NIDN Anggota:</label>
+                                <input type="text" name="nidn_anggota[]" placeholder="NIDN" required>
+
+                                <label>Jabatan Akademik:</label>
+                                <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" required>
+
+                                <label for="perguruan_anggota_edit">Perguruan Tinggi:</label>
+                                <select id="perguruan_anggota_edit" name="perguruan_anggota[]">
+                                    <option value="" disabled selected>Silahkan Pilih</option>
+                                    <option value="Universitas YARSI">Universitas YARSI</option>
+                                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                                </select>
+                                <input type="text" class="perguruan_lainnya_edit" name="perguruan_lainnya[]" placeholder="Isi perguruan yang lainnya" style="display:none;">
+
+                                <label for="fakultas_anggota_edit">Fakultas:</label>
+                                <select id="fakultas_anggota_edit" name="fakultas_anggota[]">
+                                    <option value="" disabled selected>Silahkan Pilih</option>
+                                    <option value="Fakultas Teknologi Informasi (FTI)">Fakultas Teknologi Informasi (FTI)</option>
+                                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                                </select>
+                                <input type="text" class="fakultas_lainnya_edit" name="fakultas_lainnya[]" placeholder="Isi fakultas yang lainnya" style="display:none;">
+
+                                <label for="prodi_anggota_edit">Program Studi:</label>
+                                <select id="prodi_anggota_edit" name="prodi_anggota[]">
+                                    <option value="" disabled selected>Silahkan Pilih</option>
+                                    <option value="Teknik Informatika">Teknik Informatika</option>
+                                    <option value="Perpustakaan dan Sains Informasi">Perpustakaan dan Sains Informasi</option>
+                                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                                </select>
+                                <input type="text" class="prodi_lainnya_edit" name="prodi_lainnya[]" placeholder="Isi program studi yang lainnya" style="display:none;">
+
+                                <button type="button" class="hapusAnggotaBtn">Hapus Anggota</button>
                             </div>
                         </div>
-                        <button type="button" id="editTambahAnggotaKegiatanBtn">Tambah Anggota</button>
 
-
-                        <!-- File Proposal -->
-                        <div id="fileProposalSection">
-                            <label for="editCurrentBerkasProposal">File Proposal Saat Ini:</label>
-                            <div class="file-display">
-                                <a id="editCurrentBerkasProposal" href="#" target="_blank">Lihat File Proposal</a>
-                            </div>
-                            <small>Jika ingin mengganti, unggah file baru:</small>
-                            <div class="file-upload-wrapper">
-                                <input type="file" id="editBerkasProposal" name="berkas_proposal" accept=".pdf">
-                                <small class="form-text text-muted">Maksimal ukuran file: 10 MB</small>
-                            </div>
+                        <button type="button" id="tambahAnggotaBtnEdit">Tambah Anggota</button>
+                        <div class="button_bawah">
+                            <label for="berkas_proposal_edit">Unggah File Proposal:</label>
+                            <input type="file" id="berkas_proposal_edit" name="berkas_proposal">
+                            <button type="submit">Update Proposal</button>
                         </div>
-                        <button type="submit" class="button-primary">Update</button>
-
                     </form>
                 </div>
-    </div>
-
-
-
-    <!-- Delete -->
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <h3>Konfirmasi Penghapusan</h3>
-            <p>Apakah Anda yakin ingin menghapus proposal ini?</p>
-            <input type="hidden" id="deleteProposalId">
-            <button onclick="confirmDelete()">Ya, Hapus</button>
-            <button onclick="closeDeleteModal()">Batal</button>
-        </div>
-    </div>
-
-    <!-- Modal untuk Preview PDF -->
-    <div id="pdfPreviewModal" class="modal">
-        <span class="close-modal" onclick="closePreviewModal()">&times;</span>
-        <div class="pdf-modal-content">
-            <iframe id="pdfViewer" src="" frameborder="0"></iframe>
-            <div class="modal-actions">
-                <a id="downloadButton" href="#" download>Download</a>
             </div>
-        </div>
-    </div>
+
+            <!-- Delete -->
+            <div id="deleteModal" class="modal">
+                <div class="modal-content">
+                    <input type="hidden" id="deleteProposalId">
+                </div>
+            </div>
+
+            <!-- Modal untuk Preview PDF -->
+            <div id="pdfPreviewModal" class="modal">
+                <span class="close-modal" onclick="closePreviewModal()">&times;</span>
+                <div class="pdf-modal-content">
+                    <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+                    <div class="modal-actions">
+                        <a id="downloadButton" href="#" download>Download</a>
+                    </div>
+                </div>
+            </div>
 
 
-    <div class="recent-orders">
-        <h2>Daftar Penelitian</h2>
-        <table id="proposalPenelitianTable" class="display full-table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Judul Penelitian</th>
-                    <th>Ketua Pengusul</th>
-                    <th>Anggota Pengusul</th>
-                    <th>Dana yang Disetujui</th>
-                    <th>Tanggal Pengisian</th>
-                    <th>Proposal</th>
-                    <th>Laporan Kemajuan</th>
-                    <th>Laporan Akhir</th>
-                    <?php if (session()->get('user_type') == 'dosen'): ?>
-                        <th>Aksi</th>
-                    <?php endif; ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $no = 1; ?>
-                <?php foreach ($proposals as $proposal): ?>
-                    <tr>
-                        <td><?= $no++; ?></td>
-                        <td><?= esc($proposal['judul_penelitian']); ?></td>
-                        <td><?= esc($proposal['nama'] ?? ''); ?></td>
-                        <td><?= esc($proposal['anggota_nama'] ?? ''); ?></td>
-                        <td>Rp. <?= number_format($proposal['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
-                        <td><?= date('d-m-Y', strtotime($proposal['tanggal_upload'])); ?></td>
-                        <td>
-                            <div>
-                                <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/' . $proposal['file_proposal']); ?>')">
-                                    <span class="material-icons-sharp">picture_as_pdf</span>
-                                </a>
-                            </div>
-                        </td>
-                        <td>
-                            <!-- laporan kemajuan -->
+            <div class="recent-orders">
+                <h2>Daftar Penelitian</h2>
+                <table id="proposalPenelitianTable" class="display full-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Judul Penelitian</th>
+                            <th>Ketua Pengusul</th>
+                            <th>Anggota Pengusul</th>
+                            <th>Dana yang Disetujui</th>
+                            <th>Tanggal Pengisian</th>
+                            <th>Proposal</th>
+                            <th>Laporan Kemajuan</th>
+                            <th>Laporan Akhir</th>
+                            <?php if (session()->get('user_type') == 'dosen'): ?>
+                                <th>Aksi</th>
+                            <?php endif; ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $no = 1; ?>
+                        <!-- Jika user_type dosen -->
+                        <?php if(session()->get('user_type') == 'dosen'): ?>
+                            <?php foreach ($proposalsFU as $proposalFU): ?>
+                                <tr>
+                                    <td><?= $no++; ?></td>
+                                    <td><?= esc($proposalFU['judul_penelitian']); ?></td>
+                                    <td><?= esc($proposalFU['nama'] ?? ''); ?></td>
+                                    <td><?= esc($proposalFU['anggota_nama'] ?? ''); ?></td>
+                                    <td>Rp. <?= number_format($proposalFU['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
+                                    <td><?= date('d-m-Y', strtotime($proposalFU['tanggal_upload'])); ?></td>
+                                    <td>
+                                        <div>
+                                            <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/' . $proposalFU['file_penelitian']); ?>')">
+                                                <span class="material-icons-sharp">picture_as_pdf</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <!-- laporan kemajuan -->
+                                        
+                                    </td>
+                                    <td>
+                                        <!-- laporan akhir -->
+                                        
+                                    </td>
+                                    <td>
+                                        <span class="material-icons-sharp" onclick="openEditProposalModal('<?= $proposalFU['id']; ?>')">edit</span>
+                                        <span class="material-icons-sharp" onclick="openDeleteModal('<?= $proposalFU['id']; ?>')">delete</span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <!-- Jika user_type admin -->
+                        <?php else: ?>
+                            <?php foreach ($proposalsFA as $proposalFA): ?>
+                                <tr>
+                                    <td><?= $no++; ?></td>
+                                    <td><?= esc($proposalFA['judul_penelitian']); ?></td>
+                                    <td><?= esc($proposalFA['nama'] ?? ''); ?></td>
+                                    <td><?= esc($proposalFA['anggota_nama'] ?? ''); ?></td>
+                                    <td>Rp. <?= number_format($proposalFA['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
+                                    <td><?= date('d-m-Y', strtotime($proposalFA['tanggal_upload'])); ?></td>
+                                    <td>
+                                        <div>
+                                            <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/' . $proposalFA['file_penelitian']); ?>')">
+                                                <span class="material-icons-sharp">picture_as_pdf</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <!-- laporan kemajuan -->
 
-                        </td>
-                        <td>
-                            <!-- laporan akhir -->
+                                    </td>
+                                    <td>
+                                        <!-- laporan akhir -->
 
-                        </td>
-                        <?php if (session()->get('user_type') == 'dosen'): ?>
-                            <td>
-                                <span class="material-icons-sharp" onclick="openEditModal('<?= $proposal['id']; ?>')">edit</span>
-                                <span class="material-icons-sharp" onclick="openDeleteModal('<?= $proposal['id']; ?>')">delete</span>
-                            </td>
-                        <?php endif; ?>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>        
+                    </tbody>
 
-        </table>
-    </div>
-    </main>
+                </table>
+            </div>
+        </main>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

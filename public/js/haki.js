@@ -19,6 +19,29 @@ $(document).ready(function () {
     };
 });
 
+// Fungsi untuk membuka modal preview PDF
+function openPreviewModal(filePath) {
+    const modal = document.getElementById("pdfPreviewModal");
+    const pdfViewer = document.getElementById("pdfViewer");
+    const downloadButton = document.getElementById("downloadButton");
+
+    if (modal && pdfViewer && downloadButton) {
+        pdfViewer.src = filePath; // Menampilkan file PDF dalam iframe
+        downloadButton.href = filePath; // Menyiapkan tautan untuk mengunduh file
+        modal.style.display = "block"; // Menampilkan modal
+    }
+}
+
+// Fungsi untuk menutup modal preview PDF
+function closePreviewModal() {
+    const modal = document.getElementById("pdfPreviewModal");
+    const pdfViewer = document.getElementById("pdfViewer");
+    if (modal && pdfViewer) {
+        modal.style.display = "none"; // Menyembunyikan modal
+        pdfViewer.src = ""; // Membersihkan sumber iframe
+    }
+}
+
 // Fungsi untuk menutup modal
 function closehakiModal() {
     const modal = document.getElementById("hakiModal");

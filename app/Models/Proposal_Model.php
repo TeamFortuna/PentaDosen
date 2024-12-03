@@ -6,12 +6,12 @@ use CodeIgniter\Model;
 
 class Proposal_Model extends Model
 {
-    protected $table = 'proposal';
+    protected $table = 'penelitian';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'judul_penelitian',
-        'tanggal_proposal',
-        'file_proposal',
+        'tanggal_penelitian',
+        'file_penelitian',
         'skema',
         'skema_lainnya',
         'biaya_diusulkan',
@@ -22,21 +22,26 @@ class Proposal_Model extends Model
     ];
     protected $useTimestamps = true; // Aktifkan fitur timestamps otomatis
 
-    public function getProposalsWithAnggota()
+    public function getPenelitianWithDosenAndAnggotaFU($id_dosen)
 {
-    return $this->select('proposal.*, anggota_proposal.*')
-                ->join('anggota_proposal', 'anggota_proposal.proposal_id = proposal.id', 'left')
+    return $this->select('penelitian.*, akundosen.*, id_dosen_penelitian.*, 
+                          GROUP_CONCAT(anggota_penelitian.nama_anggota SEPARATOR ", ") AS anggota_nama')
+                ->join('id_dosen_penelitian', 'id_dosen_penelitian.penelitian_id = penelitian.id', 'left')
+                ->join('akundosen', 'akundosen.id = id_dosen_penelitian.dosen_id', 'left')
+                ->join('anggota_penelitian', 'anggota_penelitian.penelitian_id = penelitian.id', 'left')
+                -> where('akundosen.id', $id_dosen)
+                ->groupBy('penelitian.id')
                 ->findAll();
 }
 
-    public function getProposalsWithDosenAndAnggota()
+public function getPenelitianWithDosenAndAnggotaFA()
 {
-    return $this->select('proposal.*, akundosen.*, id_dosen_proposal.*, 
-                          GROUP_CONCAT(anggota_proposal.nama_anggota SEPARATOR ", ") AS anggota_nama')
-                ->join('id_dosen_proposal', 'id_dosen_proposal.proposal_id = proposal.id', 'left')
-                ->join('akundosen', 'akundosen.id = id_dosen_proposal.dosen_id', 'left')
-                ->join('anggota_proposal', 'anggota_proposal.proposal_id = proposal.id', 'left')
-                ->groupBy('proposal.id')
+    return $this->select('penelitian.*, akundosen.*, id_dosen_penelitian.*, 
+                          GROUP_CONCAT(anggota_penelitian.nama_anggota SEPARATOR ", ") AS anggota_nama')
+                ->join('id_dosen_penelitian', 'id_dosen_penelitian.penelitian_id = penelitian.id', 'left')
+                ->join('akundosen', 'akundosen.id = id_dosen_penelitian.dosen_id', 'left')
+                ->join('anggota_penelitian', 'anggota_penelitian.penelitian_id = penelitian.id', 'left')
+                ->groupBy('penelitian.id')
                 ->findAll();
 }
 

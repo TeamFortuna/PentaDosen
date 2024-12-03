@@ -6,11 +6,11 @@ use CodeIgniter\Model;
 
 class Intersection_Dosen_Proposal extends Model
 {
-    protected $table = 'id_dosen_proposal';
+    protected $table = 'id_dosen_penelitian';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'dosen_id',
-        'proposal_id',
+        'penelitian_id',
     ];
 
 }

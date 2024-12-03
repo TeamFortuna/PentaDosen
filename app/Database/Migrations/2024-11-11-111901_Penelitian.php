@@ -48,7 +48,7 @@ class Penelitian extends Migration
             'tanggal_upload' => [
                 'type' => 'DATE',
             ],
-            'file_proposal' => [
+            'file_penelitian' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
             ],
@@ -62,12 +62,12 @@ class Penelitian extends Migration
             ]
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('proposal');
+        $this->forge->createTable('penelitian');
     }
 
 
     public function down()
     {
-        $this->forge->dropTable('proposal');
+        $this->forge->dropTable('penelitian');
     }
 }

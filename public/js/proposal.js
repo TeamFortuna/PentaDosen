@@ -48,10 +48,10 @@ $(document).ready(function () {
 
         // Pilihan dropdown sumber dana berdasarkan skema
         if (skemaValue === 'Hibah Internal') {
-            sumberDana.append('<option value="Yayasan YARSI">Yayasan YARSI</option>');
+            sumberDana.append('<option value="yayasan yarsi">yayasan yarsi</option>');
         } else if (skemaValue === 'Hibah Eksternal') {
-            sumberDana.append('<option value="DIKTI">Dikti</option>');
-            sumberDana.append('<option value="BRIN">Brin</option>');
+            sumberDana.append('<option value="Dikti">Dikti</option>');
+            sumberDana.append('<option value="Brin">Brin</option>');
             sumberDana.append('<option value="lainnya">Lainnya</option>');
         } else if (skemaValue === 'Mandiri') {
             sumberDana.append('<option value="pribadi">pribadi</option>');
@@ -69,24 +69,97 @@ $(document).ready(function () {
     toggleAdditionalFields('#skema', '#skema_lainnya');
     toggleAdditionalFields('#sumberDana', '#dana_lainnya');
 
-    // Fungsi untuk menambahkan anggota kegiatan
-    $('#tambahAnggotaKegiatanBtn').on('click', function () {
+    // Dropdown tambahan untuk anggota
+    const anggotaSelectors = ['perguruan_anggota[]', 'fakultas_anggota[]', 'prodi_anggota[]'];
+    anggotaSelectors.forEach(selector => {
+        $('#anggotaContainer').on('change', `select[name="${selector}"]`, function () {
+            $(this).next('.lainnya_field').toggle(this.value === 'lainnya');
+        });
+    });
+
+ // Inisialisasi Select2 untuk dropdown dosen
+function initSelect2Dropdown() {
+    $('.select-dosen').select2({
+        placeholder: "Cari nama dosen...",
+        allowClear: true,
+        width: '100%',
+        minimumInputLength: 1, // Mulai pencarian setelah 1 karakter
+        tags: true // Mengaktifkan opsi tags agar pengguna bisa melihat teks yang diketik
+    });
+}
+
+// Panggil initSelect2Dropdown saat pertama kali halaman di-load
+$(document).ready(function() {
+    initSelect2Dropdown();
+});
+
+// Fungsi untuk menambah anggota internal
+$('#tambahAnggotaInternalBtn').click(function () {
+    const anggotaInternalHtml = `
+         <div class="anggota-internal">
+                                <label for="namaDosen">Nama Dosen:</label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="anggotaInternal" name="nama_dosen_internal[]" placeholder="Masukkan nama dosen" autocomplete="off" required>
+                                    <div id="suggestions" class="suggestions"></div>
+                                    <span class="hapusAnggotaInternalIcon material-icons-sharp">remove</span>
+                                </div>
+                            </div>`;
+
+    // Menambahkan anggota internal ke dalam container
+    $('#anggotaInternalContainer').append(anggotaInternalHtml);
+
+    // Re-inisialisasi Select2 untuk dropdown yang baru ditambahkan
+    initSelect2Dropdown(); // Panggil ulang initSelect2Dropdown untuk elemen baru
+});
+
+// Fungsi untuk menghapus anggota internal
+$('#anggotaInternalContainer').on('click', '.hapusAnggotaInternalIcon', function () {
+    $(this).closest('.anggota-internal').remove();
+});
+
+
+
+
+    // Menambah anggota baru
+    $('#tambahAnggotaBtn').click(function () {
         const anggotaHtml = `
-            <div class="anggota-kegiatan">
-                <div class="input-wrapper">
-                    <input type="text" name="nama_dosen_kegiatan[]" placeholder="Masukkan nama dosen" autocomplete="off">
-                </div>
-                <span class="hapusAnggotaKegiatanIcon material-icons-sharp">remove</span>
-            </div>
-        `;
-        $('#anggotaKegiatanContainer').append(anggotaHtml);
+            <div class="anggota">
+                <label>Nama Anggota:</label>
+                <input type="text" name="nama_anggota[]" placeholder="Nama anggota" required>
+                <label>NIDN Anggota:</label>
+                <input type="text" name="nidn_anggota[]" placeholder="NIDN" required>
+                <label>Jabatan Akademik:</label>
+                <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" required>
+                <label>Perguruan Tinggi:</label>
+                <select name="perguruan_anggota[]" required>
+                    <option value="" disabled selected>Silahkan Pilih</option>
+                    <option value="Universitas YARSI">Universitas YARSI</option>
+                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                </select>
+                <input type="text" class="lainnya_field perguruan_lainnya" name="perguruan_lainnya[]" placeholder="Isi perguruan lainnya" style="display:none;">
+                <label>Fakultas:</label>
+                <select name="fakultas_anggota[]" required>
+                    <option value="" disabled selected>Silahkan Pilih</option>
+                    <option value="Fakultas Teknologi Informasi (FTI)">FTI</option>
+                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                </select>
+                <input type="text" class="lainnya_field fakultas_lainnya" name="fakultas_lainnya[]" placeholder="Isi fakultas lainnya" style="display:none;">
+                <label>Program Studi:</label>
+                <select name="prodi_anggota[]" required>
+                    <option value="" disabled selected>Silahkan Pilih</option>
+                    <option value="Teknik Informatika">Teknik Informatika</option>
+                    <option value="lainnya">Lainnya (isi sendiri)</option>
+                </select>
+                <input type="text" class="lainnya_field prodi_lainnya" name="prodi_lainnya[]" placeholder="Isi prodi lainnya" style="display:none;">
+                <button type="button" class="hapusAnggotaBtn">Hapus Anggota</button>
+            </div>`;
+        $('#anggotaContainer').append(anggotaHtml);
     });
 
-    // Fungsi untuk menghapus anggota kegiatan
-    $('#anggotaKegiatanContainer').on('click', '.hapusAnggotaKegiatanIcon', function () {
-        $(this).closest('.anggota-kegiatan').remove();
+    // Menghapus anggota
+    $('#anggotaContainer').on('click', '.hapusAnggotaBtn', function () {
+        $(this).closest('.anggota').remove();
     });
-
 });
 
 // Fungsi untuk membuka modal preview PDF
@@ -169,110 +242,4 @@ function confirmDelete() {
     });
     
 }
-
-function openEditModal(proposalId) {
-    fetch(`/getProposalById/${proposalId}`)
-        .then(response => response.json())
-        .then(data => {
-            // Isi field modal dengan data dari server
-            document.getElementById('editProposalId').value = data.id;
-            document.getElementById('editJudulPenelitian').value = data.judul_penelitian;
-            document.getElementById('editSkema').value = data.skema;
-
-            // Tampilkan skema lainnya jika ada
-            if (data.skema_lainnya) {
-                document.getElementById('editSkemaLainnya').style.display = 'block';
-                document.getElementById('editSkemaLainnya').value = data.skema_lainnya;
-            }
-
-            document.getElementById('editBiayaDiusulkan').value = data.biaya_diusulkan;
-            document.getElementById('editBiayaDidanai').value = data.biaya_didanai;
-            document.getElementById('editSumberDana').value = data.sumber_dana;
-
-            // Tampilkan dana lainnya jika ada
-            if (data.dana_lainnya) {
-                document.getElementById('editDanaLainnya').style.display = 'block';
-                document.getElementById('editDanaLainnya').value = data.dana_lainnya;
-            }
-
-            // Tambahkan logika untuk mengisi anggota kegiatan jika ada
-            const anggotaContainer = document.getElementById('editAnggotaKegiatanContainer');
-            anggotaContainer.innerHTML = ''; // Kosongkan field sebelumnya
-            if (data.anggota_kegiatan) {
-                data.anggota_kegiatan.forEach(anggota => {
-                    const anggotaDiv = document.createElement('div');
-                    anggotaDiv.className = 'anggota-kegiatan';
-                    anggotaDiv.innerHTML = `
-                        <div class="input-wrapper">
-                            <input type="text" name="nama_dosen_kegiatan[]" value="${anggota}" autocomplete="off">
-                        </div>
-                        <span class="hapusAnggotaKegiatanIcon material-icons-sharp">remove</span>
-                    `;
-                    anggotaContainer.appendChild(anggotaDiv);
-                });
-            }
-
-            // Tampilkan file proposal yang tersimpan
-            const currentFileLink = document.getElementById('editCurrentBerkasProposal');
-            currentFileLink.href = `/uploads/${data.file_proposal}`;
-            currentFileLink.textContent = data.file_proposal || 'Tidak ada file';
-            
-
-            // Tampilkan modal
-            document.getElementById('editProposalModal').style.display = 'block';
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-document.getElementById('editTambahAnggotaKegiatanBtn').addEventListener('click', function() {
-    const anggotaContainer = document.getElementById('editAnggotaKegiatanContainer');
-    const anggotaDiv = document.createElement('div');
-    anggotaDiv.className = 'anggota-kegiatan';
-    anggotaDiv.innerHTML = `
-        <div class="input-wrapper">
-            <input type="text" name="nama_dosen_kegiatan[]" placeholder="Masukkan nama dosen" autocomplete="off">
-        </div>
-        <span class="hapusAnggotaKegiatanIcon material-icons-sharp">remove</span>
-    `;
-    anggotaContainer.appendChild(anggotaDiv);
-});
-
-document.getElementById('editAnggotaKegiatanContainer').addEventListener('click', function(e) {
-    if (e.target && e.target.classList.contains('hapusAnggotaKegiatanIcon')) {
-        const anggotaDiv = e.target.closest('.anggota-kegiatan');
-        anggotaDiv.remove();
-    }
-});
-
-
-
-function closeEditProposalModal() {
-    document.getElementById('editProposalModal').style.display = 'none';
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-    if (flashSuccess) {
-        Swal.fire({
-            title: 'Berhasil!',
-            text: flashSuccess,
-            icon: 'success',
-            confirmButtonText: 'OK'
-        });
-    } else if (flashError) {
-        Swal.fire({
-            title: 'Gagal!',
-            text: flashError,
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-    }
-});
-
-
-
-
-
-
-
-
 

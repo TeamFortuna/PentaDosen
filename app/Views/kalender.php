@@ -183,7 +183,7 @@
                                 <h3><?= $event['judul_kegiatan']; ?></h3>
                                 <small class="text-muted"><?= date("d M Y", strtotime($event['batas_awal'])); ?> - <?= date("d M Y", strtotime($event['batas_akhir'])); ?></small>
                             </div>
-                            <?php if (session()->get('user_type') !== 'dosen'): ?>
+                            <?php if (session()->get('user_type') == 'admin'): ?>
                                 <span class="material-icons-sharp" onclick="openEventActionModal(
                             '<?= $event['id']; ?>', 
                             '<?= $event['judul_kegiatan']; ?>', 
@@ -222,7 +222,7 @@
                     }
                 };
                 // Menambahkan customButtons dan headerToolbar jika user_type bukan 'dosen'
-                <?php if (session()->get('user_type') !== 'dosen'): ?>
+                <?php if (session()->get('user_type') == 'admin'): ?>
                     calendarConfig.customButtons = {
                         addEventButton: {
                             text: "Tambah Acara",

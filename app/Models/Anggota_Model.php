@@ -6,10 +6,10 @@ use CodeIgniter\Model;
 
 class Anggota_Model extends Model
 {
-    protected $table = 'anggota_proposal';
+    protected $table = 'anggota_penelitian';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'proposal_id',
+        'penelitian_id',
         'nama_anggota',
         'nidn_anggota',
         'jabatan_anggota',

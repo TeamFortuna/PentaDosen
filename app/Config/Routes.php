@@ -35,8 +35,7 @@ $routes->delete('/deleteJadwal/(:num)', 'KalenderController::deleteJadwal/$1');
 ## Proposal
 $routes->get('/proposal_penelitian', 'ProposalPenelitianController::ProposalPenelitian');
 $routes->post('/uploadProposal', 'ProposalPenelitianController::uploadProposal');
-$routes->post('/updateProposal', 'ProposalPenelitianController::updateProposal');
-$routes->get('/getProposalById/(:num)', 'ProposalPenelitianController::getProposalById/$1');
+$routes->post('/updateProposal/(:num)', 'ProposalPenelitianController::updateProposal/$1');
 $routes->post('deleteProposal/(:num)', 'ProposalPenelitianController::deleteProposal/$1');
 $routes->get('/preview_pdf', 'PreviewPdfController::previewPdf');
 ## Laporan Kemajuan
@@ -46,3 +45,16 @@ $routes->get('/publikasi', 'PublikasiController::publikasi');
 $routes->get('/haki', 'HakiController::Haki');
 $routes->get('/setting', 'SettingController::setting');
 $routes->get('/profile', 'ProfileController::profile');
+## Publikasi
+$routes->get('/publikasi', 'PublikasiController::Publikasi');
+$routes->post('/uploadPublikasi', 'PublikasiController::uploadPublikasi');
+$routes->post('/updatePublikasi/(:num)', 'PublikasiController::updatePublikasi/$1');
+$routes->post('deletePublikasi/(:num)', 'PublikasiController::deletePublikasi/$1');
+$routes->get('/preview_pdf', 'PreviewPdfController::previewPdf');
+## HAKI
+$routes->get('/Haki', 'HakiController::Haki');
+$routes->post('/uploadHAKI', 'HakiController::uploadHAKI');
+$routes->post('/updateHaki/(:num)', 'HakiController::updateHaki/$1');
+$routes->post('deleteHaki/(:num)', 'HakiController::deleteHaki/$1');
+$routes->get('/preview_pdf', 'PreviewPdfController::previewPdf');
+

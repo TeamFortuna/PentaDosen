@@ -20,23 +20,23 @@ class IntersectionDosenProposal extends Migration
                 'unsigned'       => true,
                 'constraint'     => 100,
             ],
-            'proposal_id' => [
+            'penelitian_id' => [
                 'type'           => 'INT',
                 'unsigned'       => true,
                 'constraint'     => 100,
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('dosen_id', 'akundosen', 'id', 'CASCADE', 'CASCADE', 'fk_dosen_id_dosenproposal');
-        $this->forge->addForeignKey('proposal_id', 'proposal', 'id', 'CASCADE', 'CASCADE', 'fk_proposal_id_dosenproposal');
-        $this->forge->createTable('id_dosen_proposal');
+        $this->forge->addForeignKey('dosen_id', 'akundosen', 'id', 'CASCADE', 'CASCADE', 'fk_dosen_id_dosenpenelitian');
+        $this->forge->addForeignKey('penelitian_id', 'penelitian', 'id', 'CASCADE', 'CASCADE', 'fk_penelitian_id_dosenpenelitian');
+        $this->forge->createTable('id_dosen_penelitian');
     }
 
 
     public function down()
     {
-        $this->forge->dropForeignKey('id_dosen_proposal', 'fk_dosen_id_dosenproposal');
-        $this->forge->dropForeignKey('id_dosen_proposal', 'fk_proposal_id_dosenproposal');
-        $this->forge->dropTable('id_dosen_proposal');
+        $this->forge->dropForeignKey('id_dosen_penelitian', 'fk_dosen_id_dosenpenelitian');
+        $this->forge->dropForeignKey('id_dosen_penelitian', 'fk_penelitian_id_dosenpenelitian');
+        $this->forge->dropTable('id_dosen_penelitian');
     }
 }

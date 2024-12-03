@@ -1,6 +1,4 @@
 $(document).ready(function() {
-    $('#publicationTable').DataTable();
-
     var modal = document.getElementById("publicationModal");
     var btn = document.getElementById("openModalBtn");
     var closeBtn = document.getElementsByClassName("close-modal")[0]; // Perbaiki class di sini
@@ -22,16 +20,23 @@ $(document).ready(function() {
         }
     };
 
+    
     // Fungsi untuk menambah penulis dosen
     $('#tambahPenulisDosenBtn').on('click', function () {
         var newPenulisDosen = `
-          <div class="penulis-dosen">
-                                <div class="input-wrapper">
-                                    <input type="text" id="penulisDosen" name="penulisDosen[]" placeholder="Masukkan nama penulis dosen" autocomplete="off" required>
-                                    <div id="suggestions" class="suggestions"></div>
-                                    <span class="hapusPenulisDosenIcon material-icons-sharp">remove</span>
-                                </div>
-                            </div>
+        <div class="penulis-dosen">
+            <div class="input-wrapper">
+                <input 
+                    list="dosenList" 
+                    type="text" 
+                    name="penulisDosen[]" 
+                    placeholder="Cari nama atau NIDN penulis dosen" 
+                    autocomplete="off" 
+                    required
+                >
+                <span class="hapusPenulisDosenIcon material-icons-sharp">remove</span>
+            </div>
+        </div>
         `;
         $('#penulisDosenContainer').append(newPenulisDosen);
     });
@@ -40,4 +45,28 @@ $(document).ready(function() {
     $('#penulisDosenContainer').on('click', '.hapusPenulisDosenIcon', function () {
         $(this).closest('.penulis-dosen').remove();
     });
+    
 });
+
+// Fungsi untuk membuka modal preview PDF
+function openPreviewModal(filePath) {
+    const modal = document.getElementById("pdfPreviewModal");
+    const pdfViewer = document.getElementById("pdfViewer");
+    const downloadButton = document.getElementById("downloadButton");
+
+    if (modal && pdfViewer && downloadButton) {
+        pdfViewer.src = filePath; // Menampilkan file PDF dalam iframe
+        downloadButton.href = filePath; // Menyiapkan tautan untuk mengunduh file
+        modal.style.display = "block"; // Menampilkan modal
+    }
+}
+
+// Fungsi untuk menutup modal preview PDF
+function closePreviewModal() {
+    const modal = document.getElementById("pdfPreviewModal");
+    const pdfViewer = document.getElementById("pdfViewer");
+    if (modal && pdfViewer) {
+        modal.style.display = "none"; // Menyembunyikan modal
+        pdfViewer.src = ""; // Membersihkan sumber iframe
+    }
+}

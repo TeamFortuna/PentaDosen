@@ -104,6 +104,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    overflow-x: auto; /* Tambahkan scroll horizontal */
+    white-space: nowrap; /* Hindari teks memotong */
 }
 
 .recent-orders h2 {
@@ -137,6 +139,46 @@
     padding: 8px;
     border-radius: 5px;
 }
+
+.pdf-modal-content {
+    position: relative; /* Supaya posisi elemen absolute mengacu pada modal */
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px; /* Tambahkan ruang di sekitar konten */
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 1200px;
+    height: 90%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+#pdfViewer {
+    width: 100%;
+    flex-grow: 1; /* Mengisi seluruh ruang yang tersedia */
+    border: none;
+    margin-bottom: 20px; /* Memberikan jarak antara iframe dan tombol di bawah */
+}
+
+/* Tombol close modal */
+#pdfPreviewModal .close-modal {
+    position: absolute;
+    top: 15px; /* Beri jarak dari atas modal */
+    right: 15px; /* Beri jarak dari kanan modal */
+    font-size: 24px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.3s;
+    z-index: 10; /* Pastikan tombol berada di atas elemen lainnya */
+}
+
+#pdfPreviewModal .close-modal:hover {
+    color: black;
+}
+
 
 .hapusNamaPencipta,
 .hapusNamaPemegang {
