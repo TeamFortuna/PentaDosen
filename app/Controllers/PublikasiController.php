@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Models\Publikasi_Model;
 use App\Models\Intersection_Dosen_Publikasi;
 use App\Models\Dosen_Penulis_Model;
@@ -24,8 +25,9 @@ class PublikasiController extends BaseController
         ]);
     }
 
-    public function uploadPublikasi() {
-        
+    public function uploadPublikasi()
+    {
+
         $validation = \Config\Services::validation();
         $valid = $this->validate([
             'judulPublikasi' => [
@@ -83,10 +85,10 @@ class PublikasiController extends BaseController
             session()->setFlashdata('errISBN', $validation->getError('isbn'));
             session()->setFlashdata('errDosenPenulis', $validation->getError('penulisDosen'));
             session()->setFlashdata('errBerkasPublikasi', $validation->getError('berkasPublikasi'));
-            session()->setFlashdata('errPublikasi', 'Data yang Anda kirim ada yang salah !');            
+            session()->setFlashdata('errPublikasi', 'Data yang Anda kirim ada yang salah !');
             return redirect()->back()->withInput();
         }
-        
+
         $userModel = new RegisterLogin_Model();
         $publikasiModel = new Publikasi_Model();
         $id_dosen_publikasi = new Intersection_Dosen_Publikasi();
@@ -95,16 +97,16 @@ class PublikasiController extends BaseController
         $pattern = '/^.+\s-\s\d+$/'; // Pola untuk "Nama - NIDN"
 
         foreach ($this->request->getPost('penulisDosen') as $penulis) {
-                if (!preg_match($pattern, $penulis)) {
-                    session()->setFlashdata('errEmptyDosenPenulis', 'Dosen Yang Anda Input Tidak Valid !');            
-                    return redirect()->back()->withInput();
-                }
-                list($nama, $nidn) = explode(' - ', $penulis); // Pecah "Nama - NIDN"
-                $dosen = $userModel->where('nama', trim($nama))->where('nidn', trim($nidn))->first();
-                if (!$dosen) {
-                    session()->setFlashdata('errEmptyDosenPenulis', 'Dosen Yang Anda Input Tidak Valid !');       
-                    return redirect()->back()->withInput();
-                }
+            if (!preg_match($pattern, $penulis)) {
+                session()->setFlashdata('errEmptyDosenPenulis', 'Dosen Yang Anda Input Tidak Valid !');
+                return redirect()->back()->withInput();
+            }
+            list($nama, $nidn) = explode(' - ', $penulis); // Pecah "Nama - NIDN"
+            $dosen = $userModel->where('nama', trim($nama))->where('nidn', trim($nidn))->first();
+            if (!$dosen) {
+                session()->setFlashdata('errEmptyDosenPenulis', 'Dosen Yang Anda Input Tidak Valid !');
+                return redirect()->back()->withInput();
+            }
         }
 
         try {
@@ -127,7 +129,7 @@ class PublikasiController extends BaseController
             $publikasi_id = $publikasiModel->getInsertID();
             $id_dosen = session()->get('user_id');
             $penulisDosen = $this->request->getPost('penulisDosen');
-            
+
             // Jika Data Penulis Lebih Dari Satu
             foreach ($penulisDosen as $dosen) {
                 list($nama, $nidn) = explode(' - ', $dosen);
@@ -144,7 +146,7 @@ class PublikasiController extends BaseController
                     'prodi_penulis' => $dataDosenPenulis['program_studi'],
                     'prodi_lainnya' => null
                 ];
-                $dosenPenulis->insert($penulisData); 
+                $dosenPenulis->insert($penulisData);
             }
 
             // Simpan Data ID Dosen dan ID Publikasi ke Tabel Intersection
@@ -157,9 +159,6 @@ class PublikasiController extends BaseController
             session()->setFlashdata('success', 'Publikasi Berhasil Diupload !');
             return redirect()->to('publikasi')->with('success', 'Publikasi berhasil diunggah!');
         } catch (\Exception $e) {
-          
         }
-
     }
-
 }

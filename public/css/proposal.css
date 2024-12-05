@@ -216,7 +216,7 @@ h4{
 
 
 .recent-orders {
-    width: 110%; /* Agar container tabel selebar main */
+    width: 95%; /* Agar container tabel selebar main */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -225,7 +225,7 @@ h4{
 }
 
 #proposalPenelitianTable {
-    width: 120%; /* Buat tabel selebar halaman */
+    width: 100%; /* Buat tabel selebar halaman */
     border-collapse: collapse; /* Hapus jarak antar border */
 }
 
@@ -311,6 +311,64 @@ h4{
 #uploadAlert {
     margin-bottom: 15px;
 }
+
+
+#editTambahAnggotaKegiatanBtn {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    margin-bottom: 20px;  /* Menambahkan jarak bawah */
+}
+
+/* Styling untuk bagian File Proposal */
+label[for="editCurrentBerkasProposal"],
+label[for="editBerkasProposal"] {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.file-display {
+    margin-bottom: 10px;
+}
+
+#editCurrentBerkasProposal {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+#editCurrentBerkasProposal:hover {
+    text-decoration: underline;
+}
+
+small {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.file-upload-wrapper {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.file-upload-wrapper input[type="file"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 13px;
+    width: 100%;
+    background-color: #f9f9f9;
+}
+
+.file-upload-wrapper small {
+    margin-top: 5px;
+    display: block;
+}
+
+
 
 
 

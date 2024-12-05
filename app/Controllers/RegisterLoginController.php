@@ -84,7 +84,6 @@ class RegisterLoginController extends BaseController
             // Redirect ke halaman login setelah sukses
             return redirect()->to('register_login')->with('success', 'Registrasi berhasil, silakan login.');
         }
-
     }
 
     public function processLogin()
@@ -144,7 +143,7 @@ class RegisterLoginController extends BaseController
                         'username' => $user['username'],
                         'logged_in' => true,
                         'nama'      => $user['nama'],
-                        'user_type' => $user['user_type'] // Misalnya untuk mengatur role
+                        'user_type' => $user['user_type'] // untuk mengatur role
                     ]);
                     // Redirect ke halaman dashboard atau halaman lain setelah login sukses
                     return redirect()->to('dashboard');

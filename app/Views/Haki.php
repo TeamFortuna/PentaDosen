@@ -28,15 +28,16 @@
             <h1>HAKI</h1>
             <p>Ini adalah halaman untuk HAKI.</p>
 
-            <button id="openModalBtn" class="button-primary">Tambah Haki</button>
-            
+            <?php if (session()->get('user_type') == 'dosen'): ?>
+                <button id="openModalBtn" class="button-primary">Tambah Haki</button>
+            <?php endif; ?>
             <?php if (session()->getFlashdata('success') || session()->getFlashdata('errHAKI')): ?>
-                    <div class="success-feedback">
-                        <?php echo session()->getFlashdata('success') ?>
-                    </div>
-                    <div class="invalid-feedback">
-                        <?php echo session()->getFlashdata('errHAKI') ?>
-                    </div>
+                <div class="success-feedback">
+                    <?php echo session()->getFlashdata('success') ?>
+                </div>
+                <div class="invalid-feedback">
+                    <?php echo session()->getFlashdata('errHAKI') ?>
+                </div>
             <?php endif; ?>
 
             <!-- Modal untuk form HAKI -->
@@ -46,11 +47,11 @@
                     <form id="hakiForm" action="<?= base_url('uploadHAKI'); ?>" method="post" enctype="multipart/form-data">
                         <h2>Tambah HAKI</h2>
                         <?= csrf_field(); ?>
-                        
+
                         <!-- Judul Ciptaan -->
                         <label for="judulCiptaan">Judul Ciptaan:</label>
                         <input type="text" id="judulCiptaan" name="judulCiptaan" placeholder="Masukkan judul ciptaan" required>
-                        
+
                         <?php if (session()->getFlashdata('errJudul')): ?>
                             <div class="success-feedback">
                                 <?php echo session()->getFlashdata('errJudul') ?>
@@ -67,7 +68,7 @@
                             <option value="rahasia_dagang">Rahasia Dagang</option>
                             <option value="dtlst">DTLST</option>
                         </select>
-                        
+
                         <?php if (session()->getFlashdata('errJenis')): ?>
                             <div class="success-feedback">
                                 <?php echo session()->getFlashdata('errJenis') ?>
@@ -136,25 +137,25 @@
                                 <?php echo session()->getFlashdata('errStatusHAKI') ?>
                             </div>
                         <?php endif; ?>
-                        
+
                         <!-- Nama Pencipta -->
                         <label for="namaPencipta">Nama Pencipta:</label>
                         <div id="penciptaContainer">
                             <div class="input-group">
-                                <input 
-                                type="text"
-                                list="dosenList" 
-                                name="namaPencipta[]" 
-                                placeholder="Masukkan nama pencipta"
-                                autocomplete="off" 
-                                required>
+                                <input
+                                    type="text"
+                                    list="dosenList"
+                                    name="namaPencipta[]"
+                                    placeholder="Masukkan nama pencipta"
+                                    autocomplete="off"
+                                    required>
 
                                 <datalist id="dosenList">
-                                        <?php foreach ($dataDosenPP as $dosenPencipta): ?>
-                                            <option value="<?= $dosenPencipta['nama'] . ' - ' . $dosenPencipta['nidn'] ?>">
-                                                <?= $dosenPencipta['nama'] ?> - <?= $dosenPencipta['nidn'] ?>
-                                            </option>
-                                        <?php endforeach; ?>
+                                    <?php foreach ($dataDosenPP as $dosenPencipta): ?>
+                                        <option value="<?= $dosenPencipta['nama'] . ' - ' . $dosenPencipta['nidn'] ?>">
+                                            <?= $dosenPencipta['nama'] ?> - <?= $dosenPencipta['nidn'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </datalist>
 
                                 <span class="hapusNamaPencipta material-icons-sharp" onclick="hapusPencipta(this)">remove</span>
@@ -173,20 +174,20 @@
                         <label for="namaPemegang">Nama Pemegang Hak Cipta:</label>
                         <div id="pemegangContainer">
                             <div class="input-group">
-                                <input 
-                                type="text"
-                                list="dosenList" 
-                                name="namaPemegang[]" 
-                                placeholder="Masukkan nama pemegang hak cipta" 
-                                autocomplete="off"
-                                required>
+                                <input
+                                    type="text"
+                                    list="dosenList"
+                                    name="namaPemegang[]"
+                                    placeholder="Masukkan nama pemegang hak cipta"
+                                    autocomplete="off"
+                                    required>
 
                                 <datalist id="dosenList">
-                                        <?php foreach ($dataDosenPP as $dosenPencipta): ?>
-                                            <option value="<?= $dosenPencipta['nama'] . ' - ' . $dosenPencipta['nidn'] ?>">
-                                                <?= $dosenPencipta['nama'] ?> - <?= $dosenPencipta['nidn'] ?>
-                                            </option>
-                                        <?php endforeach; ?>
+                                    <?php foreach ($dataDosenPP as $dosenPencipta): ?>
+                                        <option value="<?= $dosenPencipta['nama'] . ' - ' . $dosenPencipta['nidn'] ?>">
+                                            <?= $dosenPencipta['nama'] ?> - <?= $dosenPencipta['nidn'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </datalist>
 
                                 <span class="hapusNamaPemegang material-icons-sharp" onclick="hapusPemegang(this)">remove</span>
@@ -204,7 +205,7 @@
                         <!-- Unggah File -->
                         <label for="unggahFile">Unggah File:</label>
                         <input type="file" id="unggahFile" name="berkasHAKI" accept=".pdf" required>
-                        
+
                         <?php if (session()->getFlashdata('errBerkasHAKI')): ?>
                             <div class="success-feedback">
                                 <?php echo session()->getFlashdata('errBerkasHAKI') ?>
@@ -212,20 +213,20 @@
                         <?php endif; ?>
 
                         <button type="submit">Unggah</button>
-                        
+
                     </form>
                 </div>
             </div>
-                        <!-- Modal untuk Preview PDF -->
-                        <div id="pdfPreviewModal" class="modal">
-                            <span class="close-modal" onclick="closePreviewModal()">&times;</span>
-                            <div class="pdf-modal-content">
-                                <iframe id="pdfViewer" src="" frameborder="0"></iframe>
-                                <div class="modal-actions">
-                                    <a id="downloadButton" href="#" download>Download</a>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Modal untuk Preview PDF -->
+            <div id="pdfPreviewModal" class="modal">
+                <span class="close-modal" onclick="closePreviewModal()">&times;</span>
+                <div class="pdf-modal-content">
+                    <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+                    <div class="modal-actions">
+                        <a id="downloadButton" href="#" download>Download</a>
+                    </div>
+                </div>
+            </div>
 
             <div class="recent-orders">
                 <h2>Daftar HAKI</h2>
@@ -240,39 +241,39 @@
                             <th>Nomor Permohonan</th>
                             <th>Tanggal Upload</th>
                             <th>File</th>
-                            <?php if(session()->get('user_type') == 'dosen'): ?>
-                            <th>Aksi</th>
+                            <?php if (session()->get('user_type') == 'dosen'): ?>
+                                <th>Aksi</th>
                             <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $no = 1; ?>
                         <!-- Jika user_type dosen -->
-                        <?php if(session()->get('user_type') == 'dosen'): ?>  
-                                <?php foreach ($hakiFU as $dataHakiFU): ?>
-                                    <tr>
-                                        <td><?= $no++; ?></td>
-                                        <td><?= esc($dataHakiFU['judul_ciptaan'] ?? ''); ?></td>
-                                        <td><?= esc($dataHakiFU['nama_pencipta']); ?></td>
-                                        <td><?= esc($dataHakiFU['nama_pemegang']); ?></td>
-                                        <td><?= esc($dataHakiFU['jenis_ciptaan']); ?></td>
-                                        <td><?= esc($dataHakiFU['nomor_permohonan'] ?? ''); ?></td>
-                                        <td><?= date('d-m-Y', strtotime($dataHakiFU['tanggal_upload'])); ?></td>
-                                        <td>
-                                            <div>
-                                                <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/HAKI/'. $dataHakiFU['file_haki']); ?>')">
-                                                    <span class="material-icons-sharp">picture_as_pdf</span>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="material-icons-sharp" onclick="openEditProposalModal('<?= $dataHakiFU['id']; ?>')">edit</span>
-                                            <span class="material-icons-sharp" onclick="openDeleteModal('<?= $dataHakiFU['id']; ?>')">delete</span>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
+                        <?php if (session()->get('user_type') == 'dosen'): ?>
+                            <?php foreach ($hakiFU as $dataHakiFU): ?>
+                                <tr>
+                                    <td><?= $no++; ?></td>
+                                    <td><?= esc($dataHakiFU['judul_ciptaan'] ?? ''); ?></td>
+                                    <td><?= esc($dataHakiFU['nama_pencipta']); ?></td>
+                                    <td><?= esc($dataHakiFU['nama_pemegang']); ?></td>
+                                    <td><?= esc($dataHakiFU['jenis_ciptaan']); ?></td>
+                                    <td><?= esc($dataHakiFU['nomor_permohonan'] ?? ''); ?></td>
+                                    <td><?= date('d-m-Y', strtotime($dataHakiFU['tanggal_upload'])); ?></td>
+                                    <td>
+                                        <div>
+                                            <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/HAKI/' . $dataHakiFU['file_haki']); ?>')">
+                                                <span class="material-icons-sharp">picture_as_pdf</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="material-icons-sharp" onclick="openEditProposalModal('<?= $dataHakiFU['id']; ?>')">edit</span>
+                                        <span class="material-icons-sharp" onclick="openDeleteModal('<?= $dataHakiFU['id']; ?>')">delete</span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         <?php else: ?>
-                        <!-- Jika user_type admin     -->
+                            <!-- Jika user_type admin     -->
                             <?php foreach ($hakiFA as $dataHakiFA): ?>
                                 <tr>
                                     <td><?= $no++; ?></td>
@@ -284,14 +285,14 @@
                                     <td><?= date('d-m-Y', strtotime($dataHakiFA['tanggal_upload'])); ?></td>
                                     <td>
                                         <div>
-                                            <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/HAKI/'. $dataHakiFA['file_haki']); ?>')">
+                                            <a href="javascript:void(0);" onclick="openPreviewModal('<?= base_url('uploads/HAKI/' . $dataHakiFA['file_haki']); ?>')">
                                                 <span class="material-icons-sharp">picture_as_pdf</span>
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
-                        <?php endif; ?>    
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>

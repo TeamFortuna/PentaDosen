@@ -23,12 +23,18 @@ class ProposalPenelitianController extends BaseController
         // Mengambil data penelitian dari database
         $proposalsFinalFU = $proposalModel->getPenelitianWithDosenAndAnggotaFU($userId);
         $proposalsFinalFA = $proposalModel->getPenelitianWithDosenAndAnggotaFA();
+
+        // Ambil data dosen dari database
+        $dataDosen = $userModel->select('nama, nidn')->findAll();
+
         return view('proposal_penelitian', [
             'userData' => $userData,
             'proposalsFU' => $proposalsFinalFU,
-            'proposalsFA' => $proposalsFinalFA
+            'proposalsFA' => $proposalsFinalFA,
+            'dataDosenPP' => $dataDosen, // Data dosen untuk datalist
         ]);
     }
+
 
     public function uploadProposal()
     {
@@ -55,7 +61,7 @@ class ProposalPenelitianController extends BaseController
         if (!$valid) {
             session()->setFlashdata('errFile', $validation->getError('berkas_proposal'));
             session()->setFlashdata('errNIDN', $validation->getError('nidn_anggota.*'));
-            session()->setFlashdata('errProposal', 'Data yang Anda kirim ada yang salah !');            
+            session()->setFlashdata('errProposal', 'Data yang Anda kirim ada yang salah !');
             return redirect()->back()->withInput();
         }
 
@@ -121,7 +127,6 @@ class ProposalPenelitianController extends BaseController
             session()->setFlashdata('success', 'Proposal Berhasil Diupload !');
             return redirect()->to('proposal_penelitian')->with('success', 'Proposal berhasil diunggah!');
         } catch (\Exception $e) {
-          
         }
     }
 
@@ -152,6 +157,75 @@ class ProposalPenelitianController extends BaseController
             // Debug atau log jika penghapusan anggota terkait gagal
             log_message('error', 'Gagal menghapus anggota terkait proposal dengan ID ' . $id);
             return $this->response->setJSON(['success' => false, 'error' => 'Failed to delete related members']);
+        }
+    }
+
+    public function getProposalById($id)
+    {
+        $proposalModel = new Proposal_Model();
+        $anggotaModel = new Anggota_Model();
+
+        // Ambil data proposal
+        $proposal = $proposalModel->find($id);
+
+        // Ambil data anggota terkait
+        $anggota = $anggotaModel->where('penelitian_id', $id)->findAll();
+
+        if (!$proposal) {
+            return $this->response->setJSON(['error' => 'Proposal not found']);
+        }
+
+        return $this->response->setJSON([
+            'id' => $proposal['id'],
+            'judul_penelitian' => $proposal['judul_penelitian'],
+            'skema' => $proposal['skema'],
+            'skema_lainnya' => $proposal['skema_lainnya'],
+            'biaya_diusulkan' => $proposal['biaya_diusulkan'],
+            'biaya_didanai' => $proposal['biaya_didanai'],
+            'sumber_dana' => $proposal['sumber_dana'],
+            'dana_lainnya' => $proposal['dana_lainnya'],
+            'file_penelitian' => $proposal['file_penelitian'],
+            'anggota_kegiatan' => $anggota // Kirim data anggota
+        ]);
+    }
+
+
+    public function updateProposal()
+    {
+        $proposalModel = new Proposal_Model();
+        $id = $this->request->getPost('id');
+
+        $updatedData = [
+            'judul_penelitian' => $this->request->getPost('judulPenelitian'),
+            'skema' => $this->request->getPost('skema'),
+            'skema_lainnya' => $this->request->getPost('skema_lainnya'),
+            'biaya_diusulkan' => str_replace(['Rp.', '.'], '', $this->request->getPost('biayaDiusulkan')),
+            'biaya_didanai' => str_replace(['Rp.', '.'], '', $this->request->getPost('biayaDidanai')),
+            'sumber_dana' => $this->request->getPost('sumberDana'),
+            'dana_lainnya' => $this->request->getPost('dana_lainnya'),
+            'anggota_kegiatan' => json_encode($this->request->getPost('nama_dosen_kegiatan')),
+        ];
+
+        $file = $this->request->getFile('berkas_proposal');
+        if ($file && $file->isValid()) {
+            // Hapus file lama jika ada
+            $existingProposal = $proposalModel->find($id);
+            if ($existingProposal && file_exists("uploads/" . $existingProposal['file_penelitian'])) {
+                unlink("uploads/" . $existingProposal['file_penelitian']);
+            }
+
+            // Simpan file baru
+            $file->move('uploads');
+            $updatedData['file_penelitian'] = $file->getName();
+        }
+
+        try {
+            // Update proposal dengan data yang baru
+            $proposalModel->update($id, $updatedData);
+            return redirect()->to('/proposal_penelitian')->with('success', 'Proposal berhasil diperbarui!');
+        } catch (\Exception $e) {
+            log_message('error', 'Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 }
