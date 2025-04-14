@@ -12,17 +12,22 @@ class HakiController extends BaseController
 
     public function Haki()
     {
-        $userModel = new RegisterLogin_Model();
-        $hakiModel = new HAKI_Model();
-        $id_dosen = session()->get('user_id');
-        $hakiFinalUser = $hakiModel->getHakiWithPenciptaAndPemegangForUser($id_dosen);
-        $hakiFinalAdmin = $hakiModel->getHakiWithPenciptaAndPemegangForAdmin();
-        $dataDosen = $userModel->select('nama, nidn')->findAll();
-        return view('haki', [
-            'dataDosenPP' => $dataDosen,
-            'hakiFU' => $hakiFinalUser,
-            'hakiFA' => $hakiFinalAdmin
-        ]);
+        if (session()->has('logged_in')) {
+            $userModel = new RegisterLogin_Model();
+            $hakiModel = new HAKI_Model();
+            $id_dosen = session()->get('user_id');
+            $hakiFinalUser = $hakiModel->getHakiWithPenciptaAndPemegangForUser($id_dosen);
+            $hakiFinalAdmin = $hakiModel->getHakiWithPenciptaAndPemegangForAdmin();
+            $dataDosen = $userModel->select('nama, nidn')->findAll();
+            return view('haki', [
+                'dataDosenPP' => $dataDosen,
+                'hakiFU' => $hakiFinalUser,
+                'hakiFA' => $hakiFinalAdmin
+            ]);
+        }
+        else {
+            return redirect()->back();
+        }
     }
 
     public function uploadHAKI() {
@@ -124,10 +129,8 @@ class HakiController extends BaseController
         $file = $this->request->getFile('berkasHAKI');
 
         try {
-            // Pindahkan file ke folder 'uploads/publikasi'
-            $file->move('uploads/HAKI');
-            $fileName = $file->getName();
-            // Simpan data Publikasi Ke Database
+
+            // Simpan data HAKI Ke Database
             $hakiModel->save([
                 'judul_ciptaan' => $this->request->getPost('judulCiptaan'),
                 'jenis_ciptaan' => $this->request->getPost('jenisCiptaan'),
@@ -137,12 +140,22 @@ class HakiController extends BaseController
                 'tempat_diumumkan' => $this->request->getPost('tempatDiumumkan'),
                 'nomor_pencatatan' => $this->request->getPost('nomorPencatatan'),
                 'status_haki' => $this->request->getPost('statusHaki'),
-                'file_haki' => $fileName,
+                'file_haki' => '',
                 'tanggal_upload' => date('Y-m-d'),
             ]);
-            // Ambil Data ID dari Dosen dan Publikasi
+            // Ambil Data ID dari Dosen dan HAKI
             $haki_id = $hakiModel->getInsertID();
             $id_dosen = session()->get('user_id');
+
+            // **Buat nama file sesuai format**
+            $newFileName = "{$haki_id}_hki_" . date('Y-m-d') . ".pdf";
+
+            // **Pindahkan file ke server dengan nama baru**
+            $file->move('uploads/HAKI', $newFileName);
+
+            // **Update nama file di database**
+            $hakiModel->update($haki_id, ['file_haki' => $newFileName]);
+
             $namaPencipta = $this->request->getPost('namaPencipta');
             $namaPemegang = $this->request->getPost('namaPemegang');
             

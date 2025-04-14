@@ -15,16 +15,17 @@
 }
 
 #calendar {
-    margin-top: 20px;  
-    max-width: 7000px;
-    height: 800px;
-}
-
-.calendar-container {
-    width: 100%;
     max-width: 100%;
+    max-height: 800px;
+    margin: 0 auto;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
-
+  
 #eventForm label {
     font-weight: bold;
     margin-top: 10px;
@@ -689,16 +690,18 @@ main{
         width: 83vw;
     }
 
-    main table thead tr th:last-child,
-    main table thead tr th:first-child{
-        display: none;
+    .fc-toolbar-chunk {
+        display: flex;
+        flex-direction: row; /* Atur tombol secara horizontal */
+        justify-content: center; /* Posisikan tombol di tengah */
+        align-items: center; /* Posisikan tombol secara vertikal di tengah */
+        gap: 15px; /* Tambahkan jarak antar tombol */
     }
 
-    main table tbody tr td:last-child,
-    main table tbody tr td:first-child{
-        display: none;
+    .fc-button {
+        font-size: 16px; /* Sesuaikan ukuran font tombol */
+        padding: 10px 15px; /* Tambahkan padding tombol */
     }
-
 }
 
 @media screen and (max-width: 768px) {
@@ -815,4 +818,24 @@ main{
         font-size: 2rem;
     }
 
+    .fc-toolbar-chunk {
+        display: flex;
+        flex-direction: column; /* Atur tombol secara vertikal */
+        align-items: center; /* Posisikan tombol di tengah */
+        gap: 10px; /* Jarak antar tombol */
+    }
+
+    /* Sesuaikan ukuran teks tombol jika diperlukan */
+    .fc-button {
+        font-size: 14px; /* Ukuran font tombol */
+        padding: 8px 12px; /* Padding tombol */
+    }
+
 }
+
+/* kalender.css */
+
+
+
+
+

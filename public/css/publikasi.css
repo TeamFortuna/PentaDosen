@@ -1,3 +1,224 @@
+.container-table {
+    width: 100%; /* Lebarkan hingga hampir memenuhi layar 120 */
+    margin: 20px auto; /* Kurangi margin agar tabel lebih naik ke atas */
+    overflow-x: auto; /* Scroll horizontal */
+    /* max-width: 1200px; */
+    max-height: 600px;
+}
+    
+.container-table h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+    
+.card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px; /* Tambahkan radius untuk lebih modern */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Lebih tebal untuk efek elegan */
+    padding: 30px; /* Tambahkan padding agar isi card lebih lega */
+    overflow: hidden; /* Mencegah konten keluar dari card */
+    
+}
+
+.card-header {
+    background-color: #f5f7fa; 
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+}
+
+.card-body {
+    padding: 15px;
+    margin-top: 10px;
+}
+    
+.card-header h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: -20px;
+}
+
+.table-controls {
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.table-controls button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+    border: none;
+    cursor: pointer;
+}
+
+/* Warna dan efek hover untuk tombol */
+.table-controls button.excel {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+.table-controls button.excel:hover {
+    background-color: #218838;
+}
+
+.button-primary {
+    background-color: #4A73E8;  /* Warna biru */
+    color: white;  /* Teks putih */
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Montserrat';
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.button-primary:hover {
+    background-color: #3A63D8;  /* Warna biru lebih gelap saat hover */
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+    
+table thead {
+    background-color: #f0f1f5;
+}
+    
+table th,
+table td {
+    border: 1px solid #ddd;
+    padding: 12px 16px; 
+    text-align: center;
+}
+    
+.no-data {
+    text-align: center;
+    color: #888;
+}
+
+/* Styling Entries */
+.showEntries {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.table-controls select {
+    padding: 6px 12px;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #333;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-controls select:hover {
+    border-color: #4A73E8;
+}
+
+.table-controls select:focus {
+    border-color: #4A73E8;
+    box-shadow: 0 0 4px #4A73E8;
+}
+
+/* Styling Search Bar */
+.filter {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.search-input {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: #aaa;
+}
+
+.search-input:focus {
+    border-color: #4A73E8;
+    outline: none;
+    box-shadow: 0 0 4px #4A73E8;
+}
+
+.page-controls .entries-info {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: #333;
+    margin-right: auto; /* Tetap di kiri */
+}
+
+/* Footer Pagination */
+.page-controls {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    position: relative;
+    justify-content: flex-end;
+}
+
+.page-controls .paginate_button {
+    background-color: #4A73E8; /* Warna biru */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin: 0 5px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.page-controls .paginate_button:hover {
+    background-color: #3A63D8; /* Warna biru lebih gelap */
+    transform: translateY(-2px); /* Efek mengangkat */
+}
+
+.page-controls .paginate_button.disabled {
+    background-color: #ccc; /* Warna abu-abu untuk tombol nonaktif */
+    color: #666;
+    cursor: not-allowed;
+}
+
+/* Isi dalam content */
 .modal {
     display: none;
     position: fixed;
@@ -14,10 +235,10 @@
     background-color: #f9f9f9;
     margin: 0;
     padding: 40px;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    position: relative;
 }
 
 .close-modal {
@@ -33,101 +254,14 @@
     color: black;
 }
 
-#publicationForm {
-    width: 100%;
-    max-width: 100%;
-}
 
-#publicationForm h2 {
-    text-align: left;
-    margin-top: 0;
-}
-
-#publicationForm label {
-    font-weight: bold;
-    margin-top: 10px;
-    display: block;
-    text-align: left;
-}
-
-#publicationForm label.required::after {
-    content: " *";
-    color: red;
-    font-weight: bold;
-}
-
-#publicationForm input[type="text"],
-#publicationForm input[type="date"],
-#publicationForm input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 13px;
-    box-sizing: border-box;
-}
-
-#publicationForm select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 13px;
-    box-sizing: border-box;
-    font-size: 14px;
-    /* font-family: 'Montserrat'; */
-}
-
-#openModalBtn {
-    margin-top: 20px;
-}
-
-.button-primary {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 13px;
-    cursor: pointer;
-    font-family: 'Montserrat';
-}
-
-#publicationForm button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 13px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    margin-top: 10px;
-}
-
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 13px;
-    box-sizing: border-box;
-    resize: none;
-}
-
-#publicationForm input[type="file"] {
-    padding: 10px;
-}
-
-#publicationForm input[type="text"]:focus,
-#publicationForm input[type="date"]:focus,
-#publicationForm select:focus,
-#publicationForm textarea:focus {
-    border-color: #007bff;
-    outline: none;
+/* Untuk isi publikasi */
+.publikasi-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px; /* Memberikan jarak antar elemen */
 }
 
 h4{
@@ -137,110 +271,215 @@ h4{
     margin-top: 25px;
 }
 
-
-#penulisDosenContainer {
-    margin: 20px 0;
+.publikasi-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Jarak antar field */
 }
 
-.penulis-dosen {
+.form-group {
+    display: flex;
+    flex-direction: column; /* Agar label dan input tetap vertikal */
+    width: 48%; /* Setengah lebar untuk dua kolom */
+}
+
+.form-group label {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.publikasi-container select {
+    padding: 10px 15px; /* Menambah padding agar lebih luas */
+    border-radius: 8px; /* Memberikan border radius untuk sudut yang lebih halus */
+    border: 1px solid #ccc; /* Menambahkan border dengan warna abu-abu */
+    background-color: #fff; /* Memberikan latar belakang putih */
+    font-size: 16px; /* Ukuran font dalam dropdown */
+    color: #333; /* Warna teks */
+    transition: all 0.3s ease; /* Efek transisi saat hover atau focus */
+}
+
+/* Styling saat dropdown dalam keadaan focus */
+.publikasi-container select:focus {
+    border-color: #007bff; /* Ubah border warna saat fokus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Memberikan bayangan saat fokus */
+}
+
+/* Styling untuk option di dalam select */
+.publikasi-container select option {
+    padding: 10px 15px;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Styling saat opsi dalam dropdown dihover */
+.publikasi-container select option:hover {
+    background-color: #f0f0f0; /* Latar belakang saat hover */
+}
+
+/* Styling untuk input teks */
+.publikasi-container input[type="text"] {
+    padding: 10px 15px; /* Menambah padding agar lebih luas */
+    border-radius: 8px; /* Memberikan border radius untuk sudut yang lebih halus */
+    border: 1px solid #ccc; /* Menambahkan border dengan warna abu-abu */
+    background-color: #fff; /* Memberikan latar belakang putih */
+    font-size: 16px; /* Ukuran font dalam input */
+    color: #333; /* Warna teks */
+    transition: all 0.3s ease; /* Efek transisi saat hover atau focus */
+}
+
+/* Styling saat input teks dalam keadaan focus */
+.publikasi-container input[type="text"]:focus {
+    border-color: #007bff; /* Ubah border warna saat fokus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Memberikan bayangan saat fokus */
+}
+
+/* Container untuk anggota publikasi */
+.anggota-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    padding: 15px;
+}
+
+.penulis-container,
+.pemegang-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 5px; 
+    gap: 10px;
 }
 
-.penulis-dosen input {
-    flex: 1; 
-    margin-top: 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 13px;
-    box-sizing: border-box;
+.anggota-penulis{
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .input-wrapper {
     display: flex;
-    align-items: center; 
-    gap: 10px; 
-    width: 30%; 
+    align-items: center;
+    gap: 5px;
 }
 
-.input-wrapper input {
-    flex: 1; 
+.input-wrapper input[type="text"] {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 40px;
 }
 
 .hapusPenulisDosenIcon {
-    color: red;
-    font-size: 24px;
     cursor: pointer;
-    display: inline-block; 
+    color: #d9534f;
+    font-size: 18px;
+    transition: color 0.3s;
 }
 
-.hapusPenulisDosenIcon:hover {
-    color: darkred; 
+.hapusPenulisDosenIcon {
+    color: #c9302c;
 }
 
-/* Untuk tombol Tambah Penulis Dosen */
-#publicationForm #tambahPenulisDosenBtn {
-    background-color: #289441; /* Warna hijau */
+#tambahPenulisDosenBtn {
+    background-color: #4A73E8;
     color: white;
-    padding: 6px 12px; /* Ukuran sedikit lebih besar */
-    border: 2px solid #289441; /* Border berbeda */
-    border-radius: 13px; /* Rounded corners */
+    border: none;
+    border-radius: 5px;
+    padding: 7px 15px;
+    font-size: 14px;
     cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 16px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#tambahPenulisDosenBtn:hover {
+    background-color: #3A63D8;
+}
+
+/* Jarak antar elemen dalam pencipta-container */
+.penulis-container .input-group {
     margin-bottom: 10px;
 }
 
-#publicationForm #tambahPenulisDosenBtn:hover {
-    background-color: #218838; /* Warna lebih gelap saat hover */
-    transform: scale(1.05); /* Efek zoom */
-}
 
-.recent-orders {
-    width: 110%; /* Agar container tabel selebar main */
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    overflow-x: auto; /* Tambahkan scroll horizontal */
-    white-space: nowrap; /* Hindari teks memotong */
-    
-}
 
-.recent-orders h2 {
+/* Unggah file card */
+.unggah-file-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
     margin-top: 20px;
-    
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-#publicationTable {
-    width: 120%; /* Buat tabel selebar halaman */
-    border-collapse: collapse; /* Hapus jarak antar border */
+.unggah-file-card label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
 }
 
-#publicationTable th,
-#publicationTable td {
-    text-align: center;
-    vertical-align: middle;
-    padding: 12px;
-    border: 1px solid #ddd;
-}
-
-/* Memberikan jarak antara fitur search dan data table length */
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter {
-    margin-bottom: 20px;
-    margin-right: 20px;
-}
-
-/* Atur agar search dan length lebih lebar dari default */
-.dataTables_wrapper .dataTables_length select,
-.dataTables_wrapper .dataTables_filter input {
-    padding: 8px;
+.unggah-file-card input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 14px;
+    background-color: #fff;
+    cursor: pointer;
 }
 
+.unggah-file-card input[type="file"]:focus {
+    border-color: #4A73E8;
+    outline: none;
+    box-shadow: 0 0 5px rgba(74, 115, 232, 0.5);
+}
+
+/* Label informasi ukuran file */
+.file-size-info {
+    font-size: 14px;
+    color: #555;
+    margin-top: -5px;
+}
+
+/* Pesan error */
+.unggah-file-card .error-feedback {
+    color: #d9534f;
+    font-size: 14px;
+    margin-top: -10px;
+}
+
+/* Tombol unggah di luar card */
+.form-action {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.unggah-button {
+    background-color: #4A73E8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.unggah-button:hover {
+    background-color: #3A63D8;
+}
+
+/* Preview PDF */
 .pdf-modal-content {
     position: relative; /* Supaya posisi elemen absolute mengacu pada modal */
     background-color: white;
@@ -263,6 +502,24 @@ h4{
     margin-bottom: 20px; /* Memberikan jarak antara iframe dan tombol di bawah */
 }
 
+.modal-actions {
+    text-align: center;
+    margin-top: auto; /* Memastikan tombol selalu berada di bagian bawah modal */
+}
+
+.modal-actions a {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.modal-actions a:hover {
+    background-color: #45a049;
+}
+
 /* Tombol close modal */
 #pdfPreviewModal .close-modal {
     position: absolute;
@@ -279,9 +536,3 @@ h4{
 #pdfPreviewModal .close-modal:hover {
     color: black;
 }
-
-.modal-actions {
-    text-align: center;
-    margin-top: auto; /* Memastikan tombol selalu berada di bagian bawah modal */
-}
-

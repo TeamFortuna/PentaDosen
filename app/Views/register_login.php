@@ -130,8 +130,8 @@ if (!session()->get('logged_in')):
                         </div>';
                 }
                 ?>
-                <a href="<?= base_url('/forgot_password'); ?>">Forgot Your Password?</a>
-                <button type="submit">Login</button>
+                <a href="<?= base_url('/forgot_password'); ?>">Lupa Sandi?</a>
+                <button type="submit">Masuk</button>
                 <?= form_close(); ?>
             </div>
             <div class="toggle-container">
@@ -139,7 +139,7 @@ if (!session()->get('logged_in')):
                     <div class="toggle-panel toggle-left">
                         <h1>Haii, Selamat Datang di PentaDosen!</h1>
                         <p>Masukkan akun yang anda daftarkan untuk menggunakan situs ini</p>
-                        <button class="hidden" id="login">Login</button>
+                        <button class="hidden" id="login">Masuk</button>
                     </div>
                     <div class="toggle-panel toggle-right">
                         <h1>Selamat datang di PentaDosen!</h1>

@@ -1,6 +1,50 @@
 $(document).ready(function () {
-    // Inisialisasi DataTable
-    $('#hakiTable').DataTable();
+
+    // Nonaktifkan fitur bawaan DataTable (seperti pagination, filter, entries)
+    const table = $('#hakiTable').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
+        lengthChange: false,
+    });
+
+
+    $('#customSearchInput').on('keyup', function () {
+        const searchValue = $(this).val().toLowerCase();
+        $('#proposalPenelitianTable tbody tr').filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(searchValue) > -1);
+        });
+    });
+    
+
+    // Implementasi manual entries (per halaman)
+    $('#entriesSelect').on('change', function () {
+        const pageLength = parseInt(this.value);
+        table.page.len(pageLength).draw();
+    });
+
+    // Implementasi manual pagination
+    $('#nextPageBtn').on('click', function () {
+        table.page('next').draw('page');
+    });
+
+    $('#prevPageBtn').on('click', function () {
+        table.page('previous').draw('page');
+    });
+
+    // Fungsi untuk memperbarui informasi jumlah entries
+    function updateEntriesInfo() {
+        const pageInfo = table.page.info();
+        $('#entriesShowing').text(`Showing ${pageInfo.start + 1} to ${pageInfo.end} of ${pageInfo.recordsTotal} entries`);
+    }
+
+    // Panggil fungsi updateEntriesInfo saat halaman pertama kali dimuat
+    updateEntriesInfo();
+
+    // Update info entries setiap kali tabel diperbarui
+    table.on('draw', function () {
+        updateEntriesInfo();
+    });
 
     // Mendapatkan elemen modal dan tombol
     const modal = document.getElementById("hakiModal");
@@ -48,14 +92,21 @@ function closehakiModal() {
     modal.style.display = "none";
 }
 
-// Fungsi untuk menambah input nama pencipta
 function addPencipta() {
     const container = document.getElementById("penciptaContainer");
     const div = document.createElement("div");
-    div.className = "input-group";
+    div.className = "anggota-pencipta input-group";
     div.innerHTML = `
-        <input type="text" name="namaPencipta[]" placeholder="Masukkan nama pencipta">
-        <span class="hapusNamaPencipta material-icons-sharp" onclick="hapusPencipta(this)">remove</span>
+        <div class="input-wrapper">
+            <input
+                type="text"
+                list="dosenList"
+                name="namaPencipta[]"
+                placeholder="Masukkan nama pencipta"
+                autocomplete="off"
+                required>
+            <span class="hapusNamaPencipta material-icons-sharp" onclick="hapusPencipta(this)">remove</span>
+        </div>
     `;
     container.appendChild(div);
 }
@@ -64,22 +115,32 @@ function addPencipta() {
 function addPemegang() {
     const container = document.getElementById("pemegangContainer");
     const div = document.createElement("div");
-    div.className = "input-group";
+    div.className = "anggota-pemegang input-group";
     div.innerHTML = `
-        <input type="text" name="namaPemegang[]" placeholder="Masukkan nama pemegang hak cipta">
-        <span class="hapusNamaPemegang material-icons-sharp" onclick="hapusPemegang(this)">remove</span>
+        <div class="input-wrapper">
+            <input
+                type="text"
+                list="dosenList"
+                name="namaPemegang[]"
+                placeholder="Masukkan nama pemegang"
+                autocomplete="off"
+                required>
+            <span class="hapusNamaPemegang material-icons-sharp" onclick="hapusPemegang(this)">remove</span>
+        </div>
     `;
     container.appendChild(div);
 }
 
-// Fungsi untuk menghapus nama pencipta
+// Fungsi untuk menghapus input nama pencipta
 function hapusPencipta(element) {
-    element.parentElement.remove();
+    const parent = element.closest(".input-group");
+    parent.remove();
 }
 
-// Fungsi untuk menghapus nama pemegang hak cipta
+// Fungsi untuk menghapus input nama pemegang
 function hapusPemegang(element) {
-    element.parentElement.remove();
+    const parent = element.closest(".input-group");
+    parent.remove();
 }
 
 

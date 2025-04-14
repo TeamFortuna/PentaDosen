@@ -87,18 +87,60 @@
                 <h2>Rekap Proposal Penelitian</h2>
                 <table id="dashboardTable" class="display">
                     <thead>
+                    <!-- Jika role Admin -->
+                    <?php if (session()->get('user_type') == 'admin'): ?>
                         <tr>
+                            <th>No</th>
                             <th>Nama Dosen</th>
-                            <th>Judul Proposal</th>
-                            <th>Tanggal Proposal</th>
+                            <th>Judul Penelitian</th>
+                            <th>Tanggal Penelitian</th>
                             <th>Skema</th>
                             <th>Sumber Dana</th>
                             <th>Dana yang Didanai</th>
-                            <th>File</th>
+                            <!-- <th>Proposal</th>
+                            <th>Laporan Kemajuan</th>
+                            <th>Laporan Akhir</th> -->
                         </tr>
+                    <!-- Jika role Dosen -->
+                    <?php else: ?>
+                        <tr>
+                            <th>No</th>
+                            <th>Judul Penelitian</th>
+                            <th>Tanggal Penelitian</th>
+                            <th>Skema</th>
+                            <th>Sumber Dana</th>
+                            <th>Dana yang Didanai</th>
+                        </tr>
+                    <?php endif; ?>
                     </thead>
                     <tbody>
-
+                            <?php $no = 1; ?>
+                            <!-- Jika role Admin -->
+                            <?php if (session()->get('user_type') == 'admin'): ?>
+                                <?php foreach ($proposalsFA as $proposalFA): ?>
+                                    <tr>
+                                        <td><?= $no++; ?></td>
+                                        <td><?= esc($proposalFA['nama'] ?? ''); ?></td>
+                                        <td><?= esc($proposalFA['judul_penelitian']); ?></td>
+                                        <td><?= date('d-m-Y', strtotime($proposalFA['tanggal_upload'])); ?></td>
+                                        <td><?= esc($proposalFA['skema'] ?? ''); ?></td>
+                                        <td><?= esc($proposalFA['sumber_dana'] ?? ''); ?></td>
+                                        <td>Rp. <?= number_format($proposalFA['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <!-- Jika role Dosen -->
+                            <?php else: ?>
+                                <?php foreach ($proposalsFU as $proposalFU): ?> 
+                                    <tr>
+                                        <td><?= $no++; ?></td>
+                                        <td><?= esc($proposalFU['judul_penelitian']); ?></td>
+                                        <td><?= date('d-m-Y', strtotime($proposalFU['tanggal_upload'])); ?></td>
+                                        <td><?= esc($proposalFU['skema'] ?? ''); ?></td>
+                                        <td><?= esc($proposalFU['sumber_dana'] ?? ''); ?></td>
+                                        <td>Rp. <?= number_format($proposalFU['biaya_didanai'] ?? 0, 0, ',', '.'); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                     </tbody>
                 </table>
                 <!-- End of Table -->

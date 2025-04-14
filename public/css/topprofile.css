@@ -1,0 +1,66 @@
+/* Styling Dark Mode Button */
+.dark-mode {
+    background-color: var(--color-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1.6rem;
+    width: 4.2rem;
+    cursor: pointer;
+    border-radius: var(--border-radius-1);
+}
+
+
+/* Sembunyikan Tombol Menu */
+#menu-btn {
+    display: none;
+}
+
+.dark-mode span {
+    font-size: 1.2rem;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark-mode span.active {
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: var(--border-radius-1);
+}
+
+/* Profile Container Styling */
+.profile-container {
+    display: flex;
+    justify-content: flex-end; /* Agar semua elemen ada di pojok kanan */
+    gap: 2rem;
+    position: fixed;
+    top: 1.4rem;
+    right: 2rem;
+}
+
+.profile-container .nav {
+    display: flex;
+    justify-content: end;
+    gap: 2rem;
+}
+
+.profile-text p, .profile-text small {
+    margin: 0;
+}
+
+.profile-photo img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile{
+    display: flex;
+    gap: 2rem;
+    text-align: right;
+}

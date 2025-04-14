@@ -1,6 +1,49 @@
 $(document).ready(function () {
-    // Inisialisasi DataTable
-    $('#proposalPenelitianTable').DataTable();
+    // Nonaktifkan fitur bawaan DataTable (seperti pagination, filter, entries)
+    const table = $('#proposalPenelitianTable').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
+        lengthChange: false,
+    });
+
+
+    $('#customSearchInput').on('keyup', function () {
+        const searchValue = $(this).val().toLowerCase();
+        $('#proposalPenelitianTable tbody tr').filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(searchValue) > -1);
+        });
+    });
+    
+
+    // Implementasi manual entries (per halaman)
+    $('#entriesSelect').on('change', function () {
+        const pageLength = parseInt(this.value);
+        table.page.len(pageLength).draw();
+    });
+
+    // Implementasi manual pagination
+    $('#nextPageBtn').on('click', function () {
+        table.page('next').draw('page');
+    });
+
+    $('#prevPageBtn').on('click', function () {
+        table.page('previous').draw('page');
+    });
+
+    // Fungsi untuk memperbarui informasi jumlah entries
+    function updateEntriesInfo() {
+        const pageInfo = table.page.info();
+        $('#entriesShowing').text(`Showing ${pageInfo.start + 1} to ${pageInfo.end} of ${pageInfo.recordsTotal} entries`);
+    }
+
+    // Panggil fungsi updateEntriesInfo saat halaman pertama kali dimuat
+    updateEntriesInfo();
+
+    // Update info entries setiap kali tabel diperbarui
+    table.on('draw', function () {
+        updateEntriesInfo();
+    });
 
     // Validasi ukuran file sebelum submit
     $('#berkas_proposal').on('change', function () {
@@ -59,75 +102,88 @@ $(document).ready(function () {
     });
 
     // Fungsi untuk menampilkan atau menyembunyikan field tambahan
-    const toggleAdditionalFields = (selector, targetField) => {
-        $(selector).change(function () {
-            $(targetField).toggle(this.value === 'lainnya');
-        });
-    };
+const toggleAdditionalFields = (selector, targetField) => {
+    // Menggunakan event 'change' untuk mendeteksi perubahan pada dropdown
+    $(selector).change(function () {
+        // Menampilkan atau menyembunyikan elemen target sesuai dengan nilai dropdown
+        $(targetField).toggle(this.value === 'lainnya');
+    });
+};
 
+// Pastikan jQuery sudah dimuat di halaman sebelum menjalankan kode ini
+$(document).ready(function () {
     // Dropdown tambahan untuk skema lainnya
     toggleAdditionalFields('#skema', '#skema_lainnya');
+    
+    // Dropdown tambahan untuk sumber dana lainnya
     toggleAdditionalFields('#sumberDana', '#dana_lainnya');
+});
+
 
     
 });
 
 document.addEventListener("DOMContentLoaded", function () {
     const tambahAnggotaBtn = document.getElementById("tambahAnggotaBtn");
-    const anggotaContainer = document.getElementById("anggotaContainer");
+    const anggotaContainer = document.getElementById("anggotaEksternal");
 
     tambahAnggotaBtn.addEventListener("click", function () {
         const anggotaDiv = document.createElement("div");
-        anggotaDiv.className = "anggota";
-
+        anggotaDiv.className = "anggota card mt-3";
+        
         anggotaDiv.innerHTML = `
-            <label>Nama Anggota:</label>
-            <input type="text" name="nama_anggota[]" placeholder="Nama anggota" required>
-            
-            <label>NIDN Anggota:</label>
-            <input type="text" name="nidn_anggota[]" placeholder="NIDN" required>
-            
-            <label>Jabatan Akademik:</label>
-            <input type="text" name="jabatan_anggota[]" placeholder="Jabatan" required>
-            
-            <label for="perguruan_anggota">Perguruan Tinggi:</label>
-            <select id="perguruan_anggota" name="perguruan_anggota[]">
-                <option value="" disabled selected>Silahkan Pilih</option>
-                <option value="Universitas YARSI">Universitas YARSI</option>
-                <option value="lainnya">Lainnya (isi sendiri)</option>
-            </select>
-            <input type="text" class="perguruan_lainnya" name="perguruan_lainnya[]" placeholder="Isi perguruan yang lainnya" style="display:none;">
-            
-            <label for="fakultas_anggota">Fakultas:</label>
-            <select id="fakultas_anggota" name="fakultas_anggota[]">
-                <option value="" disabled selected>Silahkan Pilih</option>
-                <option value="Fakultas Teknologi Informasi (FTI)">Fakultas Teknologi Informasi (FTI)</option>
-                <option value="lainnya">Lainnya (isi sendiri)</option>
-            </select>
-            <input type="text" class="fakultas_lainnya" name="fakultas_lainnya[]" placeholder="Isi fakultas yang lainnya" style="display:none;">
-            
-            <label for="prodi_anggota">Program Studi:</label>
-            <select id="prodi_anggota" name="prodi_anggota[]">
-                <option value="" disabled selected>Silahkan Pilih</option>
-                <option value="Teknik Informatika">Teknik Informatika</option>
-                <option value="Perpustakaan dan Sains Informasi">Perpustakaan dan Sains Informasi</option>
-                <option value="lainnya">Lainnya (isi sendiri)</option>
-            </select>
-            <input type="text" class="prodi_lainnya" name="prodi_lainnya[]" placeholder="Isi program studi yang lainnya" style="display:none;">
-            
-            <button type="button" class="hapusAnggotaBtn">Hapus Anggota</button>
+            <div class="card-eksternal">
+                <div class="form-group">
+                    <label>Nama Anggota:</label>
+                    <input type="text" name="nama_anggota[]" class="form-control" placeholder="Nama anggota" required>
+                </div>
+                <div class="form-group">
+                    <label>NIDN Anggota:</label>
+                    <input type="text" name="nidn_anggota[]" class="form-control" placeholder="NIDN" required>
+                </div>
+                <div class="form-group">
+                    <label>Jabatan Akademik:</label>
+                    <input type="text" name="jabatan_anggota[]" class="form-control" placeholder="Jabatan" required>
+                </div>
+                <div class="form-group">
+                    <label for="perguruan_anggota">Perguruan Tinggi:</label>
+                    <select class="form-control" name="perguruan_anggota[]">
+                        <option value="" disabled selected>Silahkan Pilih</option>
+                        <option value="Universitas YARSI">Universitas YARSI</option>
+                        <option value="lainnya">Lainnya (isi sendiri)</option>
+                    </select>
+                    <input type="text" class="form-control mt-2 perguruan_lainnya" name="perguruan_lainnya[]" placeholder="Isi perguruan yang lainnya" style="display:none;">
+                </div>
+                <div class="form-group">
+                    <label for="fakultas_anggota">Fakultas:</label>
+                    <select class="form-control" name="fakultas_anggota[]">
+                        <option value="" disabled selected>Silahkan Pilih</option>
+                        <option value="Fakultas Teknologi Informasi (FTI)">Fakultas Teknologi Informasi (FTI)</option>
+                        <option value="lainnya">Lainnya (isi sendiri)</option>
+                    </select>
+                    <input type="text" class="form-control mt-2 fakultas_lainnya" name="fakultas_lainnya[]" placeholder="Isi fakultas yang lainnya" style="display:none;">
+                </div>
+                <div class="form-group">
+                    <label for="prodi_anggota">Program Studi:</label>
+                    <select class="form-control" name="prodi_anggota[]">
+                        <option value="" disabled selected>Silahkan Pilih</option>
+                        <option value="Teknik Informatika">Teknik Informatika</option>
+                        <option value="Perpustakaan dan Sains Informasi">Perpustakaan dan Sains Informasi</option>
+                        <option value="lainnya">Lainnya (isi sendiri)</option>
+                    </select>
+                    <input type="text" class="form-control mt-2 prodi_lainnya" name="prodi_lainnya[]" placeholder="Isi program studi yang lainnya" style="display:none;">
+                </div>
+                <button type="button" class="btn btn-danger mt-3 hapusAnggotaBtn">Hapus Anggota</button>
+            </div>
         `;
 
-        // Tambahkan elemen baru ke dalam kontainer
         anggotaContainer.appendChild(anggotaDiv);
 
-        // Tambahkan event listener untuk tombol Hapus Anggota
         const hapusBtn = anggotaDiv.querySelector(".hapusAnggotaBtn");
         hapusBtn.addEventListener("click", function () {
             anggotaDiv.remove();
         });
 
-        // Tampilkan field tambahan jika "lainnya" dipilih
         const toggleField = (selector, target) => {
             const dropdown = anggotaDiv.querySelector(selector);
             const inputField = anggotaDiv.querySelector(target);
@@ -238,7 +294,7 @@ function tambahAnggotaInternal() {
             <input
                 type="text"
                 list="dosenList"
-                name="nama_dosen_internal[]"
+                name="nama_anggota[]"
                 placeholder="Masukkan nama dosen"
                 autocomplete="off"
                 required>
@@ -257,67 +313,15 @@ function hapusAnggota(button) {
 }
 
 
+// Fungsi untuk menampilkan modal dengan data dari server
 function openEditModal(proposalId) {
     fetch(`/getProposalById/${proposalId}`)
         .then(response => response.json())
         .then(data => {
-            console.log('Data diterima:', data);
-            // Isi field modal dengan data dari server
-            document.getElementById('editProposalId').value = data.id;
-            document.getElementById('editJudulPenelitian').value = data.judul_penelitian;
-            document.getElementById('editSkema').value = data.skema;
+            if (!data) return console.error('Data tidak ditemukan.');
 
-            // Tampilkan skema lainnya jika ada
-            if (data.skema_lainnya) {
-                document.getElementById('editSkemaLainnya').style.display = 'block';
-                document.getElementById('editSkemaLainnya').value = data.skema_lainnya;
-            }
-
-            document.getElementById('editBiayaDiusulkan').value = data.biaya_diusulkan;
-            document.getElementById('editBiayaDidanai').value = data.biaya_didanai;
-            document.getElementById('editSumberDana').value = data.sumber_dana;
-
-            // Tampilkan dana lainnya jika ada
-            if (data.dana_lainnya) {
-                document.getElementById('editDanaLainnya').style.display = 'block';
-                document.getElementById('editDanaLainnya').value = data.dana_lainnya;
-            }
-
-            if (data.anggota_kegiatan && data.anggota_kegiatan.length > 0) {
-                const anggotaContainer = document.getElementById('editAnggotaContainer');
-                anggotaContainer.innerHTML = ''; // Bersihkan field sebelumnya
-            
-                data.anggota_kegiatan.forEach(anggota => {
-                    const anggotaDiv = document.createElement('div');
-                    anggotaDiv.className = 'anggota';
-                    anggotaDiv.innerHTML = `
-                        <label>Nama Anggota:</label>
-                        <input type="text" name="nama_anggota[]" value="${anggota.nama_anggota}" placeholder="Nama anggota" required>
-                        <label>NIDN Anggota:</label>
-                        <input type="text" name="nidn_anggota[]" value="${anggota.nidn_anggota}" placeholder="NIDN" required>
-                        <label>Jabatan Akademik:</label>
-                        <input type="text" name="jabatan_anggota[]" value="${anggota.jabatan_anggota}" placeholder="Jabatan" required>
-                        <label>Perguruan Tinggi:</label>
-                        <input type="text" name="perguruan_anggota[]" value="${anggota.perguruan_anggota}" placeholder="Perguruan Tinggi" required>
-                        <label>Fakultas:</label>
-                        <input type="text" name="fakultas_anggota[]" value="${anggota.fakultas_anggota}" placeholder="Fakultas" required>
-                        <label>Program Studi:</label>
-                        <input type="text" name="prodi_anggota[]" value="${anggota.prodi_anggota}" placeholder="Program Studi" required>
-                        <button type="button" class="hapusAnggotaBtn">Hapus Anggota</button>
-                    `;
-                    anggotaContainer.appendChild(anggotaDiv);
-                });
-            } else {
-                document.getElementById('editAnggotaContainer').innerHTML = '<p>Tidak ada anggota yang ditemukan.</p>';
-            }
-            
-            
-
-            // Tampilkan file proposal yang tersimpan
-            const currentFileLink = document.getElementById('editCurrentBerkasProposal');
-            currentFileLink.href = `/uploads/${data.file_penelitian}`;
-            currentFileLink.textContent = data.file_penelitian || 'Tidak ada file';
-            
+            // Isi data modal
+            fillEditModalData(data);
 
             // Tampilkan modal
             document.getElementById('editProposalModal').style.display = 'block';
@@ -325,25 +329,70 @@ function openEditModal(proposalId) {
         .catch(error => console.error('Error:', error));
 }
 
-document.getElementById('editTambahAnggotaKegiatanBtn').addEventListener('click', function() {
-    const anggotaContainer = document.getElementById('editAnggotaKegiatanContainer');
+// Fungsi untuk mengisi data modal
+function fillEditModalData(data) {
+    document.getElementById('editProposalId').value = data.id;
+    document.getElementById('editJudulPenelitian').value = data.judul_penelitian;
+    document.getElementById('editSkema').value = data.skema || '';
+    document.getElementById('editSkemaLainnya').style.display = data.skema_lainnya ? 'block' : 'none';
+    document.getElementById('editSkemaLainnya').value = data.skema_lainnya || '';
+    document.getElementById('editBiayaDiusulkan').value = data.biaya_diusulkan || '';
+    document.getElementById('editBiayaDidanai').value = data.biaya_didanai || '';
+    document.getElementById('editSumberDana').value = data.sumber_dana || '';
+    document.getElementById('editDanaLainnya').style.display = data.dana_lainnya ? 'block' : 'none';
+    document.getElementById('editDanaLainnya').value = data.dana_lainnya || '';
+
+    // Tampilkan anggota
+    populateAnggota(data.anggota_kegiatan || []);
+
+    // File Proposal
+    const fileLink = document.getElementById('editCurrentBerkasProposal');
+    fileLink.href = data.file_penelitian ? `/uploads/${data.file_penelitian}` : '#';
+    fileLink.textContent = data.file_penelitian || 'Tidak ada file';
+}
+
+// Fungsi untuk menampilkan anggota dalam container
+function populateAnggota(anggotaList) {
+    const container = document.getElementById('editAnggotaKegiatanContainer');
+    container.innerHTML = ''; // Bersihkan sebelumnya
+    anggotaList.forEach(anggota => {
+        const anggotaDiv = document.createElement('div');
+        anggotaDiv.className = 'anggota-kegiatan';
+        anggotaDiv.innerHTML = `
+            <div class="input-wrapper">
+                <input type="text" list="dosenList" name="nama_dosen_kegiatan[]" value="${anggota.nama_anggota || ''}" placeholder="Nama atau NIDN" required>
+                <input type="hidden" name="anggota_dihapus[]" value="" class="anggotaDihapus">
+                <span class="hapusAnggotaKegiatanIcon material-icons-sharp">remove</span>
+            </div>
+        `;
+        container.appendChild(anggotaDiv);
+    });
+}
+
+// Tambahkan anggota baru
+document.getElementById('editTambahAnggotaKegiatanBtn').addEventListener('click', () => {
+    const container = document.getElementById('editAnggotaKegiatanContainer');
     const anggotaDiv = document.createElement('div');
     anggotaDiv.className = 'anggota-kegiatan';
     anggotaDiv.innerHTML = `
         <div class="input-wrapper">
-            <input type="text" name="nama_dosen_kegiatan[]" placeholder="Masukkan nama dosen" autocomplete="off">
+            <input type="text" list="dosenList" name="nama_dosen_kegiatan[]" placeholder="Nama atau NIDN" required>
+            <input type="hidden" name="anggota_dihapus[]" value="" class="anggotaDihapus">
+            <span class="hapusAnggotaKegiatanIcon material-icons-sharp">remove</span>
         </div>
-        <span class="hapusAnggotaKegiatanIcon material-icons-sharp">remove</span>
     `;
-    anggotaContainer.appendChild(anggotaDiv);
+    container.appendChild(anggotaDiv);
 });
 
-document.getElementById('editAnggotaKegiatanContainer').addEventListener('click', function(e) {
+// Hapus anggota
+document.getElementById('editAnggotaKegiatanContainer').addEventListener('click', (e) => {
     if (e.target && e.target.classList.contains('hapusAnggotaKegiatanIcon')) {
         const anggotaDiv = e.target.closest('.anggota-kegiatan');
-        anggotaDiv.remove();
+        anggotaDiv.querySelector('.anggotaDihapus').value = 'true'; // Tandai sebagai dihapus
+        anggotaDiv.remove(); // Sembunyikan elemen
     }
 });
+
 
 
 
@@ -368,6 +417,64 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const exportToExcelBtn = document.getElementById("exportToExcelBtn");
+
+    exportToExcelBtn.addEventListener("click", function () {
+        console.log("Export to Excel button clicked!");
+
+        // Ambil elemen tabel
+        const table = document.getElementById("proposalPenelitianTable");
+
+        // Buat salinan tabel tanpa kolom "Aksi"
+        const clonedTable = table.cloneNode(true);
+
+        // Hapus kolom "Aksi" dari clonedTable
+        const aksiIndex = 9; // Indeks kolom "Aksi", sesuaikan sesuai urutan kolom
+        Array.from(clonedTable.rows).forEach(row => {
+            if (row.cells[aksiIndex]) {
+                row.deleteCell(aksiIndex);
+            }
+        });
+
+        // Gunakan SheetJS untuk membuat workbook
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.table_to_sheet(clonedTable, { raw: true });
+
+        // Atur lebar kolom
+        worksheet['!cols'] = [
+            { wch: 5 },   // Kolom No
+            { wch: 40 },  // Judul Penelitian
+            { wch: 25 },  // Ketua Pengusul
+            { wch: 30 },  // Anggota Pengusul
+            { wch: 20 },  // Dana yang Disetujui
+            { wch: 15 },  // Tanggal Pengisian
+            { wch: 15 },  // Proposal
+            { wch: 20 },  // Laporan Kemajuan
+            { wch: 15 }   // Laporan Akhir
+        ];
+
+        // Tambahkan workbook dan worksheet
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Daftar Penelitian");
+
+        // Dapatkan tanggal saat ini untuk nama file
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Bulan dalam format 2 digit
+        const date = String(currentDate.getDate()).padStart(2, '0'); // Tanggal dalam format 2 digit
+        const fileName = `Daftar_Penelitian_${year}_${month}_${date}.xlsx`;
+
+        // Simpan file Excel
+        XLSX.writeFile(workbook, fileName);
+    });
+});
+
+
+
+
+
+
 
 
 

@@ -126,9 +126,6 @@
             </div>
         </div>
 
-
-
-
         <!-- Right Section -->
         <div class="right-section">
             <div class="nav">
@@ -152,7 +149,7 @@
                         <small class="text-muted"><?= session()->get('user_type'); ?></small>
                     </div>
                     <div class="profile-photo">
-                        <a href="<?= base_url('profile'); ?>"> <!-- Tambahkan link ke halaman profil -->
+                        <a href="<?= base_url('profile'); ?>">
                             <img src="<?= base_url('images/Logo Web Fortuna.png'); ?>" alt="Logo Web Fortuna">
                         </a>
                     </div>
@@ -212,7 +209,9 @@
                                 title: '<?= $event['judul_kegiatan']; ?>',
                                 description: '<?= $event['deskripsi']; ?>',
                                 start: '<?= $event['batas_awal']; ?>',
-                                end: '<?= date('Y-m-d', strtotime($event['batas_akhir'] . ' +1 day')); ?>'
+                                end: '<?= date('Y-m-d', strtotime($event['batas_akhir'] . ' +1 day')); ?>',
+
+
                             }
                         <?php endforeach; ?>
                     ],
@@ -221,7 +220,7 @@
                         showEventDetails(info.event);
                     }
                 };
-                // Menambahkan customButtons dan headerToolbar jika user_type bukan 'dosen'
+                // Menambahkan button hanya admin yang bisa menambahkan acara
                 <?php if (session()->get('user_type') == 'admin'): ?>
                     calendarConfig.customButtons = {
                         addEventButton: {
@@ -240,7 +239,7 @@
                 calendar.render();
             });
         </script>
-        <script src="<?= base_url('js/index.js'); ?>"></script>
+        <script src="<?= base_url('js/darkmode.js'); ?>"></script>
     </div>
 </body>
 
