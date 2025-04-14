@@ -108,8 +108,6 @@ body{
     cursor: pointer;           /* Mengubah kursor saat diarahkan ke tombol */
 }
 
-
-
 /* Override gaya tombol umum di dalam .container */
 .container .button-next{
     width: 40px;                  
@@ -346,3 +344,96 @@ body{
     opacity: 1;
     transition: opacity 0.5s ease-in;  /* Durasi animasi fade in */
 }
+
+/* Responsif untuk Tablet (Layar Lebar 768px ke Bawah) */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 90%;
+        min-height: 400px;
+    }
+
+    .form-container {
+        width: 100%;
+        position: relative;
+    }
+
+    .sign-in, .sign-up {
+        width: 100%;
+    }
+
+    .toggle-container {
+        display: none; /* Sembunyikan toggle panel di layar kecil */
+    }
+
+    .container button {
+        padding: 8px 30px;
+    }
+
+    .container input, .container select {
+        padding: 8px;
+    }
+}
+
+/* Responsif untuk layar kecil (iPhone 14 Pro Max) */
+@media (max-width: 480px) {
+    body {
+        height: auto; /* Sesuaikan tinggi agar scroll muncul */
+    }
+
+    .container {
+        width: 90%; /* Kurangi lebar container */
+        min-height: auto; /* Hilangkan tinggi minimum */
+        border-radius: 15px; /* Kurangi lengkungan border */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-container {
+        padding: 20px; /* Kurangi padding di dalam form */
+    }
+
+    .container input,
+    .container select {
+        font-size: 12px; /* Kurangi ukuran font input */
+        padding: 8px 10px; /* Sesuaikan padding */
+        margin: 5px 0; /* Kurangi jarak antar input */
+    }
+
+    .container button {
+        padding: 8px 20px; /* Kurangi ukuran tombol */
+        font-size: 10px; /* Kurangi ukuran font tombol */
+    }
+
+    .button-next,
+    .button-back {
+        width: 35px; /* Kurangi ukuran tombol panah */
+        height: 35px;
+        margin-left: auto; /* Posisikan ke kanan */
+    }
+
+    h1 {
+        font-size: 18px; /* Kurangi ukuran font heading */
+    }
+
+    p {
+        font-size: 12px; /* Kurangi ukuran font paragraf */
+    }
+
+    .toggle-container {
+        width: 100%; /* Lebarkan toggle agar menutupi penuh */
+        left: 0; /* Sesuaikan posisi */
+        border-radius: 0; /* Hilangkan border-radius */
+    }
+
+    .toggle-panel {
+        padding: 10px; /* Kurangi padding toggle panel */
+    }
+
+    .toggle-panel h1 {
+        font-size: 16px; /* Kurangi ukuran heading toggle */
+    }
+
+    .toggle-panel p {
+        font-size: 12px;
+    }
+}
+

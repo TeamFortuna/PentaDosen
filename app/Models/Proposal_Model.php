@@ -12,6 +12,8 @@ class Proposal_Model extends Model
         'judul_penelitian',
         'tanggal_penelitian',
         'file_penelitian',
+        'file_laporan_kemajuan',
+        'file_laporan_akhir',
         'skema',
         'skema_lainnya',
         'biaya_diusulkan',

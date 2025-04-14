@@ -10,8 +10,15 @@ class DashboardController extends BaseController
 {
     public function index()
     {
+        $proposalModel = new Proposal_Model();
+        $userId = session()->get('user_id');
+        $proposalsFinalFA = $proposalModel->getPenelitianWithDosenAndAnggotaFA();
+        $proposalsFinalFU = $proposalModel->getPenelitianWithDosenAndAnggotaFU($userId);
 
-        return view("dashboard");
+        return view("dashboard", [
+            'proposalsFA' => $proposalsFinalFA,
+            'proposalsFU' => $proposalsFinalFU,
+        ]);
     }
 
     // public function logout() {

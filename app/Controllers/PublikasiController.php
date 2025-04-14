@@ -12,17 +12,21 @@ class PublikasiController extends BaseController
 
     public function publikasi()
     {
-        $userModel = new RegisterLogin_Model();
-        $publikasiModel = new Publikasi_Model();
-        $id_dosen = session()->get('user_id');
-        $publikasiFinalUser = $publikasiModel->getPublikasiWithPenulisForUser($id_dosen);
-        $publikasiFinalAdmin = $publikasiModel->getPublikasiWithPenulisForAdmin();
-        $dataDosen = $userModel->select('nama, nidn')->findAll();
-        return view('publikasi', [
-            'dataDosen' => $dataDosen,
-            'publikasiFU' => $publikasiFinalUser,
-            'publikasiFA' => $publikasiFinalAdmin
-        ]);
+        if (session()->has('logged_in')) {
+            $userModel = new RegisterLogin_Model();
+            $publikasiModel = new Publikasi_Model();
+            $id_dosen = session()->get('user_id');
+            $publikasiFinalUser = $publikasiModel->getPublikasiWithPenulisForUser($id_dosen);
+            $publikasiFinalAdmin = $publikasiModel->getPublikasiWithPenulisForAdmin();
+            $dataDosen = $userModel->select('nama, nidn')->findAll();
+            return view('publikasi', [
+                'dataDosen' => $dataDosen,
+                'publikasiFU' => $publikasiFinalUser,
+                'publikasiFA' => $publikasiFinalAdmin
+            ]);
+        } else {
+            return redirect()->back();
+        }
     }
 
     public function uploadPublikasi()
@@ -110,9 +114,7 @@ class PublikasiController extends BaseController
         }
 
         try {
-            // Pindahkan file ke folder 'uploads/publikasi'
-            $file->move('uploads/publikasi');
-            $fileName = $file->getName();
+        
             // Simpan data Publikasi Ke Database
             $publikasiModel->save([
                 'kategori_kegiatan' => $this->request->getPost('kategoriKegiatan'),
@@ -122,12 +124,22 @@ class PublikasiController extends BaseController
                 'jumlah_halaman' => $this->request->getPost('jumlahHalaman'),
                 'penerbit' => $this->request->getPost('penerbit'),
                 'isbn' => $this->request->getPost('isbn'),
-                'file_publikasi' => $fileName,
+                'file_publikasi' => '',
                 'tanggal_upload' => date('Y-m-d'),
             ]);
             // Ambil Data ID dari Dosen dan Publikasi
             $publikasi_id = $publikasiModel->getInsertID();
             $id_dosen = session()->get('user_id');
+
+            // **Buat nama file sesuai format**
+            $newFileName = "{$publikasi_id}_publikasi_" . date('Y-m-d') . ".pdf";
+
+            // **Pindahkan file ke server dengan nama baru**
+            $file->move('uploads/publikasi', $newFileName);
+
+            // **Update nama file di database**
+            $publikasiModel->update($publikasi_id, ['file_publikasi' => $newFileName]);
+
             $penulisDosen = $this->request->getPost('penulisDosen');
 
             // Jika Data Penulis Lebih Dari Satu

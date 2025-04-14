@@ -52,6 +52,14 @@ class Penelitian extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
             ],
+            'file_laporan_kemajuan' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+            ],
+            'file_laporan_akhir' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+            ],
             'created_at' => [
                 'type'    => 'DATETIME',
                 'null'    => true,

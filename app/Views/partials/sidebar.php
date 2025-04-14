@@ -2,7 +2,9 @@
     <div class="toggle">
         <div class="logo">
             <img src="<?= base_url('images/Logo Web Fortuna.png'); ?>" alt="Logo Web Fortuna">
-            <h2>Penta<span class="web">Dosen</span></h2>
+            <a href="<?= site_url('/dashboard'); ?>" class="<?= uri_string() == 'dashboard' ? 'active' : ''; ?>">
+                <h2>Penta<span class="web">Dosen</span></h2>
+            </a>
         </div>
         <div class="close" id="close-btn">
             <span class="material-icons-sharp">close</span>
@@ -23,7 +25,7 @@
             </a>
             <a href="<?= site_url('/proposal_penelitian'); ?>" class="<?= uri_string() == 'proposal_penelitian' ? 'active' : ''; ?>">
                 <span class="material-icons-sharp">receipt_long</span>
-                <h3>Proposal Penelitian</h3>
+                <h3>Penelitian</h3>
             </a>
             <a href="<?= site_url('/publikasi'); ?>" class="<?= uri_string() == 'publikasi' ? 'active' : ''; ?>">
                 <span class="material-icons-sharp">book</span>
@@ -31,11 +33,7 @@
             </a>
             <a href="<?= site_url('/haki'); ?>" class="<?= uri_string() == 'haki' ? 'active' : ''; ?>">
                 <span class="material-icons-sharp">import_contacts</span>
-                <h3>HAKI</h3>
-            </a>
-            <a href="<?= site_url('/setting'); ?>" class="<?= uri_string() == 'setting' ? 'active' : ''; ?>">
-                <span class="material-icons-sharp">settings</span>
-                <h3>Setting</h3>
+                <h3>HKI</h3>
             </a>
         <?php endif; ?>
 
@@ -47,7 +45,7 @@
             </a>
             <a href="<?= site_url('/proposal_penelitian'); ?>" class="<?= uri_string() == 'proposal_penelitian' ? 'active' : ''; ?>">
                 <span class="material-icons-sharp">receipt_long</span>
-                <h3>Proposal Penelitian</h3>
+                <h3>Penelitian</h3>
             </a>
             <a href="<?= site_url('/publikasi'); ?>" class="<?= uri_string() == 'publikasi' ? 'active' : ''; ?>">
                 <span class="material-icons-sharp">book</span>
@@ -55,17 +53,13 @@
             </a>
             <a href="<?= site_url('/haki'); ?>" class="<?= uri_string() == 'haki' ? 'active' : ''; ?>">
                 <span class="material-icons-sharp">import_contacts</span>
-                <h3>HAKI</h3>
-            </a>
-            <a href="<?= site_url('/setting'); ?>" class="<?= uri_string() == 'setting' ? 'active' : ''; ?>">
-                <span class="material-icons-sharp">settings</span>
-                <h3>Setting</h3>
+                <h3>HKI</h3>
             </a>
         <?php endif; ?>
 
         <a href="registerlogincontroller/logout">
             <span class="material-icons-sharp">logout</span>
-            <h3>Logout</h3>
+            <h3>Keluar</h3>
         </a>
     </div>
 </aside>

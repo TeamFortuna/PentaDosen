@@ -10,8 +10,12 @@ class RegisterLoginController extends BaseController
     public function index()
     {
         helper('form');
-        // Load the registration form view
-        return view('register_login');
+        if (!session()->has('logged_in')) {
+            // Load the registration form view
+            return view('register_login');
+        } else {
+            return redirect()->back();
+        }
     }
 
     public function processRegister()

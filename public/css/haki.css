@@ -1,3 +1,600 @@
+.container-table {
+    width: 120%; /* Lebarkan hingga hampir memenuhi layar 120 */
+    margin: 20px auto; /* Kurangi margin agar tabel lebih naik ke atas */
+}
+    
+.container-table h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+    
+.card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px; /* Tambahkan radius untuk lebih modern */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Lebih tebal untuk efek elegan */
+    padding: 30px; /* Tambahkan padding agar isi card lebih lega */
+    overflow: hidden; /* Mencegah konten keluar dari card */
+    
+}
+
+.card-header {
+    background-color: #f5f7fa; 
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+}
+
+.card-body {
+    padding: 15px;
+    margin-top: 10px;
+}
+    
+.card-header h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: -20px;
+}
+
+.table-controls {
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.table-controls button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+    border: none;
+    cursor: pointer;
+}
+
+/* Warna dan efek hover untuk tombol */
+.table-controls button.excel {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+.table-controls button.excel:hover {
+    background-color: #218838;
+}
+
+.button-primary {
+    background-color: #4A73E8;  /* Warna biru */
+    color: white;  /* Teks putih */
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Montserrat';
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.button-primary:hover {
+    background-color: #3A63D8;  /* Warna biru lebih gelap saat hover */
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+    
+table thead {
+    background-color: #f0f1f5;
+}
+    
+table th,
+table td {
+    border: 1px solid #ddd;
+    padding: 12px 16px; 
+    text-align: center;
+}
+    
+.no-data {
+    text-align: center;
+    color: #888;
+}
+
+/* Styling Entries */
+.showEntries {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.table-controls select {
+    padding: 6px 12px;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #333;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-controls select:hover {
+    border-color: #4A73E8;
+}
+
+.table-controls select:focus {
+    border-color: #4A73E8;
+    box-shadow: 0 0 4px #4A73E8;
+}
+
+/* Styling Search Bar */
+.filter {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.search-input {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: #aaa;
+}
+
+.search-input:focus {
+    border-color: #4A73E8;
+    outline: none;
+    box-shadow: 0 0 4px #4A73E8;
+}
+
+.page-controls .entries-info {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: #333;
+    margin-right: auto; /* Tetap di kiri */
+}
+
+/* Footer Pagination */
+.page-controls {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    position: relative;
+    justify-content: flex-end;
+}
+
+.page-controls .paginate_button {
+    background-color: #4A73E8; /* Warna biru */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin: 0 5px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.page-controls .paginate_button:hover {
+    background-color: #3A63D8; /* Warna biru lebih gelap */
+    transform: translateY(-2px); /* Efek mengangkat */
+}
+
+.page-controls .paginate_button.disabled {
+    background-color: #ccc; /* Warna abu-abu untuk tombol nonaktif */
+    color: #666;
+    cursor: not-allowed;
+}
+
+.table-wrapper {
+    overflow-x: auto; /* Tambahkan scroll horizontal */
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    height: 8px; /* Ukuran scrollbar horizontal */
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background-color: #4A73E8; /* Warna scrollbar */
+    border-radius: 5px; /* Agar lebih modern */
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: #3A63D8; /* Warna saat hover */
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background-color: #f0f1f5; /* Warna latar belakang scrollbar */
+}
+
+
+/* Dark Mode Styling */
+.dark-mode-variables {
+    --background-color: #121212; /* Warna latar belakang utama */
+    --text-color: #ffffff; /* Warna teks */
+    --card-background: #1e1e1e; /* Warna latar belakang card */
+    --card-border: #333333; /* Warna border card */
+    --table-header-bg: #2c2c2c; /* Warna header tabel */
+    --table-border-color: #444444; /* Warna border tabel */
+    --modal-background: #333333;
+    --iframe-background: #222222;
+    --text-color: #ffffff;
+    --card-border: #444444;
+}
+
+/* General Dark Mode Styling */
+.dark-mode-variables body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Card Styling for Dark Mode */
+.dark-mode-variables .card {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    color: var(--text-color);
+}
+
+.dark-mode-variables .card-header {
+    background-color: var(--card-background); /* Sesuaikan dengan card */
+    border-bottom: 1px solid var(--card-border); /* Border bawah */
+    color: var(--text-color); /* Warna teks */
+}
+
+/* Table Styling for Dark Mode */
+.dark-mode-variables table {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border-collapse: collapse;
+}
+
+.dark-mode-variables table td,
+.dark-mode-variables table th {
+    background-color: var(--background-color); /* Warna latar belakang untuk td dan th */
+    color: var(--text-color); /* Warna teks untuk td dan th */
+    border: 1px solid var(--table-border-color); /* Warna border */
+}
+
+.dark-mode-variables table thead th {
+    background-color: var(--table-header-bg); /* Warna header tabel */
+    color: var(--text-color); /* Warna teks header tabel */
+}
+
+/* Aturan untuk tabel DataTables dalam dark mode */
+.dark-mode-variables table.dataTable tbody td {
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+}
+
+/* Sorting Column Styling */
+.dark-mode-variables table td.sorting,
+.dark-mode-variables table th.sorting {
+    background-color: var(--background-color); /* Warna latar belakang kolom sorting */
+    color: var(--text-color); /* Warna teks */
+    border-color: var(--table-border-color); /* Warna border */
+}
+
+/* Button Styling for Dark Mode */
+/* .dark-mode-variables button {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid var(--card-border);
+    padding: 8px 12px;
+    border-radius: 4px;
+} */
+
+.dark-mode-variables button:hover {
+    background-color: #444444;
+    border-color: #555555;
+}
+
+/* Styling untuk elemen select */
+.dark-mode-variables .showEntries select {
+    background-color: var(--card-background); /* Warna latar belakang */
+    color: var(--text-color); /* Warna teks */
+    border: 1px solid var(--card-border); /* Warna border */
+    padding: 6px 12px;
+    border-radius: 4px; /* Rounded corners */
+    appearance: none; /* Menghapus gaya default browser */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Placeholder atau teks label */
+.dark-mode-variables .showEntries label {
+    color: var(--text-color); /* Warna teks label */
+}
+
+/* Fokus pada elemen select */
+.dark-mode-variables .showEntries select:focus {
+    outline: none; /* Menghapus outline default */
+    border: 1px solid #555555; /* Warna border saat fokus */
+}
+
+
+/* Custom Search Input Styling */
+.dark-mode-variables .search-input {
+    background-color: var(--card-background); /* Warna latar belakang input */
+    color: var(--text-color); /* Warna teks */
+    border: 1px solid var(--card-border); /* Warna border input */
+    padding: 8px;
+    border-radius: 4px; /* Membuat rounded corner */
+}
+
+.dark-mode-variables .search-input::placeholder {
+    color: #888888; /* Warna placeholder */
+}
+
+.dark-mode-variables .search-input:focus {
+    outline: none; /* Menghapus garis biru default */
+    border: 1px solid #555555; /* Warna border saat fokus */
+}
+
+/* Styling Dark Mode untuk Form HAKI */
+.dark-mode-variables #hakiModal .modal-content {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.dark-mode-variables #hakiModal h2 {
+    color: var(--text-color);
+}
+
+.dark-mode-variables #hakiModal .form-group label {
+    color: var(--text-color);
+}
+
+.dark-mode-variables #hakiModal .form-group input,
+.dark-mode-variables #hakiModal .form-group select {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.dark-mode-variables #hakiModal .form-group input::placeholder {
+    color: #888888;
+}
+
+.dark-mode-variables #hakiModal .form-group input:focus,
+.dark-mode-variables #hakiModal .form-group select:focus {
+    outline: none;
+    border-color: #555555;
+}
+
+.dark-mode-variables #hakiModal .success-feedback,
+.dark-mode-variables #hakiModal .error-feedback {
+    color: #ff7373; /* Warna teks untuk pesan kesalahan */
+}
+
+/* .dark-mode-variables #hakiModal button {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid var(--card-border);
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dark-mode-variables #hakiModal button:hover {
+    background-color: #444444;
+    border-color: #555555;
+} */
+
+.dark-mode-variables #hakiModal .file-size-info {
+    color: #888888;
+}
+
+.dark-mode-variables #hakiModal .anggota-card {
+    margin-top: 20px;
+}
+
+.dark-mode-variables #hakiModal .input-group .input-wrapper input {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.dark-mode-variables #hakiModal .input-group .input-wrapper input:focus {
+    outline: none;
+    border-color: #555555;
+}
+
+.dark-mode-variables #hakiModal .input-group .input-wrapper input::placeholder {
+    color: #888888;
+}
+
+/* Styling Dark Mode untuk HAKI Card */
+.dark-mode-variables .haki-card {
+    background-color: var(--card-background); /* Warna latar belakang card */
+    border: 1px solid var(--card-border); /* Warna border card */
+    color: var(--text-color); /* Warna teks */
+    padding: 20px;
+    border-radius: 8px; /* Membuat rounded corner */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Efek bayangan */
+}
+
+/* Styling elemen di dalam HAKI Card */
+.dark-mode-variables .haki-card .form-group label {
+    color: var(--text-color); /* Warna label */
+}
+
+.dark-mode-variables .haki-card .form-group input,
+.dark-mode-variables .haki-card .form-group select {
+    background-color: var(--card-background); /* Latar belakang input/select */
+    color: var(--text-color); /* Warna teks input/select */
+    border: 1px solid var(--card-border); /* Border input/select */
+    padding: 8px 12px;
+    border-radius: 4px; /* Membuat rounded corner */
+}
+
+.dark-mode-variables .haki-card .form-group input:focus,
+.dark-mode-variables .haki-card .form-group select:focus {
+    outline: none; /* Menghapus outline default */
+    border-color: #555555; /* Warna border saat fokus */
+}
+
+/* Styling Dark Mode untuk Card Anggota Pencipta */
+.dark-mode-variables #hakiModal .anggota-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.dark-mode-variables #hakiModal .anggota-card label {
+    color: var(--text-color);
+}
+
+.dark-mode-variables #hakiModal .anggota-card .input-group .input-wrapper input {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+/* .dark-mode-variables #hakiModal .anggota-card button {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid var(--card-border);
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dark-mode-variables #hakiModal .anggota-card button:hover {
+    background-color: #444444;
+    border-color: #555555;
+} */
+
+/* Styling Dark Mode untuk Card Unggah File */
+.dark-mode-variables #hakiModal .unggah-file-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.dark-mode-variables #hakiModal .unggah-file-card label {
+    color: var(--text-color);
+}
+
+.dark-mode-variables #hakiModal .unggah-file-card input[type="file"] {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.dark-mode-variables #hakiModal .unggah-file-card .file-size-info {
+    color: #888888;
+}
+
+/* Styling Dark Mode untuk Tombol Unggah */
+/* .dark-mode-variables #hakiModal .form-action button {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid var(--card-border);
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dark-mode-variables #hakiModal .form-action button:hover {
+    background-color: #444444;
+    border-color: #555555;
+} */
+
+/* Styling Dark Mode untuk Form HAKI - untuk card lainnya */
+.dark-mode-variables #hakiModal .haki-card,
+.dark-mode-variables #hakiModal .anggota-card,
+.dark-mode-variables #hakiModal .unggah-file-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.dark-mode-variables #hakiModal .haki-card {
+    margin-top: 20px;
+}
+
+/* Dark Mode untuk Preview PDF */
+.dark-mode-variables #pdfPreviewModal .pdf-modal-content {
+    background-color: var(--modal-background);
+    border: 1px solid var(--card-border);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode-variables #pdfPreviewModal iframe {
+    background-color: var(--iframe-background);
+    color: var(--text-color);
+}
+
+/* .dark-mode-variables #pdfPreviewModal .modal-actions a {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid var(--card-border);
+}
+
+.dark-mode-variables #pdfPreviewModal .modal-actions a:hover {
+    background-color: #444444;
+} */
+
+.dark-mode-variables #pdfPreviewModal .close-modal {
+    color: #bbbbbb;
+}
+
+.dark-mode-variables #pdfPreviewModal .close-modal:hover {
+    color: #ffffff;
+}
+
+/* Isi dalam content */
 .modal {
     display: none;
     position: fixed;
@@ -14,10 +611,10 @@
     background-color: #f9f9f9;
     margin: 0;
     padding: 40px;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    position: relative;
 }
 
 .close-modal {
@@ -33,113 +630,237 @@
     color: black;
 }
 
-#hakiForm {
+/* Untuk isi haki */
+.haki-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px; /* Memberikan jarak antar elemen */
+}
+
+.haki-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Jarak antar field */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column; /* Agar label dan input tetap vertikal */
+    width: 48%; /* Setengah lebar untuk dua kolom */
+}
+
+.form-group label {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.form-group input {
     width: 100%;
-    max-width: 100%;
-}
-
-#hakiForm h2 {
-    text-align: left;
-    margin-top: 0;
-}
-
-#hakiForm label {
-    font-weight: bold;
-    margin-top: 10px;
-    display: block;
-    text-align: left;
-}
-
-#hakiForm input[type="text"],
-#hakiForm input[type="date"],
-#hakiForm input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
     border: 1px solid #ccc;
-    border-radius: 13px;
-    box-sizing: border-box;
-}
-
-#hakiForm select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 13px;
-    box-sizing: border-box;
     font-size: 14px;
 }
 
-.button-primary {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 13px;
-    cursor: pointer;
-    font-family: 'Montserrat';
+.haki-container select {
+    padding: 10px 15px; /* Menambah padding agar lebih luas */
+    border-radius: 8px; /* Memberikan border radius untuk sudut yang lebih halus */
+    border: 1px solid #ccc; /* Menambahkan border dengan warna abu-abu */
+    background-color: #fff; /* Memberikan latar belakang putih */
+    font-size: 16px; /* Ukuran font dalam dropdown */
+    color: #333; /* Warna teks */
+    transition: all 0.3s ease; /* Efek transisi saat hover atau focus */
 }
 
-#openModalBtn {
+/* Styling saat dropdown dalam keadaan focus */
+.haki-container select:focus {
+    border-color: #007bff; /* Ubah border warna saat fokus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Memberikan bayangan saat fokus */
+}
+
+/* Styling untuk option di dalam select */
+.haki-container select option {
+    padding: 10px 15px;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Styling saat opsi dalam dropdown dihover */
+.haki-container select option:hover {
+    background-color: #f0f0f0; /* Latar belakang saat hover */
+}
+
+/* Styling untuk input teks */
+.haki-container input[type="text"] {
+    padding: 10px 15px; /* Menambah padding agar lebih luas */
+    border-radius: 8px; /* Memberikan border radius untuk sudut yang lebih halus */
+    border: 1px solid #ccc; /* Menambahkan border dengan warna abu-abu */
+    background-color: #fff; /* Memberikan latar belakang putih */
+    font-size: 16px; /* Ukuran font dalam input */
+    color: #333; /* Warna teks */
+    transition: all 0.3s ease; /* Efek transisi saat hover atau focus */
+}
+
+/* Styling saat input teks dalam keadaan focus */
+.haki-container input[type="text"]:focus {
+    border-color: #007bff; /* Ubah border warna saat fokus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Memberikan bayangan saat fokus */
+}
+
+/* Container untuk anggota Haki */
+.anggota-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
+    padding: 15px;
 }
 
-#hakiForm button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 13px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    margin-top: 10px;
+.pencipta-container,
+.pemegang-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.recent-orders {
-    width: 110%; /* Agar container tabel selebar main */
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    overflow-x: auto; /* Tambahkan scroll horizontal */
-    white-space: nowrap; /* Hindari teks memotong */
+.anggota-pencipta,
+.anggota-pemegang {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.recent-orders h2 {
-    margin-top: 20px;
-    
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-#hakiTable {
-    width: 120%; /* Buat tabel selebar halaman */
-    border-collapse: collapse; /* Hapus jarak antar border */
-}
-
-#hakiTable th,
-#hakiTable td {
-    text-align: center;
-    vertical-align: middle;
-    padding: 12px;
-    border: 1px solid #ddd;
-}
-
-/* Memberikan jarak antara fitur search dan data table length */
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter {
-    margin-bottom: 20px;
-    margin-right: 20px;
-}
-
-/* Atur agar search dan length lebih lebar dari default */
-.dataTables_wrapper .dataTables_length select,
-.dataTables_wrapper .dataTables_filter input {
-    padding: 8px;
+.input-wrapper input[type="text"] {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
     border-radius: 5px;
+    height: 40px;
 }
 
+.hapusNamaPencipta,
+.hapusNamaPemegang {
+    cursor: pointer;
+    color: #d9534f;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+.hapusNamaPencipta:hover,
+.hapusNamaPemegang:hover {
+    color: #c9302c;
+}
+
+#tambahAnggotaPencipta,
+#tambahAnggotaPemegang {
+    background-color: #4A73E8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#tambahAnggotaPencipta:hover,
+#tambahAnggotaPemegang:hover {
+    background-color: #3A63D8;
+}
+
+/* Jarak antar bagian pencipta dan pemegang */
+.anggota-card{
+    margin-top: 20px;
+}
+
+/* Jarak antar elemen dalam pencipta-container */
+.pencipta-container .input-group {
+    margin-bottom: 10px;
+}
+
+/* Jarak antar elemen dalam pemegang-container */
+.pemegang-container .input-group {
+    margin-bottom: 10px;
+}
+
+/* Unggah file card */
+.unggah-file-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.unggah-file-card label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.unggah-file-card input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.unggah-file-card input[type="file"]:focus {
+    border-color: #4A73E8;
+    outline: none;
+    box-shadow: 0 0 5px rgba(74, 115, 232, 0.5);
+}
+
+/* Label informasi ukuran file */
+.file-size-info {
+    font-size: 14px;
+    color: #555;
+    margin-top: -5px;
+}
+
+/* Pesan error */
+.unggah-file-card .error-feedback {
+    color: #d9534f;
+    font-size: 14px;
+    margin-top: -10px;
+}
+
+/* Tombol unggah di luar card */
+.form-action {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.unggah-button {
+    background-color: #4A73E8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.unggah-button:hover {
+    background-color: #3A63D8;
+}
+
+/* Preview PDF */
 .pdf-modal-content {
     position: relative; /* Supaya posisi elemen absolute mengacu pada modal */
     background-color: white;
@@ -162,6 +883,24 @@
     margin-bottom: 20px; /* Memberikan jarak antara iframe dan tombol di bawah */
 }
 
+.modal-actions {
+    text-align: center;
+    margin-top: auto; /* Memastikan tombol selalu berada di bagian bawah modal */
+}
+
+.modal-actions a {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.modal-actions a:hover {
+    background-color: #45a049;
+}
+
 /* Tombol close modal */
 #pdfPreviewModal .close-modal {
     position: absolute;
@@ -178,46 +917,3 @@
 #pdfPreviewModal .close-modal:hover {
     color: black;
 }
-
-
-.hapusNamaPencipta,
-.hapusNamaPemegang {
-    cursor: pointer;
-    color: red;
-    font-size: 20px;
-    margin-left: 10px;
-    vertical-align: middle;
-}
-
-.hapusNamaPencipta:hover,
-.hapusNamaPemegang:hover {
-    color: darkred;
-}
-
-/* Gaya untuk grup input */
-.input-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.input-group input {
-    flex: 1; /* Ukuran input menyesuaikan ruang */
-    padding: 5px 10px; /* Kurangi padding untuk ukuran lebih kecil */
-    font-size: 14px; /* Perkecil font */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px; /* Jarak antara input dan tombol hapus */
-}
-
-.input-group span {
-    cursor: pointer;
-    color: red;
-    font-size: 20px;
-}
-
-.input-group span:hover {
-    color: darkred;
-}
-
-

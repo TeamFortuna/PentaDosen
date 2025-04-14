@@ -534,6 +534,17 @@ main .recent-orders a{
     align-items: center;
     gap: 0.6rem;
 }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+table th,
+table td {
+    border: 1px solid #ddd;
+    padding: 12px 16px; 
+    text-align: center;
+}
 
 @media screen and (max-width: 1200px) {
     .container{
