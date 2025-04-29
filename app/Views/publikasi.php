@@ -207,31 +207,31 @@
         <div class="flex-1 overflow-y-auto py-4">
             <ul class="space-y-1 px-4">
                 <li>
-                    <a href="dashboard.html" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
+                    <a href="<?= site_url('dashboard') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="kalender.html" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
+                    <a href="<?= site_url('kalender') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
                         <i class="far fa-calendar-alt mr-3"></i>
                         Kalender
                     </a>
                 </li>
                 <li>
-                    <a href="penelitian.html" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
+                    <a href="<?= site_url('penelitian') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
                         <i class="fas fa-microscope mr-3"></i>
                         Penelitian
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item active flex items-center px-4 py-3 rounded-lg text-white font-medium">
+                    <a href="<?= site_url('publikasi') ?>" class="sidebar-item active flex items-center px-4 py-3 rounded-lg text-white font-medium">
                         <i class="fas fa-book-open mr-3"></i>
                         Publikasi
                     </a>
                 </li>
                 <li>
-                    <a href="hki.html" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
+                    <a href="<?= site_url('hki') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
                         <i class="fas fa-lightbulb mr-3"></i>
                         HKI
                     </a>
@@ -249,7 +249,9 @@
                 </div>
             </div>
             <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200 flex items-center justify-center">
-                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                <a href="<?= site_url('homepage') ?>">
+                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
             </button>
         </div>
     </div>
@@ -389,7 +391,6 @@
                             <i class="fas fa-info-circle mr-2 text-indigo-500"></i>
                             Informasi Publikasi
                         </h4>
-
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="publicationCategory" class="block text-sm font-medium text-gray-700 mb-1">Kategori Kegiatan*</label>

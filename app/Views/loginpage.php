@@ -234,7 +234,7 @@
                         </a>
                     </div>
 
-                    <button type="submit"
+                    <button type="submit" href="<?= site_url('dashboard') ?>"
                         class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl text-sm font-medium text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-400 shadow-md hover:shadow-lg transition-all duration-300 animate-entry group"
                         style="animation-delay: 0.4s"
                         id="loginButton">

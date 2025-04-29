@@ -22,6 +22,7 @@ $routes->get('/forgotpassword', 'AuthController::forgotpassword');
 $routes->get('/kalender', 'KalenderController::showcalender');
 $routes->get('/penelitian', 'PenelitianController::showpenelitian');
 $routes->get('/publikasi', 'PublikasiController::showpublikasi');
+$routes->get('/hki', 'HkiController::showhki');
 
 
 
@@ -30,7 +31,7 @@ $routes->get('/register', 'AuthController::register');
 $routes->post('/register', 'AuthController::processRegister');
 $routes->get('/login', 'AuthController::login');
 $routes->post('/login', 'AuthController::processLogin');
-$routes->get('/logout', 'AuthController::logout');
+$routes->get('auth/logout', 'AuthController::logout');
 
 // Dashboard Route
 $routes->get('/dashboard', 'DashboardController::index');

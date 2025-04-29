@@ -113,7 +113,7 @@
         <div class="flex-1 overflow-y-auto py-4">
             <ul class="space-y-1 px-4">
                 <li>
-                    <a href="#" class="sidebar-item active flex items-center px-4 py-3 rounded-lg text-indigo-600 font-medium">
+                    <a href="<?= site_url('dashboard') ?>" class="sidebar-item active flex items-center px-4 py-3 rounded-lg text-indigo-600 font-medium">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         Dashboard
                     </a>
@@ -154,8 +154,10 @@
                     <p class="text-xs text-gray-500">Dosen Fakultas Teknik Informatika</p>
                 </div>
             </div>
-            <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200">
-                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200 flex items-center justify-center">
+                <a href="<?= site_url('auth/logout') ?>">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
             </button>
         </div>
     </div>
