@@ -705,28 +705,28 @@
         </div>
 
         <!-- Menu -->
-        <div class="flex-1 overflow-y-auto py-4">
+        <div class="flex-1 overflow-y-auto py-4">   
             <ul class="space-y-1 px-4">
                 <li>
-                    <a href="dashbaru.html" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-primary hover:bg-gray-100 font-medium transition">
+                    <a href="<?= site_url('dashboard') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-primary hover:bg-gray-100 font-medium transition">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="kalenderbaru.html" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-primary hover:bg-gray-100 font-medium transition">
+                    <a href="<?= site_url('kalender') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-primary hover:bg-gray-100 font-medium transition">
                         <i class="far fa-calendar-alt mr-3"></i>
                         Kalender
                     </a>
                 </li>
                 <li>
-                    <a href="penelitiannew.html" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-white bg-primary font-medium transition">
+                    <a href="<?= site_url('penelitian') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-white bg-primary font-medium transition">
                         <i class="fas fa-microscope mr-3"></i>
                         Penelitian
                     </a>
                 </li>
                 <li>
-                    <a href="publication.html" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-primary hover:bg-gray-100 font-medium transition">
+                    <a href="<?= site_url('publikasi') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-primary hover:bg-gray-100 font-medium transition">
                         <i class="fas fa-book-open mr-3"></i>
                         Publikasi
                     </a>
@@ -750,7 +750,9 @@
                 </div>
             </div>
             <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200 flex items-center justify-center">
-                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                <a href="<?= site_url('homepage') ?>">
+                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
             </button>
         </div>
     </div>
