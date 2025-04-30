@@ -137,7 +137,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
+                    <a href="<?= site_url('hki') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
                         <i class="fas fa-lightbulb mr-3"></i>
                         HKI
                     </a>

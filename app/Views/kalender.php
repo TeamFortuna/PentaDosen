@@ -296,7 +296,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
+                    <a href="<?= site_url('hki') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
                         <i class="fas fa-lightbulb mr-3"></i>
                         HKI
                     </a>
@@ -443,7 +443,7 @@
 
             <!-- Calendar -->
             <div class="calendar-container">
-                <div id="calendar" class="p-4"></div>
+                <div id="calendar" class="p-4" data-events='<?= $events ?>'></div>
             </div>
         </main>
     </div>
@@ -676,6 +676,9 @@
         // Initialize Calendar
         document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('calendar');
+            const events = <?= $events ?>;
+            console.log('Events from server:', events); // Debugging
+
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'id',
@@ -791,7 +794,7 @@
             // Edit event button
             editEvent.addEventListener('click', function() {
                 const eventId = detailModal.dataset.eventId;
-                const event = events.find(e => e.id === eventId);
+                const event = calendar.getEventById(eventId);
 
                 if (event) {
                     document.getElementById('modalTitle').textContent = 'Edit Acara';
@@ -808,7 +811,7 @@
                     document.getElementById('eventEndDate').value = endDate.toISOString().split('T')[0];
 
                     // Waktu mulai
-                    if (event.startStr.includes('T')) {
+                    if (event.start && event.allDay === false) {
                         const startTime = startDate.toTimeString().substring(0, 5);
                         document.getElementById('eventStartTime').value = startTime;
                     } else {
@@ -816,7 +819,7 @@
                     }
 
                     // Waktu selesai
-                    if (event.endStr.includes('T')) {
+                    if (event.end && event.allDay === false) {
                         const endTime = endDate.toTimeString().substring(0, 5);
                         document.getElementById('eventEndTime').value = endTime;
                     } else {
@@ -824,10 +827,10 @@
                     }
 
                     // Warna
-                    document.getElementById('eventColor').value = event.color || '#6366F1';
-                    document.getElementById('eventClass').value = event.className || 'event-research';
+                    document.getElementById('eventColor').value = event.backgroundColor || '#6366F1';
+                    document.getElementById('eventClass').value = event.classNames[0] || 'event-research';
                     colorOptions.forEach(opt => opt.classList.remove('selected'));
-                    document.querySelector(`.color-option[data-color="${event.color || '#6366F1'}"]`).classList.add('selected');
+                    document.querySelector(`.color-option[data-color="${event.backgroundColor || '#6366F1'}"]`).classList.add('selected');
 
                     // Tampilkan tombol hapus
                     document.getElementById('deleteEvent').classList.remove('hidden');
@@ -839,15 +842,36 @@
 
             // Delete event button
             deleteEvent.addEventListener('click', function() {
+                const eventId = document.getElementById('eventId').value;
+                
                 if (confirm('Apakah Anda yakin ingin menghapus acara ini?')) {
-                    const eventId = document.getElementById('eventId').value;
-                    events = events.filter(e => e.id !== eventId);
-                    calendar.refetchEvents();
-                    closeModalFunc();
+                    fetch(`/kalender/delete/${eventId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const event = calendar.getEventById(eventId);
+                            if (event) {
+                                event.remove();
+                            }
+                            closeModalFunc();
+                        } else {
+                            alert('Gagal menghapus event: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan saat menghapus event');
+                    });
                 }
             });
 
-            // Form submit
+            // Form submit (Create/Update)
             eventForm.addEventListener('submit', function(e) {
                 e.preventDefault();
 
@@ -861,44 +885,50 @@
                 const color = document.getElementById('eventColor').value;
                 const eventClass = document.getElementById('eventClass').value;
 
-                // Format tanggal dan waktu
-                let start = startDate;
-                if (startTime) start += `T${startTime}`;
-
-                let end = endDate;
-                if (endTime) end += `T${endTime}`;
-
-                // Jika tidak ada waktu, gunakan allday event
-                if (!startTime && !endTime) {
-                    end = endDate;
-                }
-
                 const eventData = {
-                    id: eventId || Date.now().toString(),
                     title: title,
                     description: description,
-                    start: start,
-                    end: end,
+                    start_date: startDate,
+                    end_date: endDate,
+                    start_time: startTime || null,
+                    end_time: endTime || null,
                     color: color,
-                    className: eventClass,
-                    extendedProps: {
-                        description: description,
-                        type: color === '#F43F5E' ? 'deadline' : color === '#6366F1' ? 'research' : color === '#3B82F6' ? 'publication' : color === '#8B5CF6' ? 'hki' : 'other'
-                    }
+                    event_type: color === '#F43F5E' ? 'deadline' : color === '#6366F1' ? 'research' : color === '#3B82F6' ? 'publication' : color === '#8B5CF6' ? 'hki' : 'other'
                 };
 
-                // Update atau tambah event
-                if (eventId) {
-                    const index = events.findIndex(e => e.id === eventId);
-                    if (index !== -1) {
-                        events[index] = eventData;
-                    }
-                } else {
-                    events.push(eventData);
-                }
+                const url = eventId ? `/kalender/update/${eventId}` : '/kalender/save';
+                const method = eventId ? 'PUT' : 'POST';
 
-                calendar.refetchEvents();
-                closeModalFunc();
+                fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(eventData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Refresh kalender dengan mengambil data terbaru
+                        fetch('/kalender')
+                            .then(response => response.text())
+                            .then(html => {
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
+                                const newEvents = doc.querySelector('#calendar').dataset.events;
+                                calendar.removeAllEvents();
+                                calendar.addEventSource(JSON.parse(newEvents));
+                            });
+                        closeModalFunc();
+                    } else {
+                        alert('Gagal menyimpan event: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menyimpan event');
+                });
             });
         });
 
