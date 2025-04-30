@@ -40,3 +40,9 @@ $routes->get('/dashboard', 'DashboardController::index');
 $routes->post('/kalender/save', 'KalenderController::saveEvent');
 $routes->put('/kalender/update/(:num)', 'KalenderController::updateEvent/$1');
 $routes->post('/kalender/delete/(:num)', 'KalenderController::deleteEvent/$1');
+
+$routes->group('', ['filter' => 'auth'], function ($routes) {
+    $routes->get('profile', 'Profile::index');
+    $routes->get('profile/edit', 'Profile::edit');
+    $routes->post('profile/update', 'Profile::update');
+});
