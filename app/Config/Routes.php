@@ -35,3 +35,8 @@ $routes->get('auth/logout', 'AuthController::logout');
 
 // Dashboard Route
 $routes->get('/dashboard', 'DashboardController::index');
+
+// Kalender API Routes
+$routes->post('/kalender/save', 'KalenderController::saveEvent');
+$routes->put('/kalender/update/(:num)', 'KalenderController::updateEvent/$1');
+$routes->post('/kalender/delete/(:num)', 'KalenderController::deleteEvent/$1');

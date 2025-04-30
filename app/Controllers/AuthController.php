@@ -109,7 +109,7 @@ class AuthController extends BaseController
         }
 
         $this->setUserSession($user);
-        return redirect()->to('/login')->with('success', 'Login berhasil!');
+        return redirect()->to('/dashboard')->with('success', 'Login berhasil!');
     }
 
     // Logout
@@ -123,6 +123,7 @@ class AuthController extends BaseController
     private function setUserSession($user)
     {
         $data = [
+            'user_id' => $user['id'],
             'id' => $user['id'],
             'nama' => $user['nama'],
             'nidn' => $user['nidn'],
