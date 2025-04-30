@@ -148,11 +148,13 @@
         <!-- User Profile -->
         <div class="p-4 border-t">
             <div class="flex items-center">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full mr-3">
-                <div>
-                    <p class="font-medium text-gray-800">Muhammad Syafi'ul Umam S.Kom.</p>
-                    <p class="text-xs text-gray-500">Dosen Fakultas Teknik Informatika</p>
-                </div>
+                <a href="<?= site_url('profile') ?>" class="flex items-center">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full mr-3">
+                    <div>
+                        <p class="font-medium text-gray-800">Muhammad Syafi'ul Umam S.Kom.</p>
+                        <p class="text-xs text-gray-500">Dosen Fakultas Teknik Informatika</p>
+                    </div>
+                </a>
             </div>
             <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200 flex items-center justify-center">
                 <a href="<?= site_url('auth/logout') ?>">
