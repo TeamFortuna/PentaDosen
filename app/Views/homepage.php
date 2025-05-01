@@ -254,12 +254,14 @@
                 Daftar sekarang dan rasakan kemudahan mengelola penelitian secara digital
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4" data-aos="fade-up" data-aos-delay="400">
-                <a href="<?= site_url('') ?>" class="px-8 py-3 bg-white text-indigo-600 font-bold rounded-md hover:bg-gray-100 transition transform hover:scale-105 shadow-lg">
+                <a href="<?= site_url('register') ?>" class="px-8 py-3 bg-white text-indigo-600 font-bold rounded-md hover:bg-gray-100 transition transform hover:scale-105 shadow-lg">
                     Daftar Sekarang
                 </a>
             </div>
         </div>
     </section>
+
+
 
     <!-- Floating CTA -->
     <div class="fixed bottom-6 right-6 z-50" data-aos="fade-left" data-aos-delay="800">

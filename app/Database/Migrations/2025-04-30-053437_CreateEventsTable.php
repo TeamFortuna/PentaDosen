@@ -10,51 +10,40 @@ class CreateEventsTable extends Migration
     {
         $this->forge->addField([
             'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
                 'auto_increment' => true,
             ],
             'title' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '255',
-                'null'       => false,
+                'type' => 'VARCHAR',
+                'constraint' => 255,
             ],
             'description' => [
                 'type' => 'TEXT',
                 'null' => true,
             ],
             'start_date' => [
-                'type' => 'DATE',
-                'null' => false,
+                'type' => 'DATETIME',
             ],
             'end_date' => [
-                'type' => 'DATE',
-                'null' => false,
-            ],
-            'start_time' => [
-                'type' => 'TIME',
-                'null' => true,
-            ],
-            'end_time' => [
-                'type' => 'TIME',
+                'type' => 'DATETIME',
                 'null' => true,
             ],
             'color' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '7',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 50,
+                'default' => '#6366F1',
             ],
-            'event_type' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '50',
-                'null'       => true,
+            'class_name' => [
+                'type' => 'VARCHAR',
+                'constraint' => 50,
+                'default' => 'event-research',
             ],
             'user_id' => [
-                'type'       => 'INT',
+                'type' => 'INT',
                 'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => false,
+                'unsigned' => true,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -65,7 +54,8 @@ class CreateEventsTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
+
+        $this->forge->addPrimaryKey('id');
         $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('events');
     }
@@ -74,4 +64,4 @@ class CreateEventsTable extends Migration
     {
         $this->forge->dropTable('events');
     }
-} 
+}

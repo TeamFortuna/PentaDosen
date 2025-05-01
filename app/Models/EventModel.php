@@ -8,27 +8,18 @@ class EventModel extends Model
 {
     protected $table = 'events';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
-    protected $returnType = 'array';
-    protected $useSoftDeletes = false;
-    protected $allowedFields = [
-        'title',
-        'description',
-        'start_date',
-        'end_date',
-        'start_time',
-        'end_time',
-        'color',
-        'event_type',
-        'user_id'
-    ];
-
+    protected $allowedFields = ['title', 'description', 'start_date', 'end_date', 'color', 'class_name', 'user_id'];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
 
-    public function getEventsByUserId($userId)
+    public function getEvents($userId, $start, $end)
     {
-        return $this->where('user_id', $userId)->findAll();
+        return $this->where('user_id', $userId)
+            ->where('start_date >=', $start)
+            ->where('start_date <=', $end)
+            ->orWhere('end_date >=', $start)
+            ->where('end_date <=', $end)
+            ->findAll();
     }
-} 
+}

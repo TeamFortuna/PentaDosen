@@ -20,7 +20,9 @@ class UserModel extends Model
         'jurusan',
         'email',
         'username',
-        'password'
+        'password',
+        'reset_token',
+        'reset_expiry'
     ];
 
     // Tambahkan ini untuk mengaktifkan timestamps

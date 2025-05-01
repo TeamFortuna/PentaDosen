@@ -85,6 +85,21 @@
             display: block;
         }
 
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
         .weather-card {
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             border-radius: 12px;
@@ -158,6 +173,158 @@
             display: none;
         }
 
+        /* Notification Styles */
+        .notification-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            width: 320px;
+            max-width: 100%;
+        }
+
+        .notification {
+            position: relative;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            animation: slideIn 0.3s ease-out forwards;
+            display: flex;
+            align-items: center;
+        }
+
+        .notification.success {
+            background-color: var(--success);
+        }
+
+        .notification.error {
+            background-color: var(--danger);
+        }
+
+        .notification.warning {
+            background-color: var(--warning);
+        }
+
+        .notification.info {
+            background-color: var(--primary);
+        }
+
+        .notification-icon {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-message {
+            font-size: 0.875rem;
+        }
+
+        .notification-close {
+            margin-left: 0.75rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .notification.hide {
+            animation: slideOut 0.3s ease-in forwards;
+        }
+
+        /* Notification Events Styles */
+        .event-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+            background-color: rgba(241, 245, 249, 0.5);
+            transition: all 0.2s;
+        }
+
+        .event-item:hover {
+            transform: translateX(3px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .event-date {
+            font-size: 0.75rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+        }
+
+        .event-date i {
+            margin-right: 0.25rem;
+            font-size: 0.65rem;
+        }
+
+        .event-research-item {
+            border-left-color: #6366F1;
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        .event-publication-item {
+            border-left-color: #3B82F6;
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .event-hki-item {
+            border-left-color: #8B5CF6;
+            background-color: rgba(139, 92, 246, 0.05);
+        }
+
+        .event-deadline-item {
+            border-left-color: #F43F5E;
+            background-color: rgba(244, 63, 94, 0.05);
+        }
+
+        .event-other-item {
+            border-left-color: #10B981;
+            background-color: rgba(16, 185, 129, 0.05);
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -203,6 +370,13 @@
             .main-content {
                 margin-left: 0;
             }
+
+            .notification-container {
+                width: 90%;
+                left: 5%;
+                right: 5%;
+                top: 1rem;
+            }
         }
 
         .event-research {
@@ -246,80 +420,67 @@
             border-radius: 3px;
             background-color: var(--primary);
         }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary);
+        }
+
+        /* Delete Confirmation Modal Animation */
+        #deleteConfirmationModal {
+            animation: modalFadeIn 0.3s ease-out;
+            z-index: 60;
+        }
+
+        /* Shake animation for delete button */
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-5px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(5px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+        }
     </style>
 </head>
 
 <body class="flex h-screen overflow-hidden bg-gray-50">
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
     <!-- Overlay (for mobile sidebar) -->
     <div class="overlay" id="overlay" style="display: none;"></div>
 
-    <!-- Sidebar -->
-    <div class="sidebar flex flex-col h-full" id="sidebar">
-        <!-- Logo and Toggle -->
-        <div class="p-4 flex items-center justify-between border-b">
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center text-white mr-3">
-                    <i class="fas fa-calendar-alt text-xl"></i>
-                </div>
-                <h1 class="text-xl font-bold text-indigo-600">Penta Dosen</h1>
-            </div>
-            <button class="menu-toggle md:hidden text-gray-500" id="closeSidebar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay"></div>
 
-        <!-- Menu -->
-        <div class="flex-1 overflow-y-auto py-4">
-            <ul class="space-y-1 px-4">
-                <li>
-                    <a href="<?= site_url('dashboard') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-tachometer-alt mr-3"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('kalender') ?>" class="sidebar-item active flex items-center px-4 py-3 rounded-lg text-white font-medium">
-                        <i class="far fa-calendar-alt mr-3"></i>
-                        Kalender
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('penelitian') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-microscope mr-3"></i>
-                        Penelitian
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('publikasi') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-book-open mr-3"></i>
-                        Publikasi
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('hki') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-lightbulb mr-3"></i>
-                        HKI
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- User Profile -->
-        <div class="p-4 border-t">
-            <div class="flex items-center">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full mr-3 border-2 border-indigo-100">
-                <div>
-                    <p class="font-medium text-gray-800">Prof. Dr. Andi Wijaya</p>
-                    <p class="text-xs text-gray-500">Dosen Fakultas Kedokteran</p>
-                </div>
-            </div>
-            <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200 flex items-center justify-center">
-                <a href="<?= site_url('homepage') ?>">
-                <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                </a>
-            </button>
-        </div>
-    </div>
+    <!-- Include Sidebar -->
+    <?= view('partials/sidebar') ?>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden main-content">
@@ -344,8 +505,9 @@
                             <span id="weatherTemp">0</span>°
                         </span>
                     </div>
-                    <button class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition">
+                    <button id="notificationBell" class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition relative">
                         <i class="fas fa-bell"></i>
+                        <span id="notificationCount" class="absolute -top-1 -right-1 bg-indigo-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
                     </button>
                 </div>
             </div>
@@ -443,7 +605,7 @@
 
             <!-- Calendar -->
             <div class="calendar-container">
-                <div id="calendar" class="p-4" data-events='<?= $events ?>'></div>
+                <div id="calendar" class="p-4"></div>
             </div>
         </main>
     </div>
@@ -554,60 +716,117 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteConfirmationModal">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-md">
+            <div class="px-6 py-4 border-b flex justify-between items-center bg-red-600 text-white">
+                <h3 class="text-lg font-semibold">Konfirmasi Penghapusan</h3>
+                <button id="closeDeleteModal" class="text-white hover:text-red-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
+                        <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                    </div>
+                    <h4 class="text-lg font-medium text-gray-800 mb-2">Apakah Anda yakin ingin menghapus acara ini?</h4>
+                    <p class="text-gray-600 mb-6">Data yang sudah dihapus tidak dapat dikembalikan.</p>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="cancelDelete" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">
+                        Batal
+                    </button>
+                    <button type="button" id="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        Ya, Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Events Modal -->
+    <div class="modal" id="notificationModal">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-md">
+            <div class="px-6 py-4 border-b flex justify-between items-center bg-indigo-600 text-white">
+                <h3 class="text-lg font-semibold">Daftar Acara Mendatang</h3>
+                <button id="closeNotificationModal" class="text-white hover:text-indigo-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4 max-h-96 overflow-y-auto" id="eventsList">
+                <!-- Daftar acara akan dimuat di sini -->
+                <div class="text-center py-4 text-gray-500">
+                    <i class="fas fa-spinner fa-spin mr-2"></i> Memuat acara...
+                </div>
+            </div>
+            <div class="px-6 py-3 border-t flex justify-end">
+                <button id="closeNotificationBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Sidebar Script -->
+    <script src="<?= base_url('js/sidebar-script.js') ?>"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/id.js'></script>
     <script>
-        // Data acara (simulasi database)
-        let events = [{
-                id: '1',
-                title: 'Pengumpulan Proposal Penelitian',
-                description: 'Pengumpulan proposal penelitian tahap akhir untuk semester ini',
-                start: new Date().toISOString().split('T')[0],
-                color: '#F43F5E',
-                className: 'event-deadline',
-                type: 'deadline'
-            },
-            {
-                id: '2',
-                title: 'Seminar Hasil Penelitian',
-                description: 'Presentasi hasil penelitian untuk tim Fakultas Kedokteran',
-                start: new Date(new Date().setDate(new Date().getDate() + 5)) + 'T10:00:00',
-                end: new Date(new Date().setDate(new Date().getDate() + 5)) + 'T12:00:00',
-                color: '#6366F1',
-                className: 'event-research',
-                type: 'research'
-            },
-            {
-                id: '3',
-                title: 'Submit Jurnal Internasional',
-                description: 'Batas akhir pengumpulan jurnal untuk publikasi internasional',
-                start: new Date(new Date().setDate(new Date().getDate() + 10)).toISOString().split('T')[0],
-                color: '#3B82F6',
-                className: 'event-publication',
-                type: 'publication'
+        // Notification System
+        function showNotification(type, title, message, duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+
+            let icon;
+            switch (type) {
+                case 'success':
+                    icon = 'fa-check-circle';
+                    break;
+                case 'error':
+                    icon = 'fa-exclamation-circle';
+                    break;
+                case 'warning':
+                    icon = 'fa-exclamation-triangle';
+                    break;
+                default:
+                    icon = 'fa-info-circle';
             }
-        ];
 
-        // Inisialisasi sidebar untuk mobile
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        const openSidebar = document.getElementById('openSidebar');
-        const closeSidebar = document.getElementById('closeSidebar');
+            notification.innerHTML = `
+                <div class="notification-icon">
+                    <i class="fas ${icon}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <div class="notification-close">
+                    <i class="fas fa-times"></i>
+                </div>
+            `;
 
-        openSidebar.addEventListener('click', () => {
-            sidebar.classList.add('active');
-            overlay.style.display = 'block';
-        });
+            container.appendChild(notification);
 
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.style.display = 'none';
-        });
+            // Auto remove after duration
+            const timer = setTimeout(() => {
+                notification.classList.add('hide');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, duration);
 
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.style.display = 'none';
-        });
+            // Close button
+            const closeBtn = notification.querySelector('.notification-close');
+            closeBtn.addEventListener('click', () => {
+                clearTimeout(timer);
+                notification.classList.add('hide');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            });
+        }
 
         // Color picker
         const colorOptions = document.querySelectorAll('.color-option');
@@ -631,25 +850,30 @@
         const editEvent = document.getElementById('editEvent');
         const addEventBtn = document.getElementById('addEventBtn');
         const eventForm = document.getElementById('eventForm');
+        const modalOverlay = document.getElementById('modalOverlay');
 
         function openModal() {
             eventModal.classList.add('active');
+            modalOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeModalFunc() {
             eventModal.classList.remove('active');
+            modalOverlay.classList.remove('active');
             document.body.style.overflow = '';
             resetForm();
         }
 
         function openDetailModal() {
             detailModal.classList.add('active');
+            modalOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeDetailModalFunc() {
             detailModal.classList.remove('active');
+            modalOverlay.classList.remove('active');
             document.body.style.overflow = '';
         }
 
@@ -673,12 +897,145 @@
             document.querySelector('.color-option[data-color="#6366F1"]').classList.add('selected');
         }
 
+        // Notification Bell Functionality
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationModal = document.getElementById('notificationModal');
+        const closeNotificationModal = document.getElementById('closeNotificationModal');
+        const closeNotificationBtn = document.getElementById('closeNotificationBtn');
+        const eventsList = document.getElementById('eventsList');
+        const notificationCount = document.getElementById('notificationCount');
+
+        // Function to open notification modal
+        function openNotificationModal() {
+            loadUpcomingEvents();
+            notificationModal.classList.add('active');
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Function to close notification modal
+        function closeNotificationModalFunc() {
+            notificationModal.classList.remove('active');
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Event listeners for notification modal
+        notificationBell.addEventListener('click', openNotificationModal);
+        closeNotificationModal.addEventListener('click', closeNotificationModalFunc);
+        closeNotificationBtn.addEventListener('click', closeNotificationModalFunc);
+        modalOverlay.addEventListener('click', closeNotificationModalFunc);
+
+        // Function to load upcoming events
+        function loadUpcomingEvents() {
+            eventsList.innerHTML = '<div class="text-center py-4 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Memuat acara...</div>';
+
+            // Get today's date and 7 days from now
+            const today = new Date();
+            const nextWeek = new Date();
+            nextWeek.setDate(today.getDate() + 7);
+
+            const startStr = today.toISOString().split('T')[0];
+            const endStr = nextWeek.toISOString().split('T')[0];
+
+            fetch(`<?= site_url('kalender/events') ?>?start=${startStr}&end=${endStr}`)
+                .then(response => response.json())
+                .then(events => {
+                    if (events.length === 0) {
+                        eventsList.innerHTML = '<div class="text-center py-4 text-gray-500">Tidak ada acara mendatang dalam 7 hari ke depan</div>';
+                        notificationCount.classList.add('hidden');
+                        return;
+                    }
+
+                    // Update notification count
+                    notificationCount.textContent = events.length;
+                    notificationCount.classList.remove('hidden');
+
+                    // Sort events by date
+                    events.sort((a, b) => new Date(a.start) - new Date(b.start));
+
+                    // Group events by date
+                    const eventsByDate = {};
+                    events.forEach(event => {
+                        const eventDate = new Date(event.start);
+                        const dateKey = eventDate.toLocaleDateString('id-ID', {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+
+                        if (!eventsByDate[dateKey]) {
+                            eventsByDate[dateKey] = [];
+                        }
+
+                        eventsByDate[dateKey].push(event);
+                    });
+
+                    // Render events
+                    let html = '';
+                    for (const [date, dateEvents] of Object.entries(eventsByDate)) {
+                        html += `<div class="mb-4">
+                            <h4 class="font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="far fa-calendar-alt mr-2 text-indigo-500"></i>
+                                ${date}
+                            </h4>
+                            <div class="space-y-2">`;
+
+                        dateEvents.forEach(event => {
+                            // Determine event type class
+                            let eventTypeClass = 'event-research-item';
+                            if (event.extendedProps?.type === 'publication') {
+                                eventTypeClass = 'event-publication-item';
+                            } else if (event.extendedProps?.type === 'hki') {
+                                eventTypeClass = 'event-hki-item';
+                            } else if (event.extendedProps?.type === 'deadline') {
+                                eventTypeClass = 'event-deadline-item';
+                            } else if (event.extendedProps?.type === 'other') {
+                                eventTypeClass = 'event-other-item';
+                            }
+
+                            // Format time
+                            let timeStr = 'Sepanjang hari';
+                            if (event.start.includes('T')) {
+                                const startTime = new Date(event.start);
+                                timeStr = startTime.toLocaleTimeString('id-ID', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+
+                                if (event.end && event.end.includes('T')) {
+                                    const endTime = new Date(event.end);
+                                    timeStr += ' - ' + endTime.toLocaleTimeString('id-ID', {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    });
+                                }
+                            }
+
+                            html += `<div class="event-item ${eventTypeClass}">
+                                <div class="event-title">${event.title}</div>
+                                <div class="event-date">
+                                    <i class="far fa-clock"></i>
+                                    ${timeStr}
+                                </div>
+                            </div>`;
+                        });
+
+                        html += `</div></div>`;
+                    }
+
+                    eventsList.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error loading events:', error);
+                    eventsList.innerHTML = '<div class="text-center py-4 text-red-500">Gagal memuat daftar acara</div>';
+                });
+        }
+
         // Initialize Calendar
         document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('calendar');
-            const events = <?= $events ?>;
-            console.log('Events from server:', events); // Debugging
-
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'id',
@@ -693,7 +1050,15 @@
                     week: 'Minggu',
                     day: 'Hari'
                 },
-                events: events,
+                events: function(fetchInfo, successCallback, failureCallback) {
+                    fetch(`<?= site_url('kalender/events') ?>?start=${fetchInfo.startStr}&end=${fetchInfo.endStr}`)
+                        .then(response => response.json())
+                        .then(data => successCallback(data))
+                        .catch(error => {
+                            console.error('Error fetching events:', error);
+                            failureCallback(error);
+                        });
+                },
                 dateClick: function(info) {
                     document.getElementById('eventStartDate').value = info.dateStr;
                     document.getElementById('eventEndDate').value = info.dateStr;
@@ -802,37 +1167,41 @@
                     document.getElementById('eventTitle').value = event.title;
                     document.getElementById('eventDescription').value = event.extendedProps.description || '';
 
-                    // Tanggal mulai
+                    // Format dates
                     const startDate = event.start ? new Date(event.start) : new Date();
-                    document.getElementById('eventStartDate').value = startDate.toISOString().split('T')[0];
-
-                    // Tanggal selesai
                     const endDate = event.end ? new Date(event.end) : startDate;
+
+                    // Set date values (YYYY-MM-DD format)
+                    document.getElementById('eventStartDate').value = startDate.toISOString().split('T')[0];
                     document.getElementById('eventEndDate').value = endDate.toISOString().split('T')[0];
 
-                    // Waktu mulai
-                    if (event.start && event.allDay === false) {
-                        const startTime = startDate.toTimeString().substring(0, 5);
-                        document.getElementById('eventStartTime').value = startTime;
+                    // Set time values if they exist
+                    if (event.startStr.includes('T')) {
+                        document.getElementById('eventStartTime').value =
+                            startDate.getHours().toString().padStart(2, '0') + ':' +
+                            startDate.getMinutes().toString().padStart(2, '0');
                     } else {
                         document.getElementById('eventStartTime').value = '';
                     }
 
-                    // Waktu selesai
-                    if (event.end && event.allDay === false) {
-                        const endTime = endDate.toTimeString().substring(0, 5);
-                        document.getElementById('eventEndTime').value = endTime;
+                    if (event.endStr.includes('T')) {
+                        document.getElementById('eventEndTime').value =
+                            endDate.getHours().toString().padStart(2, '0') + ':' +
+                            endDate.getMinutes().toString().padStart(2, '0');
                     } else {
                         document.getElementById('eventEndTime').value = '';
                     }
 
-                    // Warna
+                    // Set color
                     document.getElementById('eventColor').value = event.backgroundColor || '#6366F1';
                     document.getElementById('eventClass').value = event.classNames[0] || 'event-research';
-                    colorOptions.forEach(opt => opt.classList.remove('selected'));
-                    document.querySelector(`.color-option[data-color="${event.backgroundColor || '#6366F1'}"]`).classList.add('selected');
 
-                    // Tampilkan tombol hapus
+                    // Update color selection UI
+                    colorOptions.forEach(opt => opt.classList.remove('selected'));
+                    const selectedColor = event.backgroundColor || '#6366F1';
+                    document.querySelector(`.color-option[data-color="${selectedColor}"]`).classList.add('selected');
+
+                    // Show delete button
                     document.getElementById('deleteEvent').classList.remove('hidden');
 
                     closeDetailModalFunc();
@@ -840,38 +1209,84 @@
                 }
             });
 
-            // Delete event button
+            // Delete event button with enhanced confirmation
             deleteEvent.addEventListener('click', function() {
                 const eventId = document.getElementById('eventId').value;
-                
-                if (confirm('Apakah Anda yakin ingin menghapus acara ini?')) {
-                    fetch(`/kalender/delete/${eventId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            const event = calendar.getEventById(eventId);
-                            if (event) {
-                                event.remove();
-                            }
-                            closeModalFunc();
-                        } else {
-                            alert('Gagal menghapus event: ' + data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Terjadi kesalahan saat menghapus event');
-                    });
+                const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
+                const closeDeleteModal = document.getElementById('closeDeleteModal');
+                const cancelDelete = document.getElementById('cancelDelete');
+                const confirmDelete = document.getElementById('confirmDelete');
+
+                // Function to open delete confirmation modal
+                function openDeleteModal() {
+                    modalOverlay.classList.add('active');
+                    deleteConfirmationModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
                 }
+
+                // Function to close delete confirmation modal
+                function closeDeleteModalFunc() {
+                    modalOverlay.classList.remove('active');
+                    deleteConfirmationModal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+
+                // Event listeners for delete modal
+                closeDeleteModal.addEventListener('click', closeDeleteModalFunc);
+                cancelDelete.addEventListener('click', closeDeleteModalFunc);
+                modalOverlay.addEventListener('click', closeDeleteModalFunc);
+
+                // Show the delete confirmation modal
+                openDeleteModal();
+
+                // Handle delete confirmation
+                // Ganti kode event listener confirmDelete dengan ini:
+                confirmDelete.addEventListener('click', function() {
+                    const eventId = document.getElementById('eventId').value;
+                    const eventToRemove = calendar.getEventById(eventId); // Dapatkan event dari kalender
+
+                    fetch(`<?= site_url('kalender/delete') ?>/${eventId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': '<?= csrf_hash() ?>'
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.status === 'success') {
+                                // Hapus event langsung dari kalender
+                                if (eventToRemove) {
+                                    eventToRemove.remove();
+                                }
+
+                                // Tutup modal
+                                closeModalFunc();
+                                closeDeleteModalFunc();
+
+                                // Tampilkan notifikasi
+                                showNotification('success', 'Berhasil', 'Acara berhasil dihapus');
+
+                                // Refresh daftar acara mendatang
+                                loadUpcomingEvents();
+                            } else {
+                                showNotification('error', 'Gagal', 'Gagal menghapus acara: ' + (data.message || 'Terjadi kesalahan'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showNotification('error', 'Error', 'Terjadi kesalahan saat menghapus acara');
+                        });
+                });
             });
 
-            // Form submit (Create/Update)
+            // Form submit
             eventForm.addEventListener('submit', function(e) {
                 e.preventDefault();
 
@@ -885,51 +1300,87 @@
                 const color = document.getElementById('eventColor').value;
                 const eventClass = document.getElementById('eventClass').value;
 
-                const eventData = {
-                    title: title,
-                    description: description,
-                    start_date: startDate,
-                    end_date: endDate,
-                    start_time: startTime || null,
-                    end_time: endTime || null,
-                    color: color,
-                    event_type: color === '#F43F5E' ? 'deadline' : color === '#6366F1' ? 'research' : color === '#3B82F6' ? 'publication' : color === '#8B5CF6' ? 'hki' : 'other'
-                };
+                // Format date and time
+                let start = startDate;
+                if (startTime) start += `T${startTime}:00`;
 
-                const url = eventId ? `/kalender/update/${eventId}` : '/kalender/save';
-                const method = eventId ? 'PUT' : 'POST';
+                let end = endDate;
+                if (endTime) end += `T${endTime}:00`;
+
+                // For all-day events
+                if (!startTime && !endTime) {
+                    end = endDate;
+                }
+
+                // Create form data
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('description', description);
+                formData.append('start_date', start);
+                formData.append('end_date', end);
+                formData.append('color', color);
+                formData.append('class_name', eventClass);
+
+                const url = eventId ? `<?= site_url('kalender/update') ?>/${eventId}` : `<?= site_url('kalender/add') ?>`;
+                const method = 'POST';
 
                 fetch(url, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify(eventData)
-                })
+                        method: method,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': '<?= csrf_hash() ?>'
+                        },
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Show success notification
+                            const message = eventId ? 'Acara berhasil diperbarui' : 'Acara berhasil ditambahkan';
+                            showNotification('success', 'Berhasil', message);
+
+                            // Refresh calendar and close modal
+                            if (calendar) {
+                                calendar.refetchEvents();
+                            }
+                            loadUpcomingEvents();
+                            closeModalFunc();
+                        } else {
+                            showNotification('error', 'Gagal', 'Gagal menyimpan acara: ' + (data.message || 'Terjadi kesalahan'));
+                            console.error('Error details:', data);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('error', 'Error', 'Terjadi kesalahan saat menyimpan acara: ' + error.message);
+                    });
+            });
+
+            // Load upcoming events count when page loads
+            // Get today's date and 7 days from now
+            const today = new Date();
+            const nextWeek = new Date();
+            nextWeek.setDate(today.getDate() + 7);
+
+            const startStr = today.toISOString().split('T')[0];
+            const endStr = nextWeek.toISOString().split('T')[0];
+
+            fetch(`<?= site_url('kalender/events') ?>?start=${startStr}&end=${endStr}`)
                 .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Refresh kalender dengan mengambil data terbaru
-                        fetch('/kalender')
-                            .then(response => response.text())
-                            .then(html => {
-                                const parser = new DOMParser();
-                                const doc = parser.parseFromString(html, 'text/html');
-                                const newEvents = doc.querySelector('#calendar').dataset.events;
-                                calendar.removeAllEvents();
-                                calendar.addEventSource(JSON.parse(newEvents));
-                            });
-                        closeModalFunc();
-                    } else {
-                        alert('Gagal menyimpan event: ' + data.error);
+                .then(events => {
+                    if (events.length > 0) {
+                        notificationCount.textContent = events.length;
+                        notificationCount.classList.remove('hidden');
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat menyimpan event');
+                    console.error('Error loading events count:', error);
                 });
-            });
         });
 
         // Weather API Integration
@@ -943,7 +1394,6 @@
                 // Fetch current weather
                 const currentResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=id`);
                 const currentData = await currentResponse.json();
-                console.log(currentData); // Tambahkan ini untuk melihat isi datanya
 
                 // Update UI dengan data cuaca
                 document.getElementById('weatherLocation').textContent = currentData.name || 'Jakarta';
@@ -951,8 +1401,6 @@
                 document.getElementById('weatherTemp').textContent = Math.round(currentData.main.temp);
                 document.getElementById('weatherDescription').textContent = currentData.weather[0].description;
                 document.getElementById('weatherHumidity').textContent = `${currentData.main.humidity}%`;
-
-
 
                 // Update humidity bar
                 const humidityBar = document.getElementById('humidityBar');

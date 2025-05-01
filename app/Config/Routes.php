@@ -7,39 +7,36 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 
-// Homepage Route
+
+
+
+// Route
 $routes->get('/', 'HomepageController::index');
 
-
-
-// $routes->get('/register', 'AuthController::register');
-// $routes->post('/register', 'AuthController::register');
-
-// $routes->get('/login', 'AuthController::login');
-// $routes->post('/login', 'AuthController::login'); 
-
-$routes->get('/forgotpassword', 'AuthController::forgotpassword');
-$routes->get('/kalender', 'KalenderController::showcalender');
-$routes->get('/penelitian', 'PenelitianController::showpenelitian');
-$routes->get('/publikasi', 'PublikasiController::showpublikasi');
-$routes->get('/hki', 'HkiController::showhki');
-
-
-
-// Auth Routes
 $routes->get('/register', 'AuthController::register');
 $routes->post('/register', 'AuthController::processRegister');
 $routes->get('/login', 'AuthController::login');
 $routes->post('/login', 'AuthController::processLogin');
-$routes->get('auth/logout', 'AuthController::logout');
+$routes->get('/logout', 'AuthController::logout');
 
-// Dashboard Route
+$routes->get('/forgotpassword', 'AuthController::forgotpassword');
+$routes->post('/forgotpassword', 'AuthController::processForgotPassword');
+$routes->get('/verify-otp', 'AuthController::verifyOtp');
+$routes->post('/verify-otp', 'AuthController::processVerifyOtp');
+$routes->get('/reset-password', 'AuthController::resetPassword');
+$routes->post('/reset-password', 'AuthController::processResetPassword');
+
 $routes->get('/dashboard', 'DashboardController::index');
+$routes->get('/penelitian', 'PenelitianController::showpenelitian');
+$routes->get('/publikasi', 'PublikasiController::showpublikasi');
 
-// Kalender API Routes
-$routes->post('/kalender/save', 'KalenderController::saveEvent');
-$routes->put('/kalender/update/(:num)', 'KalenderController::updateEvent/$1');
-$routes->post('/kalender/delete/(:num)', 'KalenderController::deleteEvent/$1');
+$routes->group('kalender', function ($routes) {
+    $routes->get('/', 'KalenderController::index');
+    $routes->get('events', 'KalenderController::getEvents');
+    $routes->post('add', 'KalenderController::addEvent');
+    $routes->post('update/(:num)', 'KalenderController::updateEvent/$1');
+    $routes->post('delete/(:num)', 'KalenderController::deleteEvent/$1');
+});
 
 $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('profile', 'Profile::index');
