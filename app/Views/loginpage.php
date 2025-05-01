@@ -151,7 +151,6 @@
             <div class="absolute -top-10 -left-10 w-20 h-20 rounded-full bg-purple-200 opacity-20 animate-float"></div>
             <div class="absolute -bottom-5 -right-5 w-16 h-16 rounded-full bg-pink-200 opacity-20 animate-float animation-delay-1500"></div>
 
-            <!-- Tambahkan ini di bagian atas form -->
             <?php if (session()->getFlashdata('error')) : ?>
                 <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl animate-entry">
                     <?= session()->getFlashdata('error') ?>
@@ -188,18 +187,18 @@
                     </p>
                 </div>
 
-                <form class="space-y-6" id="loginForm">
+                <form class="space-y-6" action="<?= site_url('login') ?>" method="POST" id="loginForm">
                     <div class="group animate-entry" style="animation-delay: 0.1s">
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1 transition-all duration-300 group-focus-within:text-primary-600">
-                            Email Address
+                        <label for="usernameOrEmail" class="block text-sm font-medium text-gray-700 mb-1 transition-all duration-300 group-focus-within:text-primary-600">
+                            Username atau Email
                         </label>
                         <div class="relative transition-all duration-300">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors duration-300">
-                                <i class="fas fa-envelope"></i>
+                                <i class="fas fa-user"></i>
                             </div>
-                            <input type="email" id="email" name="email"
+                            <input type="text" id="usernameOrEmail" name="usernameOrEmail"
                                 class="input-glow block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-primary-400 focus:border-transparent placeholder-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                                placeholder="your@email.com" required>
+                                placeholder="Masukkan username atau email" required>
                         </div>
                     </div>
 
@@ -220,21 +219,14 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between animate-entry" style="animation-delay: 0.3s">
-                        <div class="flex items-center">
-                            <input id="remember-me" name="remember-me" type="checkbox"
-                                class="h-4 w-4 text-primary-500 focus:ring-primary-400 border-gray-300 rounded transition-all duration-300 hover:scale-110">
-                            <label for="remember-me" class="ml-2 block text-sm text-gray-700 hover:text-gray-900 cursor-pointer transition-colors duration-300">
-                                Ingat akun
-                            </label>
-                        </div>
-
-                        <a href="<?= site_url('forgotpassword') ?>" class="text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors duration-300 hover:underline">
+                    <div class="flex justify-end animate-entry" style="animation-delay: 0.3s">
+                        <a href="<?= site_url('forgotpassword') ?>"
+                            class="text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors duration-300 hover:underline">
                             Lupa password?
                         </a>
                     </div>
 
-                    <button type="submit" href="<?= site_url('dashboard') ?>"
+                    <button type="submit"
                         class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl text-sm font-medium text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-400 shadow-md hover:shadow-lg transition-all duration-300 animate-entry group"
                         style="animation-delay: 0.4s"
                         id="loginButton">
@@ -289,7 +281,7 @@
 
             // Form submission effect
             const form = document.getElementById('loginForm');
-            form.addEventListener('submit', (e) => {
+            form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
                 // Button press animation
@@ -301,21 +293,12 @@
                     ease: "power1.inOut"
                 });
 
-                // Success animation after short delay
+                // Create confetti effect
+                createConfetti();
+
+                // Submit form after animations
                 setTimeout(() => {
-                    createConfetti();
-
-                    gsap.to('.card-gradient', {
-                        y: -20,
-                        duration: 0.5,
-                        ease: "back.out(1.2)"
-                    });
-
-                    // Simulate successful login
-                    setTimeout(() => {
-                        // This would normally redirect to dashboard
-                        window.location.href = "#"; // Replace with actual redirect
-                    }, 1500);
+                    this.submit();
                 }, 800);
             });
         });
@@ -389,25 +372,6 @@
                 });
             }
         }
-
-        // Social button hover effects
-        document.querySelectorAll('.social-btn').forEach(btn => {
-            btn.addEventListener('mouseenter', () => {
-                gsap.to(btn, {
-                    scale: 1.05,
-                    duration: 0.3,
-                    ease: "back.out(1.2)"
-                });
-            });
-
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, {
-                    scale: 1,
-                    duration: 0.3,
-                    ease: "back.out(1.2)"
-                });
-            });
-        });
     </script>
 </body>
 

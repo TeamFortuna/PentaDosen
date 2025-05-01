@@ -164,6 +164,141 @@
             background: linear-gradient(to right, #6366f1, #8b5cf6);
             transition: width 0.4s ease;
         }
+
+        /* Success Modal Styles */
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .success-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .success-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .success-modal.active .success-content {
+            transform: scale(1);
+        }
+
+        .checkmark-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .checkmark {
+            width: 50px;
+            height: 50px;
+            display: block;
+            stroke-width: 5;
+            stroke: #fff;
+            stroke-miterlimit: 10;
+            margin: 10% auto;
+            animation: checkmark 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark-check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+        }
+
+        @keyframes checkmark {
+            0% {
+                stroke-dashoffset: 48;
+            }
+
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+            }
+
+            80% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .success-bg-circle {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.1);
+            top: -150px;
+            right: -150px;
+            z-index: -1;
+        }
+
+        .success-bg-circle:nth-child(2) {
+            top: auto;
+            right: auto;
+            bottom: -150px;
+            left: -150px;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .success-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .success-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .success-btn:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 
@@ -175,6 +310,28 @@
 
     <!-- Confetti container -->
     <div id="confetti-container"></div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="success-modal">
+        <div class="success-content">
+            <div class="success-bg-circle"></div>
+            <div class="success-bg-circle"></div>
+
+            <div class="checkmark-circle">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark-circle-bg" cx="26" cy="26" r="25" fill="none" />
+                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                </svg>
+            </div>
+
+            <h2 class="text-3xl font-bold text-gray-800 mb-3">Registrasi Berhasil!</h2>
+            <p class="text-gray-600 mb-6">Akun Anda berhasil dibuat. Silakan login untuk melanjutkan.</p>
+
+            <button id="successBtn" class="success-btn">
+                Lanjutkan ke Halaman Login
+            </button>
+        </div>
+    </div>
 
     <div class="relative z-10 w-full max-w-md">
         <!-- Main card with subtle gradient border -->
@@ -493,7 +650,7 @@
                 <div class="mt-6 text-center animate-entry" style="animation-delay: 0.8s">
                     <p class="text-sm text-gray-600">
                         Sudah punya akun?
-                        <a href="login.html" class="font-medium text-primary-500 hover:text-primary-600 transition-colors duration-300 hover:underline">
+                        <a href="<?= site_url('login') ?>" class="font-medium text-primary-500 hover:text-primary-600 transition-colors duration-300 hover:underline">
                             Masuk
                         </a>
                     </p>
@@ -535,7 +692,6 @@
             // Form submission effect
             const form = document.getElementById('registerForm');
             form.addEventListener('submit', (e) => {
-                // Atau jika ingin tetap menggunakan animasi, submit form secara manual setelah animasi
                 e.preventDefault();
 
                 // Button press animation
@@ -546,12 +702,33 @@
                     repeat: 1,
                     ease: "power1.inOut",
                     onComplete: function() {
-                        // Submit form setelah animasi selesai
+                        // Show success modal
+                        showSuccessModal();
+
+                        // In a real app, you would submit the form here
                         form.submit();
                     }
                 });
             });
+
+            // Success modal button - Redirect to login page
+            document.getElementById('successBtn').addEventListener('click', function() {
+                window.location.href = "<?= site_url('login') ?>";
+            });
         });
+
+        // Show success modal with animations
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            const confettiContainer = document.getElementById('confetti-container');
+
+            // Show modal
+            modal.classList.add('active');
+
+            // Create confetti explosion
+            createConfetti();
+
+        }
 
         // Function to generate initials from full name
         function generateInitials(fullName) {
@@ -819,6 +996,14 @@
             return isValid;
         }
 
+        function animateInvalidField(field) {
+            gsap.to(field, {
+                x: [-5, 5, -5, 5, 0],
+                duration: 0.4,
+                ease: "power1.out"
+            });
+        }
+
         // Create confetti explosion
         function createConfetti() {
             const container = document.getElementById('confetti-container');
@@ -827,8 +1012,8 @@
             // Clear previous confetti
             container.innerHTML = '';
 
-            // Create 50 confetti pieces
-            for (let i = 0; i < 50; i++) {
+            // Create 100 confetti pieces
+            for (let i = 0; i < 100; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
 
@@ -837,11 +1022,9 @@
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 const shape = Math.random() > 0.5 ? '50%' : '0';
 
-                // Position at button
-                const button = document.getElementById('registerButton');
-                const buttonRect = button.getBoundingClientRect();
-                const startX = buttonRect.left + buttonRect.width / 2;
-                const startY = buttonRect.top;
+                // Position at random points on screen
+                const startX = Math.random() * window.innerWidth;
+                const startY = -20;
 
                 // Apply styles
                 confetti.style.width = `${size}px`;
@@ -853,20 +1036,22 @@
 
                 container.appendChild(confetti);
 
+                // Random animation duration
+                const duration = Math.random() * 3 + 2;
+
                 // Animate confetti
                 gsap.to(confetti, {
-                    x: `${Math.random() * 400 - 200}px`,
-                    y: `${Math.random() * 300 + 100}px`,
+                    y: window.innerHeight + 100,
+                    x: startX + (Math.random() * 200 - 100),
                     rotation: Math.random() * 360,
                     opacity: 1,
-                    duration: 1.5,
+                    duration: duration,
                     delay: Math.random() * 0.5,
-                    ease: "power1.out",
+                    ease: "power1.in",
                     onComplete: () => {
                         gsap.to(confetti, {
                             opacity: 0,
-                            duration: 0.5,
-                            delay: 0.5
+                            duration: 0.5
                         });
                     }
                 });

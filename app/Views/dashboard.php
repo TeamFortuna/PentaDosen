@@ -94,75 +94,8 @@
     <!-- Overlay -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- Sidebar -->
-    <div class="sidebar w-64 bg-white shadow-lg flex flex-col h-full" id="sidebar">
-        <!-- Logo and Toggle -->
-        <div class="p-4 flex items-center justify-between border-b">
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center text-white mr-3">
-                    <i class="fas fa-flask text-xl"></i>
-                </div>
-                <h1 class="text-xl font-bold text-indigo-600">Penta Dosen</h1>
-            </div>
-            <button class="menu-toggle md:hidden text-gray-500" id="closeSidebar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-
-        <!-- Menu -->
-        <div class="flex-1 overflow-y-auto py-4">
-            <ul class="space-y-1 px-4">
-                <li>
-                    <a href="<?= site_url('dashboard') ?>" class="sidebar-item active flex items-center px-4 py-3 rounded-lg text-indigo-600 font-medium">
-                        <i class="fas fa-tachometer-alt mr-3"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('kalender') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="far fa-calendar-alt mr-3"></i>
-                        Kalender
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('penelitian') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-microscope mr-3"></i>
-                        Penelitian
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('publikasi') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-book-open mr-3"></i>
-                        Publikasi
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('hki') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-lightbulb mr-3"></i>
-                        HKI
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- User Profile -->
-        <div class="p-4 border-t">
-            <div class="flex items-center">
-                <a href="<?= site_url('profile') ?>" class="flex items-center">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full mr-3">
-                    <div>
-                        <p class="font-medium text-gray-800">Muhammad Syafi'ul Umam S.Kom.</p>
-                        <p class="text-xs text-gray-500">Dosen Fakultas Teknik Informatika</p>
-                    </div>
-                </a>
-            </div>
-            <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200 flex items-center justify-center">
-                <a href="<?= site_url('auth/logout') ?>">
-                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                </a>
-            </button>
-        </div>
-    </div>
+    <!-- Include Sidebar -->
+    <?= view('partials/sidebar') ?>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
@@ -173,7 +106,10 @@
                     <button class="menu-toggle mr-4 text-gray-600 md:hidden" id="openSidebar">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+                    <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-tachometer-alt mr-2 text-indigo-500"></i>
+                        Dashboard
+                    </h2>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="relative hidden md:block">
@@ -193,7 +129,7 @@
             <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl shadow-md p-6 text-white mb-6">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h3 class="text-2xl font-bold mb-2">Selamat Datang, Pak Umam!</h3>
+                        <h3 class="text-2xl font-bold mb-2">Selamat Datang, <?= $user['nama'] ?>!</h3>
                         <p class="opacity-90">Pantau aktivitas terbaru dan kelola penelitian Anda di sini.</p>
                     </div>
                     <div class="w-16 h-16 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
@@ -284,6 +220,7 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aktivitas</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waktu</th>
@@ -291,127 +228,50 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200" id="logTable">
-                            <tr class="table-row">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                                            <i class="fas fa-sign-in-alt"></i>
+                            <?php foreach ($activity_logs as $log): ?>
+                                <tr class="table-row">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900"><?= $log['user_name'] ?? 'System' ?></div>
+                                            </div>
                                         </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">Login</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded-full 
+                                    <?= $log['activity'] === 'Login' ? 'bg-green-100 text-green-600' : ($log['activity'] === 'Logout' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600') ?> 
+                                    flex items-center justify-center">
+                                                <i class="fas 
+                                        <?= $log['activity'] === 'Login' ? 'fa-sign-in-alt' : ($log['activity'] === 'Logout' ? 'fa-sign-out-alt' : 'fa-info-circle') ?>"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900"><?= $log['activity'] ?></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">Berhasil login ke sistem</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">15 Juni 2023, 08:30 WIB</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        Success
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr class="table-row">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                                            <i class="fas fa-plus"></i>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">Create</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">Membuat penelitian baru "Pengaruh Obat X"</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">14 Juni 2023, 14:15 WIB</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        Success
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr class="table-row">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600">
-                                            <i class="fas fa-edit"></i>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">Update</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">Memperbarui data publikasi "Jurnal Internasional"</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">13 Juni 2023, 10:45 WIB</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        Success
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr class="table-row">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">Delete</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">Menghapus draft penelitian "Studi Kasus Y"</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">12 Juni 2023, 16:20 WIB</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        Success
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr class="table-row">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                                            <i class="fas fa-sign-out-alt"></i>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">Logout</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">Keluar dari sistem</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">11 Juni 2023, 17:00 WIB</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        Success
-                                    </span>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900"><?= $log['description'] ?></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900"><?= date('d M Y, H:i', strtotime($log['created_at'])) ?> WIB</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            Success
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
                 <div class="px-6 py-4 border-t flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
                     <div class="text-sm text-gray-500">
-                        Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">5</span> dari <span class="font-medium">24</span> aktivitas
+                        Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium"><?= count($activity_logs) ?></span> dari <span class="font-medium"><?= count($activity_logs) ?></span> aktivitas
                     </div>
                     <div class="flex space-x-2">
                         <button class="px-3 py-1 border rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
@@ -419,9 +279,6 @@
                         </button>
                         <button class="px-3 py-1 border rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
                             1
-                        </button>
-                        <button class="px-3 py-1 border rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                            2
                         </button>
                         <button class="px-3 py-1 border rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
                             Next
@@ -432,61 +289,10 @@
         </main>
     </div>
 
+    <!-- Include Sidebar Script -->
+    <script src="<?= base_url('js/sidebar-script.js') ?>"></script>
+
     <script>
-        // Toggle sidebar on mobile
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        const openSidebar = document.getElementById('openSidebar');
-        const closeSidebar = document.getElementById('closeSidebar');
-
-        openSidebar.addEventListener('click', () => {
-            sidebar.classList.add('active');
-            overlay.classList.add('active');
-        });
-
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-
-        // Search functionality for activity log
-        document.getElementById('searchLog').addEventListener('input', function() {
-            const searchValue = this.value.toLowerCase();
-            const rows = document.querySelectorAll('#logTable tr');
-
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                if (text.includes(searchValue)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-
-        // Sidebar item active state
-        document.querySelectorAll('.sidebar-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.sidebar-item').forEach(i => {
-                    i.classList.remove('active', 'text-indigo-600');
-                    i.classList.add('text-gray-600', 'hover:text-indigo-600');
-                });
-                this.classList.add('active', 'text-indigo-600');
-                this.classList.remove('text-gray-600', 'hover:text-indigo-600');
-
-                // Close sidebar on mobile after clicking menu item
-                if (window.innerWidth < 768) {
-                    sidebar.classList.remove('active');
-                    overlay.classList.remove('active');
-                }
-            });
-        });
-
         // Chart Initialization
         document.addEventListener('DOMContentLoaded', function() {
             // Data Fakultas

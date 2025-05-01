@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Models\EventModel;
 use CodeIgniter\Controller;
+use App\Models\EventModel;
 
 class KalenderController extends Controller
 {
@@ -12,133 +12,172 @@ class KalenderController extends Controller
     public function __construct()
     {
         $this->eventModel = new EventModel();
+        helper(['form', 'url']);
     }
 
-    public function showcalender()
+    public function index()
     {
-        // Ambil user_id dari session
-        $userId = session()->get('user_id');
-        
-        // Ambil semua event untuk user tersebut
-        $events = $this->eventModel->getEventsByUserId($userId);
-        
-        // Format events untuk FullCalendar
+
+        $data['user'] = [
+            'id' => session()->get('id'),
+            'nama' => session()->get('nama'),
+            'nidn' => session()->get('nidn'),
+            'nip' => session()->get('nip'),
+            'inisial' => session()->get('inisial'),
+            'jabatan' => session()->get('jabatan'),
+            'universitas' => session()->get('universitas'),
+            'fakultas' => session()->get('fakultas'),
+            'jurusan' => session()->get('jurusan'),
+            'email' => session()->get('email'),
+            'username' => session()->get('username')
+        ];
+        return view('kalender', $data);
+    }
+
+    public function getEvents()
+    {
+        $start = $this->request->getGet('start');
+        $end = $this->request->getGet('end');
+        $userId = session()->get('user_id') ?? 1; // Default to 1 if no session
+
+        $events = $this->eventModel->where('user_id', $userId)
+            ->where('start_date >=', $start)
+            ->where('start_date <=', $end)
+            ->orWhere('end_date >=', $start)
+            ->where('end_date <=', $end)
+            ->findAll();
+
         $formattedEvents = [];
         foreach ($events as $event) {
             $formattedEvents[] = [
                 'id' => $event['id'],
                 'title' => $event['title'],
                 'description' => $event['description'],
-                'start' => $event['start_date'] . ($event['start_time'] ? 'T' . $event['start_time'] : ''),
-                'end' => $event['end_date'] . ($event['end_time'] ? 'T' . $event['end_time'] : ''),
+                'start' => $event['start_date'],
+                'end' => $event['end_date'],
                 'color' => $event['color'],
-                'className' => 'event-' . $event['event_type'],
+                'className' => $event['class_name'],
                 'extendedProps' => [
                     'description' => $event['description'],
-                    'type' => $event['event_type']
+                    'type' => $event['color'] === '#F43F5E' ? 'deadline' : ($event['color'] === '#6366F1' ? 'research' : ($event['color'] === '#3B82F6' ? 'publication' : ($event['color'] === '#8B5CF6' ? 'hki' : 'other')))
                 ]
             ];
         }
 
-        $data['events'] = json_encode($formattedEvents);
-        return view('kalender', $data);
+        return $this->response->setJSON($formattedEvents);
     }
 
-    public function saveEvent()
+    public function addEvent()
     {
-        if (!$this->request->isAJAX()) {
-            return $this->response->setStatusCode(403)->setJSON(['error' => 'Forbidden']);
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'title' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'permit_empty',
+            'color' => 'permit_empty',
+            'class_name' => 'permit_empty',
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => $validation->getErrors()
+            ]);
         }
 
-        $userId = session()->get('user_id');
-        if (!$userId) {
-            return $this->response->setStatusCode(401)->setJSON(['error' => 'Unauthorized']);
-        }
-
-        // Ambil data dari JSON request
-        $json = $this->request->getJSON();
-        
         $data = [
-            'title' => $json->title,
-            'description' => $json->description,
-            'start_date' => $json->start_date,
-            'end_date' => $json->end_date,
-            'start_time' => $json->start_time,
-            'end_time' => $json->end_time,
-            'color' => $json->color,
-            'event_type' => $json->event_type,
-            'user_id' => $userId
+            'title' => $this->request->getPost('title'),
+            'description' => $this->request->getPost('description') ?? '',
+            'start_date' => $this->request->getPost('start_date'),
+            'end_date' => $this->request->getPost('end_date') ?? $this->request->getPost('start_date'),
+            'color' => $this->request->getPost('color') ?? '#6366F1',
+            'class_name' => $this->request->getPost('class_name') ?? 'event-research',
+            'user_id' => session()->get('user_id') ?? 1,
         ];
 
         try {
-            $this->eventModel->insert($data);
-            return $this->response->setJSON(['success' => true, 'message' => 'Event berhasil disimpan']);
+            if ($this->eventModel->insert($data)) {
+                return $this->response->setJSON([
+                    'status' => 'success',
+                    'message' => 'Event added successfully',
+                    'event_id' => $this->eventModel->getInsertID()
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Failed to add event',
+                    'errors' => $this->eventModel->errors()
+                ]);
+            }
         } catch (\Exception $e) {
-            return $this->response->setStatusCode(500)->setJSON(['error' => 'Gagal menyimpan event: ' . $e->getMessage()]);
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Exception: ' . $e->getMessage()
+            ]);
         }
     }
 
     public function updateEvent($id)
     {
-        if (!$this->request->isAJAX()) {
-            return $this->response->setStatusCode(403)->setJSON(['error' => 'Forbidden']);
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'title' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'permit_empty',
+            'color' => 'permit_empty',
+            'class_name' => 'permit_empty',
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            return $this->response->setJSON(['status' => 'error', 'message' => $validation->getErrors()]);
         }
 
-        $userId = session()->get('user_id');
-        if (!$userId) {
-            return $this->response->setStatusCode(401)->setJSON(['error' => 'Unauthorized']);
-        }
-
-        // Pastikan event milik user ini
-        $event = $this->eventModel->where('id', $id)->where('user_id', $userId)->first();
-        if (!$event) {
-            return $this->response->setStatusCode(404)->setJSON(['error' => 'Event tidak ditemukan']);
-        }
-
-        // Ambil data dari JSON request
-        $json = $this->request->getJSON();
-        
         $data = [
-            'title' => $json->title,
-            'description' => $json->description,
-            'start_date' => $json->start_date,
-            'end_date' => $json->end_date,
-            'start_time' => $json->start_time,
-            'end_time' => $json->end_time,
-            'color' => $json->color,
-            'event_type' => $json->event_type
+            'title' => $this->request->getPost('title'),
+            'description' => $this->request->getPost('description') ?? '',
+            'start_date' => $this->request->getPost('start_date'),
+            'end_date' => $this->request->getPost('end_date') ?? $this->request->getPost('start_date'),
+            'color' => $this->request->getPost('color') ?? '#6366F1',
+            'class_name' => $this->request->getPost('class_name') ?? 'event-research',
         ];
 
         try {
-            $this->eventModel->update($id, $data);
-            return $this->response->setJSON(['success' => true, 'message' => 'Event berhasil diupdate']);
+            if ($this->eventModel->update($id, $data)) {
+                return $this->response->setJSON(['status' => 'success', 'message' => 'Event updated successfully']);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Failed to update event',
+                    'errors' => $this->eventModel->errors()
+                ]);
+            }
         } catch (\Exception $e) {
-            return $this->response->setStatusCode(500)->setJSON(['error' => 'Gagal mengupdate event: ' . $e->getMessage()]);
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Exception: ' . $e->getMessage()
+            ]);
         }
     }
 
     public function deleteEvent($id)
     {
-        if (!$this->request->isAJAX()) {
-            return $this->response->setStatusCode(403)->setJSON(['error' => 'Forbidden']);
-        }
+        $event = $this->eventModel->find($id);
 
-        $userId = session()->get('user_id');
-        if (!$userId) {
-            return $this->response->setStatusCode(401)->setJSON(['error' => 'Unauthorized']);
-        }
-
-        // Pastikan event milik user ini
-        $event = $this->eventModel->where('id', $id)->where('user_id', $userId)->first();
         if (!$event) {
-            return $this->response->setStatusCode(404)->setJSON(['error' => 'Event tidak ditemukan']);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Event not found']);
         }
 
         try {
-            $this->eventModel->delete($id);
-            return $this->response->setJSON(['success' => true, 'message' => 'Event berhasil dihapus']);
+            if ($this->eventModel->delete($id)) {
+                return $this->response->setJSON(['status' => 'success', 'message' => 'Event deleted successfully']);
+            } else {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to delete event']);
+            }
         } catch (\Exception $e) {
-            return $this->response->setStatusCode(500)->setJSON(['error' => 'Gagal menghapus event: ' . $e->getMessage()]);
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Exception: ' . $e->getMessage()
+            ]);
         }
     }
 }

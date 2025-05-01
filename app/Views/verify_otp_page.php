@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgot Password</title>
+    <title>Verifikasi OTP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
@@ -152,47 +152,49 @@
             <div class="card-gradient relative rounded-2xl border border-white/20 p-8 backdrop-blur-sm">
                 <div class="text-center mb-8 animate-entry">
                     <div class="w-20 h-20 bg-gradient-to-r from-primary-500 to-secondary mx-auto rounded-2xl flex items-center justify-center shadow-lg mb-4 animate-pulse-slow hover:animate-wave cursor-pointer">
-                        <i class="fas fa-key text-white text-3xl"></i>
+                        <i class="fas fa-shield-alt text-white text-3xl"></i>
                     </div>
                     <h1 class="text-3xl font-extrabold text-gray-800 transform transition-all duration-500 hover:scale-105 inline-block">
-                        Reset Password
+                        Verifikasi OTP
                     </h1>
                     <p class="mt-2 text-gray-600 transform transition-all duration-500 hover:scale-100 hover:translate-x-1 inline-block">
-                        Enter your email to receive a reset link
+                        Masukkan 6 digit kode yang dikirim ke email Anda
                     </p>
                 </div>
 
-                <form class="space-y-6" action="/forgotpassword" method="post">
-                    <?php if (session()->getFlashdata('error')): ?>
-                        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-xl animate-entry">
-                            <?= session()->getFlashdata('error') ?>
-                        </div>
-                    <?php endif; ?>
+                <?php if (session()->getFlashdata('error')): ?>
+                    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-xl animate-entry">
+                        <?= session()->getFlashdata('error') ?>
+                    </div>
+                <?php endif; ?>
+
+                <form class="space-y-6" action="/verify-otp" method="post">
                     <div class="group animate-entry" style="animation-delay: 0.1s">
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1 transition-all duration-300 group-focus-within:text-primary-600">
-                            Email Address
+                        <label for="otp" class="block text-sm font-medium text-gray-700 mb-1 transition-all duration-300 group-focus-within:text-primary-600">
+                            Kode OTP
                         </label>
                         <div class="relative transition-all duration-300">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors duration-300">
-                                <i class="fas fa-envelope"></i>
+                                <i class="fas fa-key"></i>
                             </div>
-                            <input type="email" id="email" name="email"
+                            <input type="text" id="otp" name="otp" maxlength="6"
                                 class="input-glow block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-primary-400 focus:border-transparent placeholder-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                                placeholder="your@email.com" required>
+                                placeholder="123456" required
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6)">
                         </div>
                     </div>
 
                     <button type="submit"
                         class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl text-sm font-medium text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-400 shadow-md hover:shadow-lg transition-all duration-300 animate-entry group"
                         style="animation-delay: 0.2s"
-                        id="resetButton">
-                        <span class="mr-2 group-hover:translate-x-1 transition-transform duration-300">Kirim Reset Link</span>
-                        <i class="fas fa-paper-plane transform group-hover:translate-x-2 group-hover:scale-110 transition-transform duration-300"></i>
+                        id="verifyButton">
+                        <span class="mr-2 group-hover:translate-x-1 transition-transform duration-300">Verifikasi</span>
+                        <i class="fas fa-check transform group-hover:translate-x-2 group-hover:scale-110 transition-transform duration-300"></i>
                     </button>
 
                     <div class="mt-6 text-center animate-entry" style="animation-delay: 0.3s">
-                        <a href="<?= site_url('login') ?>" class="text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors duration-300 hover:underline">
-                            <i class="fas fa-arrow-left mr-1"></i> Kembali ke Login
+                        <a href="/forgotpassword" class="text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors duration-300 hover:underline">
+                            <i class="fas fa-arrow-left mr-1"></i> Kembali
                         </a>
                     </div>
                 </form>
@@ -218,10 +220,10 @@
                 ease: "back.out(1.2)"
             });
 
-            // Key icon hover effect
-            const key = document.querySelector('.fa-key');
-            key.parentElement.addEventListener('mouseenter', () => {
-                gsap.to(key, {
+            // Shield icon hover effect
+            const shield = document.querySelector('.fa-shield-alt');
+            shield.parentElement.addEventListener('mouseenter', () => {
+                gsap.to(shield, {
                     y: -5,
                     duration: 0.3,
                     repeat: 1,
@@ -231,12 +233,12 @@
             });
 
             // Form submission effect
-            const form = document.getElementById('forgotForm');
+            const form = document.querySelector('form');
             form.addEventListener('submit', (e) => {
-                e.preventDefault();
+                const verifyButton = document.getElementById('verifyButton');
 
                 // Button press animation
-                gsap.to('#resetButton', {
+                gsap.to(verifyButton, {
                     scale: 0.95,
                     duration: 0.2,
                     yoyo: true,
@@ -253,33 +255,6 @@
                         duration: 0.5,
                         ease: "back.out(1.2)"
                     });
-
-                    // Simulate successful submission
-                    setTimeout(() => {
-                        // Show success message
-                        const successHTML = `
-                            <div class="text-center">
-                                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <i class="fas fa-check text-green-500 text-2xl"></i>
-                                </div>
-                                <h2 class="text-xl font-bold text-gray-800 mb-2">Email Sent!</h2>
-                                <p class="text-gray-600 mb-6">We've sent a password reset link to your email address.</p>
-                                <a href="login.html" class="inline-flex items-center text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors duration-300 hover:underline">
-                                    <i class="fas fa-arrow-left mr-1"></i> Back to Login
-                                </a>
-                            </div>
-                        `;
-
-                        document.querySelector('.card-gradient').innerHTML = successHTML;
-
-                        // Animate success message
-                        gsap.from('.card-gradient > div', {
-                            opacity: 0,
-                            y: 20,
-                            duration: 0.6,
-                            ease: "back.out(1.2)"
-                        });
-                    }, 1000);
                 }, 800);
             });
         });
@@ -303,7 +278,7 @@
                 const shape = Math.random() > 0.5 ? '50%' : '0';
 
                 // Position at button
-                const button = document.getElementById('resetButton');
+                const button = document.getElementById('verifyButton');
                 const buttonRect = button.getBoundingClientRect();
                 const startX = buttonRect.left + buttonRect.width / 2;
                 const startY = buttonRect.top;
