@@ -71,6 +71,17 @@ class CreateUsersTable extends Migration
                 'type' => 'DATETIME',
                 'null' => true,
             ],
+            'reset_token' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+                'after' => 'password'
+            ],
+            'reset_expiry' => [
+                'type' => 'DATETIME',
+                'null' => true,
+                'after' => 'reset_token'
+            ],
         ]);
 
         $this->forge->addKey('id', true);

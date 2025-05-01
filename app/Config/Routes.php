@@ -29,6 +29,7 @@ $routes->post('/reset-password', 'AuthController::processResetPassword');
 $routes->get('/dashboard', 'DashboardController::index');
 $routes->get('/penelitian', 'PenelitianController::showpenelitian');
 $routes->get('/publikasi', 'PublikasiController::showpublikasi');
+$routes->get('/hki', 'HkiController::showhki');
 
 $routes->group('kalender', function ($routes) {
     $routes->get('/', 'KalenderController::index');
