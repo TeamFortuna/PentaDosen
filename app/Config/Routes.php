@@ -28,6 +28,11 @@ $routes->post('/reset-password', 'AuthController::processResetPassword');
 
 $routes->get('/dashboard', 'DashboardController::index');
 $routes->get('/penelitian', 'PenelitianController::showpenelitian');
+$routes->post('/penelitian/save', 'PenelitianController::save');
+$routes->post('/penelitian/update/(:num)', 'PenelitianController::update/$1');
+$routes->delete('/penelitian/delete/(:num)', 'PenelitianController::delete/$1');
+$routes->post('/penelitian/upload-laporan/(:num)', 'PenelitianController::uploadLaporan/$1');
+$routes->get('/penelitian/detail/(:num)', 'PenelitianController::getDetail/$1');
 $routes->get('/publikasi', 'PublikasiController::showpublikasi');
 $routes->get('/hki', 'HkiController::showhki');
 
