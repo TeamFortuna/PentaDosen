@@ -18,8 +18,31 @@ class HkiController extends BaseController
 
     public function showhki()
     {
+        // Cek session login terlebih dahulu
+        if (!session()->get('logged_in')) {
+            return redirect()->to('login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
         $data['users'] = $this->userModel->findAll();
-        $data['hkis'] = $this->hkiModel->getHkiWithUsers();
+
+        // Ambil user ID dari session
+        $userId = session()->get('id');
+        
+        // Debug untuk melihat user_id
+        log_message('debug', 'User ID from session: ' . $userId);
+
+        // Ambil data HKI berdasarkan user yang login
+        $data['hkis'] = $this->hkiModel->getHkiWithUsersByUser($userId);
+        log_message('debug', 'Filtering HKI for user ID: ' . $userId);
+        log_message('debug', 'Number of HKI found: ' . count($data['hkis']));
+
+        // Tambahkan data user untuk debug
+        $data['debug'] = [
+            'user_id' => $userId,
+            'logged_in' => session()->get('logged_in'),
+            'session_data' => session()->get()
+        ];
+
         return view('hki', $data);
     }
 
@@ -43,7 +66,8 @@ class HkiController extends BaseController
 
         // Untuk tambah, file wajib. Untuk edit, file opsional.
         if ($isUpdate) {
-            if ($this->request->getFile('file')->isValid() && !$this->request->getFile('file')->hasMoved()) {
+            if ($this->request->getFile('file')->isValid() && 
+            !$this->request->getFile('file')->hasMoved()) {
                 $rules['file'] = 'uploaded[file]|max_size[file,10240]|ext_in[file,pdf,doc,docx,jpg,jpeg,png]';
             }
         } else {

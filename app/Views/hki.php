@@ -207,6 +207,17 @@
 </head>
 
 <body class="flex h-screen overflow-hidden bg-gray-50">
+    <?php if (ENVIRONMENT === 'development' && isset($debug)): ?>
+    <div class="fixed bottom-0 right-0 bg-gray-800 text-white p-4 m-4 rounded-lg shadow-lg z-50">
+        <h3 class="font-bold mb-2">Debug Info:</h3>
+        <pre class="text-xs">
+User ID: <?= $debug['user_id'] ?? 'null' ?>
+Logged In: <?= $debug['logged_in'] ? 'Yes' : 'No' ?>
+Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
+        </pre>
+    </div>
+    <?php endif; ?>
+
     <!-- Overlay (for mobile sidebar) -->
     <div class="overlay" id="overlay" style="display: none;"></div>
 
@@ -376,8 +387,7 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <?php if (isset(
-                                $hkis) && count($hkis) > 0): ?>
+                            <?php if (isset($hkis) && count($hkis) > 0): ?>
                                 <?php foreach ($hkis as $i => $hki): ?>
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $i+1 ?></td>
@@ -411,6 +421,12 @@
                                 <tr>
                                     <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                                         Tidak ada data HKI yang ditemukan
+                                        <?php if (ENVIRONMENT === 'development'): ?>
+                                            <br>
+                                            <small class="text-xs text-gray-400">
+                                                Debug: User ID = <?= session()->get('user_id') ?? 'null' ?>
+                                            </small>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>
