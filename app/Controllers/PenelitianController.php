@@ -154,13 +154,15 @@ class PenelitianController extends Controller
     public function update($id)
     {
         // Validasi input
-        if (!$this->validate([
+        $validationRules = [
             'judul' => 'required',
             'skema' => 'required',
             'sumber_dana' => 'required',
             'biaya_diusulkan' => 'required|numeric',
             'biaya_didanai' => 'required|numeric'
-        ])) {
+        ];
+
+        if (!$this->validate($validationRules)) {
             return $this->response->setJSON([
                 'status' => 'error',
                 'message' => $this->validator->getErrors()
@@ -190,6 +192,10 @@ class PenelitianController extends Controller
         $this->anggotaPenelitianModel->where('penelitian_id', $id)->where('tipe', 'internal')->delete();
         $anggotaInternal = $this->request->getPost('anggota_internal');
         if ($anggotaInternal) {
+            // Jika dikirim dalam bentuk JSON string
+            if (is_string($anggotaInternal)) {
+                $anggotaInternal = json_decode($anggotaInternal, true);
+            }
             foreach ($anggotaInternal as $userId) {
                 $user = $this->userModel->find($userId);
                 if ($user) {
@@ -212,6 +218,10 @@ class PenelitianController extends Controller
         $this->anggotaPenelitianModel->where('penelitian_id', $id)->where('tipe', 'eksternal')->delete();
         $anggotaEksternal = $this->request->getPost('anggota_eksternal');
         if ($anggotaEksternal) {
+            // Jika dikirim dalam bentuk JSON string
+            if (is_string($anggotaEksternal)) {
+                $anggotaEksternal = json_decode($anggotaEksternal, true);
+            }
             foreach ($anggotaEksternal as $anggota) {
                 $this->anggotaPenelitianModel->insert([
                     'penelitian_id' => $id,

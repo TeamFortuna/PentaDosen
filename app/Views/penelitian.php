@@ -225,17 +225,18 @@
     <!-- Overlay -->
     <div class="overlay fixed inset-0 bg-black bg-opacity-50 z-40 hidden" id="overlay"></div>
 
-    <!-- Modal Tambah Penelitian -->
+    <!-- Modal Tambah/Edit Penelitian -->
     <div class="modal fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-4xl hidden" id="addResearchModal">
         <div class="bg-white rounded-xl shadow-xl overflow-hidden mx-4 max-h-[90vh] overflow-y-auto">
             <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-primary sticky top-0">
-                <h3 class="text-lg font-semibold text-white">Tambah Penelitian Baru</h3>
+                <h3 class="text-lg font-semibold text-white" id="addResearchModalTitle">Tambah Penelitian Baru</h3>
                 <button id="closeAddResearchModal" class="text-white hover:text-gray-200 transition">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="p-6">
                 <form id="researchForm" class="space-y-6" enctype="multipart/form-data">
+                    <input type="hidden" id="editResearchId" name="editResearchId">
                     <!-- Section 1.1 - Identitas Ketua (readonly) -->
                     <div class="mb-8">
                         <h4 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">1.1 Identitas Ketua Peneliti</h4>
@@ -382,7 +383,6 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Jabatan Akademik</label>
-                                        <!-- <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent external-position"> -->
                                         <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition external-position">
                                             <option value="" disabled selected>Pilih Jabatan Akademik</option>
                                             <option value="guru_besar">Guru Besar</option>
@@ -532,27 +532,27 @@
                             <p class="text-sm text-gray-600">Biaya Didanai</p>
                             <p class="font-medium" id="detailApprovedBudget"></p>
                         </div>
+                        </div>
                     </div>
-                </div>
 
                 <!-- Section 1.3 - Anggota Penelitian -->
                 <div class="mb-8">
                     <h4 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">1.3 Anggota Penelitian</h4>
                     <div id="detailAnggotaContainer" class="space-y-4">
                         <!-- Anggota akan ditambahkan secara dinamis -->
+                        </div>
                     </div>
-                </div>
 
                 <!-- Section 1.4 - File Penelitian -->
                 <div class="mb-8">
                     <h4 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">1.4 File Penelitian</h4>
                     <div class="space-y-4">
-                        <div>
+                    <div>
                             <p class="text-sm text-gray-600 mb-2">Proposal</p>
                             <a href="#" id="detailProposalLink" class="text-primary hover:underline hidden" target="_blank">
                                 <i class="fas fa-file-pdf mr-1"></i> Lihat Proposal
                             </a>
-                        </div>
+                            </div>
                         <div>
                             <p class="text-sm text-gray-600 mb-2">Laporan Kemajuan</p>
                             <a href="#" id="detailLaporanKemajuanLink" class="text-primary hover:underline hidden" target="_blank">
@@ -591,39 +591,39 @@
                     <input type="hidden" id="uploadReportResearchId">
                     <input type="hidden" id="uploadReportType">
 
-                    <div class="mb-4">
-                        <div class="dropzone p-8 text-center cursor-pointer" id="reportDropzone">
-                            <input type="file" id="reportFile" class="hidden" accept=".pdf">
-                            <div class="flex flex-col items-center justify-center">
-                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-                                <p class="text-sm text-gray-600">Drag & drop file laporan di sini atau klik untuk memilih</p>
-                                <p class="text-xs text-gray-500 mt-1">Format PDF (maks. 10MB)</p>
-                            </div>
-                        </div>
-                        <div id="reportPreview" class="hidden mt-2 p-3 bg-gray-50 rounded-lg">
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center">
-                                    <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                    <span id="reportFileName" class="text-sm font-medium"></span>
-                                </div>
-                                <button type="button" id="removeReport" class="text-danger hover:text-red-700">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
-                                <div id="reportUploadProgress" class="bg-primary h-1.5 rounded-full" style="width: 0%"></div>
-                            </div>
+                <div class="mb-4">
+                    <div class="dropzone p-8 text-center cursor-pointer" id="reportDropzone">
+                        <input type="file" id="reportFile" class="hidden" accept=".pdf">
+                        <div class="flex flex-col items-center justify-center">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-sm text-gray-600">Drag & drop file laporan di sini atau klik untuk memilih</p>
+                            <p class="text-xs text-gray-500 mt-1">Format PDF (maks. 10MB)</p>
                         </div>
                     </div>
+                    <div id="reportPreview" class="hidden mt-2 p-3 bg-gray-50 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                <span id="reportFileName" class="text-sm font-medium"></span>
+                            </div>
+                            <button type="button" id="removeReport" class="text-danger hover:text-red-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                            <div id="reportUploadProgress" class="bg-primary h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" id="cancelUploadReport" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">
-                            Batal
-                        </button>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="cancelUploadReport" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">
+                        Batal
+                    </button>
                         <button type="submit" id="confirmUploadReport" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition flex items-center">
-                            <i class="fas fa-upload mr-2"></i> Upload
-                        </button>
-                    </div>
+                        <i class="fas fa-upload mr-2"></i> Upload
+                    </button>
+                </div>
                 </form>
             </div>
         </div>
@@ -637,18 +637,18 @@
                 <div class="flex items-center justify-between p-4 border-b">
                     <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Hapus</h3>
                     <button id="closeDeleteConfirmModal" class="text-gray-400 hover:text-gray-500">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
                 <div class="p-4">
                     <p id="deleteConfirmMessage" class="text-gray-600 mb-4"></p>
                     <div class="flex justify-end space-x-2">
                         <button id="cancelDelete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">
-                            Batal
-                        </button>
+                        Batal
+                    </button>
                         <button id="confirmDelete" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md">
                             Hapus
-                        </button>
+                    </button>
                     </div>
                 </div>
             </div>
@@ -671,7 +671,7 @@
         </div>
 
         <!-- Menu -->
-        <div class="flex-1 overflow-y-auto py-4">
+        <div class="flex-1 overflow-y-auto py-4">   
             <ul class="space-y-1 px-4">
                 <li>
                     <a href="<?= site_url('dashboard') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-primary hover:bg-gray-100 font-medium transition">
@@ -719,7 +719,7 @@
             </div>
             <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200 flex items-center justify-center">
                 <a href="<?= site_url('auth/logout') ?>">
-                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                <i class="fas fa-sign-out-alt mr-2"></i>Logout
                 </a>
             </button>
         </div>
@@ -770,39 +770,46 @@
         <!-- Content -->
         <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
             <!-- Filter dan Pencarian -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                <!-- Button Tambah Penelitian dipindah ke kiri -->
-                <div class="flex items-center w-full md:w-auto">
-                    <button id="addResearchBtn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition flex items-center">
-                        <i class="fas fa-plus mr-2"></i> Tambah Penelitian
-                    </button>
-                    <!-- Search Bar dipindah ke kanan -->
-                    <div class="relative ml-2 w-full md:w-64">
-                        <input type="text" placeholder="Cari penelitian..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Daftar Penelitian</h1>
+                <p class="text-gray-600 mt-1">Kelola semua Penelitian dosen di sini</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="flex items-center w-full md:w-auto">
+                        <button id="addResearchBtn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Tambah Penelitian
+                        </button>
+                        <div class="relative ml-2 w-full md:w-64">
+                            <input type="text" placeholder="Cari penelitian..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            <option value="">Semua Status</option>
+                            <option value="draft">Draft</option>
+                            <option value="submitted">Terkirim</option>
+                            <option value="approved">Disetujui</option>
+                            <option value="rejected">Ditolak</option>
+                            <option value="in_progress">Dalam Proses</option>
+                            <option value="completed">Selesai</option>
+                        </select>
+                        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            <option value="">Semua Tahun</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                        </select>
+                        <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition flex items-center">
+                            <i class="fas fa-filter mr-2"></i> Filter
+                        </button>
                     </div>
                 </div>
-                <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
-                        <option value="">Semua Status</option>
-                        <option value="draft">Draft</option>
-                        <option value="submitted">Terkirim</option>
-                        <option value="approved">Disetujui</option>
-                        <option value="rejected">Ditolak</option>
-                        <option value="in_progress">Dalam Proses</option>
-                        <option value="completed">Selesai</option>
-                    </select>
-                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
-                        <option value="">Semua Tahun</option>
-                        <option value="2023">2023</option>
-                        <option value="2022">2022</option>
-                        <option value="2021">2021</option>
-                    </select>
-                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition flex items-center">
-                        <i class="fas fa-filter mr-2"></i> Filter
-                    </button>
-                    <button id="exportExcelBtn" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center">
-                        <i class="fas fa-file-excel mr-2"></i> Export Excel
+                <div class="mt-4 flex">
+                    <button id="exportExcelBtn" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center text-center transition">
+                        <i class="fas fa-file-excel mr-2"></i>
+                        Export ke Excel
                     </button>
                 </div>
             </div>
@@ -828,11 +835,11 @@
                         <tbody>
                             <?php if (isset($penelitian) && !empty($penelitian)): ?>
                                 <?php foreach ($penelitian as $index => $p): ?>
-                                    <tr>
+                            <tr>
                                         <td><?= $index + 1 ?></td>
-                                        <td class="font-medium">
+                                <td class="font-medium">
                                             <a href="#" class="text-primary hover:underline view-research" data-id="<?= $p['id'] ?>"><?= $p['judul'] ?></a>
-                                        </td>
+                                </td>
                                         <td><?= $p['ketua_nama'] ?></td>
                                         <td><?= $p['jumlah_anggota'] ?> Anggota</td>
                                         <td>Rp<?= number_format($p['biaya_didanai'], 0, ',', '.') ?></td>
@@ -840,52 +847,52 @@
                                         <td>
                                             <?php if ($p['file_proposal']): ?>
                                                 <a href="<?= base_url('uploads/proposal/' . $p['file_proposal']) ?>" class="text-primary hover:underline" target="_blank">
-                                                    <i class="fas fa-file-pdf mr-1"></i> Lihat
-                                                </a>
+                                        <i class="fas fa-file-pdf mr-1"></i> Lihat
+                                    </a>
                                             <?php else: ?>
                                                 <span class="text-gray-500">-</span>
                                             <?php endif; ?>
-                                        </td>
-                                        <td>
+                                </td>
+                                <td>
                                             <?php if ($p['file_laporan_kemajuan']): ?>
                                                 <a href="<?= base_url('uploads/laporan/' . $p['file_laporan_kemajuan']) ?>" class="text-primary hover:underline" target="_blank">
                                                     <i class="fas fa-file-pdf mr-1"></i> Lihat
                                                 </a>
                                             <?php else: ?>
                                                 <button class="text-primary hover:underline upload-report" data-type="progress" data-id="<?= $p['id'] ?>">
-                                                    <i class="fas fa-upload mr-1"></i> Upload
-                                                </button>
+                                        <i class="fas fa-upload mr-1"></i> Upload
+                                    </button>
                                             <?php endif; ?>
-                                        </td>
-                                        <td>
+                                </td>
+                                <td>
                                             <?php if ($p['file_laporan_akhir']): ?>
                                                 <a href="<?= base_url('uploads/laporan/' . $p['file_laporan_akhir']) ?>" class="text-primary hover:underline" target="_blank">
-                                                    <i class="fas fa-file-pdf mr-1"></i> Lihat
-                                                </a>
+                                        <i class="fas fa-file-pdf mr-1"></i> Lihat
+                                    </a>
                                             <?php else: ?>
                                                 <button class="text-primary hover:underline upload-report" data-type="final" data-id="<?= $p['id'] ?>">
-                                                    <i class="fas fa-upload mr-1"></i> Upload
-                                                </button>
+                                        <i class="fas fa-upload mr-1"></i> Upload
+                                    </button>
                                             <?php endif; ?>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="flex justify-center space-x-2">
+                                </td>
+                                <td class="text-center">
+                                    <div class="flex justify-center space-x-2">
                                                 <button class="text-primary hover:text-primary-dark edit-research" data-id="<?= $p['id'] ?>">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
+                                            <i class="fas fa-edit"></i>
+                                        </button>
                                                 <button class="text-danger hover:text-red-700 delete-research" data-id="<?= $p['id'] ?>">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
                                     <td colspan="10" class="text-center py-4 text-gray-500">
                                         Belum ada data penelitian
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -899,7 +906,22 @@
         // Data penelitian dari database
         let researches = <?= json_encode($penelitian) ?>;
 
-        // --- FUNGSI FORM TAMBAH PENELITIAN ---
+        // Tambahkan fungsi utilitas untuk menampilkan pesan error
+        function showAlertMessage(msg) {
+            if (typeof msg === 'object' && msg !== null) {
+                let str = '';
+                for (const key in msg) {
+                    if (msg.hasOwnProperty(key)) {
+                        str += `- ${msg[key]}\n`;
+                    }
+                }
+                alert(str || '[Terjadi kesalahan]');
+            } else {
+                alert(msg);
+            }
+        }
+
+        // --- FUNGSI FORM TAMBAH/EDIT PENELITIAN ---
         const addResearchBtn = document.getElementById('addResearchBtn');
         const addResearchModal = document.getElementById('addResearchModal');
         const overlay = document.getElementById('overlay');
@@ -926,17 +948,29 @@
         const removeProposal = document.getElementById('removeProposal');
         const proposedBudget = document.getElementById('proposedBudget');
         const approvedBudget = document.getElementById('approvedBudget');
+        const editResearchId = document.getElementById('editResearchId');
+        const addResearchModalTitle = document.getElementById('addResearchModalTitle');
+        const saveResearch = document.getElementById('saveResearch');
 
-        // Modal tambah penelitian
+        let isEditMode = false;
+
+        // Modal tambah/edit penelitian
         addResearchBtn.addEventListener('click', function() {
+            isEditMode = false;
+            addResearchModalTitle.textContent = 'Tambah Penelitian Baru';
+            saveResearch.innerHTML = '<i class="fas fa-save mr-2"></i> Simpan Penelitian';
+            editResearchId.value = '';
+            resetResearchForm();
             overlay.classList.remove('hidden');
             addResearchModal.classList.remove('hidden');
         });
+
         closeAddResearchModal.addEventListener('click', function() {
             overlay.classList.add('hidden');
             addResearchModal.classList.add('hidden');
             resetResearchForm();
         });
+
         cancelResearch.addEventListener('click', function() {
             overlay.classList.add('hidden');
             addResearchModal.classList.add('hidden');
@@ -952,7 +986,12 @@
             proposalPreview.classList.add('hidden');
             document.getElementById('proposalUploadProgress').style.width = '0%';
             otherFundingSourceContainer.classList.add('hidden');
+            isEditMode = false;
+            editResearchId.value = '';
+            addResearchModalTitle.textContent = 'Tambah Penelitian Baru';
+            saveResearch.innerHTML = '<i class="fas fa-save mr-2"></i> Simpan Penelitian';
         }
+
         // Tambah anggota internal
         defaultAddInternalMember();
         addInternalMember.addEventListener('click', function() {
@@ -970,17 +1009,18 @@
         }
 
         function defaultAddInternalMember() {
-            // Tambahkan satu anggota internal secara default jika kosong
             if (internalMembersContainer.children.length === 0) {
                 const template = internalMemberTemplate.content.cloneNode(true);
                 internalMembersContainer.appendChild(template);
                 updateRemoveInternalMemberListeners();
             }
         }
+
         // Toggle form anggota eksternal
         toggleExternalForm.addEventListener('click', function() {
             externalMemberForm.classList.toggle('hidden');
         });
+
         // Handle perguruan tinggi eksternal
         externalUniversity.addEventListener('change', function() {
             if (this.value === 'other') {
@@ -989,6 +1029,7 @@
                 otherUniversityContainer.classList.add('hidden');
             }
         });
+
         // Tambah anggota eksternal
         addExternalMemberBtn.addEventListener('click', function() {
             const name = document.querySelector('.external-name').value;
@@ -1083,10 +1124,12 @@
                 memberDiv.remove();
             });
         });
+
         // Handle dropzone proposal
         proposalDropzone.addEventListener('click', function() {
             proposalFile.click();
         });
+
         proposalFile.addEventListener('change', function() {
             if (this.files.length > 0) {
                 const file = this.files[0];
@@ -1111,13 +1154,16 @@
                 }, 100);
             }
         });
+
         proposalDropzone.addEventListener('dragover', function(e) {
             e.preventDefault();
             this.classList.add('active');
         });
+
         proposalDropzone.addEventListener('dragleave', function() {
             this.classList.remove('active');
         });
+
         proposalDropzone.addEventListener('drop', function(e) {
             e.preventDefault();
             this.classList.remove('active');
@@ -1136,11 +1182,13 @@
                 proposalPreview.classList.remove('hidden');
             }
         });
+
         removeProposal.addEventListener('click', function() {
             proposalFile.value = '';
             proposalPreview.classList.add('hidden');
             document.getElementById('proposalUploadProgress').style.width = '0%';
         });
+
         // Format input biaya
         function formatCurrencyInput(input) {
             input.addEventListener('input', function(e) {
@@ -1155,6 +1203,7 @@
         }
         formatCurrencyInput(proposedBudget);
         formatCurrencyInput(approvedBudget);
+
         // Sumber dana lainnya
         researchFundingSource.addEventListener('change', function() {
             if (this.value === 'lainnya') {
@@ -1163,7 +1212,87 @@
                 otherFundingSourceContainer.classList.add('hidden');
             }
         });
-        // Event listener submit form tambah penelitian
+
+        // --- FUNGSI EDIT PENELITIAN ---
+        document.querySelectorAll('.edit-research').forEach(button => {
+            button.addEventListener('click', function() {
+                const researchId = this.dataset.id;
+                isEditMode = true;
+                addResearchModalTitle.textContent = 'Edit Penelitian';
+                saveResearch.innerHTML = '<i class="fas fa-save mr-2"></i> Update Penelitian';
+                editResearchId.value = researchId;
+                // Jangan resetResearchForm() di sini! (Agar isEditMode tetap true dan id tetap ada)
+                overlay.classList.remove('hidden');
+                addResearchModal.classList.remove('hidden');
+
+                // Kosongkan form manual (tanpa mengubah isEditMode dan editResearchId)
+                researchForm.reset();
+                internalMembersContainer.innerHTML = '';
+                externalMembersContainer.innerHTML = '';
+                externalMemberForm.classList.add('hidden');
+                proposalFile.value = '';
+                proposalPreview.classList.add('hidden');
+                document.getElementById('proposalUploadProgress').style.width = '0%';
+                otherFundingSourceContainer.classList.add('hidden');
+
+                // Ambil detail penelitian
+                fetch(`/penelitian/detail/${researchId}`)
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.status === 'success') {
+                            const data = result.data;
+                            // Isi form
+                            document.getElementById('researchTitle').value = data.judul;
+                            document.getElementById('researchScheme').value = data.skema;
+                            document.getElementById('researchFundingSource').value = data.sumber_dana;
+                            if (data.sumber_dana === 'lainnya') {
+                                otherFundingSourceContainer.classList.remove('hidden');
+                                document.getElementById('otherFundingSource').value = data.sumber_dana;
+                            }
+                            document.getElementById('proposedBudget').value = Number(data.biaya_diusulkan).toLocaleString('id-ID');
+                            document.getElementById('approvedBudget').value = Number(data.biaya_didanai).toLocaleString('id-ID');
+                            // Anggota internal
+                            internalMembersContainer.innerHTML = '';
+                            if (data.anggota) {
+                                data.anggota.filter(a => a.tipe === 'internal').forEach(a => {
+                                    const template = internalMemberTemplate.content.cloneNode(true);
+                                    const select = template.querySelector('select');
+                                    select.value = a.user_id || '';
+                                    internalMembersContainer.appendChild(template);
+                                });
+                                updateRemoveInternalMemberListeners();
+                            }
+                            // Anggota eksternal
+                            externalMembersContainer.innerHTML = '';
+                            if (data.anggota) {
+                                data.anggota.filter(a => a.tipe === 'eksternal').forEach(a => {
+                                    const memberDiv = document.createElement('div');
+                                    memberDiv.className = 'external-member-item bg-gray-50 p-3 rounded-lg mb-2 flex justify-between items-center';
+                                    memberDiv.innerHTML = `
+                                        <div>
+                                            <p class="text-sm font-medium">${a.nama} - ${a.nidn} (${a.universitas})</p>
+                                            <p class="text-xs text-gray-600">${a.jabatan} - ${a.fakultas} - ${a.jurusan}</p>
+                                        </div>
+                                        <button type="button" class="remove-external-member text-danger hover:text-red-700">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    `;
+                                    externalMembersContainer.appendChild(memberDiv);
+                                    memberDiv.querySelector('.remove-external-member').addEventListener('click', function() {
+                                        memberDiv.remove();
+                                    });
+                                });
+                            }
+                            // File proposal (tidak diisi, user upload jika ingin ganti)
+                            proposalFile.value = '';
+                            proposalPreview.classList.add('hidden');
+                            document.getElementById('proposalUploadProgress').style.width = '0%';
+                        }
+                    });
+            });
+        });
+
+        // --- SUBMIT FORM TAMBAH/EDIT PENELITIAN ---
         researchForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -1174,9 +1303,9 @@
             formData.append('biaya_diusulkan', document.getElementById('proposedBudget').value.replace(/[^0-9]/g, ''));
             formData.append('biaya_didanai', document.getElementById('approvedBudget').value.replace(/[^0-9]/g, ''));
             // File proposal
-            const proposalFile = document.getElementById('proposalFile').files[0];
-            if (proposalFile) {
-                formData.append('file_proposal', proposalFile);
+            const proposalFileInput = document.getElementById('proposalFile');
+            if (proposalFileInput.files.length > 0) {
+                formData.append('file_proposal', proposalFileInput.files[0]);
             }
             // Anggota internal
             const internalMembers = [];
@@ -1200,8 +1329,11 @@
                 externalMembers.push(memberData);
             });
             formData.append('anggota_eksternal', JSON.stringify(externalMembers));
-            // Kirim ke backend
-            fetch('<?= base_url('penelitian/save') ?>', {
+
+            // --- Perbaikan utama di sini ---
+            if (isEditMode && editResearchId.value) {
+                const id = editResearchId.value;
+                fetch(`/penelitian/update/${id}`, {
                     method: 'POST',
                     body: formData
                 })
@@ -1211,13 +1343,33 @@
                         alert(data.message);
                         location.reload();
                     } else {
+                        showAlertMessage(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat update data');
+                });
+            } else {
+                // Tambah baru
+                fetch('<?= base_url('penelitian/save') ?>', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
                         alert(data.message);
+                        location.reload();
+                    } else {
+                        showAlertMessage(data.message);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     alert('Terjadi kesalahan saat menyimpan data');
                 });
+            }
         });
 
         // Event listener untuk klik judul penelitian
@@ -1299,7 +1451,7 @@
                             if (data.file_proposal) {
                                 document.getElementById('detailProposalLink').href = `/uploads/proposal/${data.file_proposal}`;
                                 document.getElementById('detailProposalLink').classList.remove('hidden');
-                            } else {
+            } else {
                                 document.getElementById('detailProposalLink').classList.add('hidden');
                             }
 
@@ -1322,8 +1474,8 @@
                         console.error('Error:', error);
                         alert('Terjadi kesalahan saat mengambil data penelitian');
                     });
+                });
             });
-        });
 
         // Event listener untuk tombol tutup modal detail
         document.getElementById('closeDetailResearchModal').addEventListener('click', function() {
@@ -1337,9 +1489,9 @@
         });
 
         // Event listener untuk tombol upload laporan
-        document.querySelectorAll('.upload-report').forEach(button => {
-            button.addEventListener('click', function() {
-                const researchId = this.dataset.id;
+            document.querySelectorAll('.upload-report').forEach(button => {
+                button.addEventListener('click', function() {
+                    const researchId = this.dataset.id;
                 const type = this.dataset.type;
 
                 // Set nilai pada form
@@ -1350,8 +1502,8 @@
                 const title = type === 'progress' ? 'Upload Laporan Kemajuan' : 'Upload Laporan Akhir';
                 document.getElementById('uploadReportTitle').textContent = title;
 
-                // Tampilkan modal
-                overlay.classList.remove('hidden');
+            // Tampilkan modal
+            overlay.classList.remove('hidden');
                 document.getElementById('uploadReportModal').classList.remove('hidden');
             });
         });
@@ -1436,8 +1588,8 @@
                     if (result.status === 'success') {
                         alert(result.message);
                         location.reload();
-                    } else {
-                        alert(result.message);
+                } else {
+                        showAlertMessage(result.message);
                     }
                 })
                 .catch(error => {
@@ -1488,7 +1640,7 @@
                                 alert(result.message);
                                 location.reload();
                             } else {
-                                alert(result.message);
+                                showAlertMessage(result.message);
                             }
                         })
                         .catch(error => {
@@ -1501,7 +1653,7 @@
 
         // Event listener untuk tombol tutup modal konfirmasi delete
         document.getElementById('closeDeleteConfirmModal').addEventListener('click', function() {
-            overlay.classList.add('hidden');
+                overlay.classList.add('hidden');
             document.getElementById('deleteConfirmModal').classList.add('hidden');
         });
 
