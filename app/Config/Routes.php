@@ -74,3 +74,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('profile/edit', 'Profile::edit');
     $routes->post('profile/update', 'Profile::update');
 });
+
+$routes->post('hki/save', 'HkiController::save');
+$routes->delete('hki/delete/(:num)', 'HkiController::delete/$1');
+$routes->get('hki/detail/(:num)', 'HkiController::detail/$1');

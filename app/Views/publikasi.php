@@ -364,11 +364,6 @@
                                 Tambah Publikasi
                             </button>
                         <?php endif; ?>
-
-                        <button id="exportExcelBtn" class="action-btn bg-green-600 text-white hover:bg-green-700">
-                            <i class="fas fa-file-excel"></i>
-                            Export to Excel
-                        </button>
                     </div>
                 </div>
             </div>
@@ -410,6 +405,12 @@
                             ?>
                         </select>
                     </div>
+                </div>
+                <div class="mt-4 flex">
+                    <button id="exportExcelBtn" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center text-center transition">
+                        <i class="fas fa-file-excel mr-2"></i>
+                        Export ke Excel
+                    </button>
                 </div>
             </div>
 

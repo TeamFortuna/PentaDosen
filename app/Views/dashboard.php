@@ -113,6 +113,12 @@
             color: white;
         }
 
+        .ts-control,
+        .ts-dropdown {
+            min-width: 10rem !important;
+            /* Atur lebar minimal agar dropdown dan input select lebih kecil */
+        }
+
         /* Badge Style for Department */
         .department-badge {
             display: inline-flex;
@@ -355,45 +361,49 @@
             <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                 <div class="px-6 py-4 border-b flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
                     <h3 class="font-semibold text-gray-800">Log Aktivitas</h3>
-                    <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto">
-                        <div class="relative w-full md:w-56">
-                            <select id="filterFakultas" placeholder="Filter Fakultas..." autocomplete="off">
-                                <option value="">Semua Fakultas</option>
-                                <option value="Fakultas Kedokteran" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Kedokteran' ? 'selected' : '' ?>>Fakultas Kedokteran</option>
-                                <option value="Fakultas Kedokteran Gigi" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Kedokteran Gigi' ? 'selected' : '' ?>>Fakultas Kedokteran Gigi</option>
-                                <option value="Fakultas Teknologi Informasi" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Teknologi Informasi' ? 'selected' : '' ?>>Fakultas Teknologi Informasi</option>
-                                <option value="Fakultas Ekonomi Bisnis" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Ekonomi Bisnis' ? 'selected' : '' ?>>Fakultas Ekonomi Bisnis</option>
-                                <option value="Fakultas Hukum" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Hukum' ? 'selected' : '' ?>>Fakultas Hukum</option>
-                                <option value="Fakultas Psikologi" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Psikologi' ? 'selected' : '' ?>>Fakultas Psikologi</option>
-                            </select>
+                    <div class="flex flex-col md:flex-row w-full md:w-auto justify-between gap-4">
+                        <!-- Filter group kiri -->
+                        <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                            <div class="relative w-full md:w-40 w-40">
+                                <select id="filterFakultas" placeholder="Filter Fakultas..." autocomplete="off">
+                                    <option value="">Semua Fakultas</option>
+                                    <option value="Fakultas Kedokteran" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Kedokteran' ? 'selected' : '' ?>>Fakultas Kedokteran</option>
+                                    <option value="Fakultas Kedokteran Gigi" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Kedokteran Gigi' ? 'selected' : '' ?>>Fakultas Kedokteran Gigi</option>
+                                    <option value="Fakultas Teknologi Informasi" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Teknologi Informasi' ? 'selected' : '' ?>>Fakultas Teknologi Informasi</option>
+                                    <option value="Fakultas Ekonomi Bisnis" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Ekonomi Bisnis' ? 'selected' : '' ?>>Fakultas Ekonomi Bisnis</option>
+                                    <option value="Fakultas Hukum" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Hukum' ? 'selected' : '' ?>>Fakultas Hukum</option>
+                                    <option value="Fakultas Psikologi" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Psikologi' ? 'selected' : '' ?>>Fakultas Psikologi</option>
+                                </select>
+                            </div>
+                            <div class="relative w-full md:w-40 w-40">
+                                <select id="filterJurusan" placeholder="Filter Jurusan..." autocomplete="off">
+                                    <option value="">Semua Jurusan</option>
+                                    <option value="Kedokteran" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Kedokteran' ? 'selected' : '' ?>>Kedokteran</option>
+                                    <option value="Kedokteran Gigi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Kedokteran Gigi' ? 'selected' : '' ?>>Kedokteran Gigi</option>
+                                    <option value="Teknik Informatika" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Teknik Informatika' ? 'selected' : '' ?>>Teknik Informatika</option>
+                                    <option value="Perpustakaan dan Sains Informasi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Perpustakaan dan Sains Informasi' ? 'selected' : '' ?>>Perpustakaan dan Sains Informasi</option>
+                                    <option value="Manajemen" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Manajemen' ? 'selected' : '' ?>>Manajemen</option>
+                                    <option value="Akuntansi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Akuntansi' ? 'selected' : '' ?>>Akuntansi</option>
+                                    <option value="Hukum" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Hukum' ? 'selected' : '' ?>>Hukum</option>
+                                    <option value="Psikologi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Psikologi' ? 'selected' : '' ?>>Psikologi</option>
+                                </select>
+                            </div>
+                            <div class="relative w-full md:w-40 w-40">
+                                <select id="filterAktivitas" placeholder="Filter Aktivitas..." autocomplete="off">
+                                    <option value="">Semua Aktivitas</option>
+                                    <option value="Login" <?= isset($filters['activity']) && $filters['activity'] === 'Login' ? 'selected' : '' ?>>Login</option>
+                                    <option value="Logout" <?= isset($filters['activity']) && $filters['activity'] === 'Logout' ? 'selected' : '' ?>>Logout</option>
+                                    <option value="Create" <?= isset($filters['activity']) && $filters['activity'] === 'Create' ? 'selected' : '' ?>>Create</option>
+                                    <option value="Update" <?= isset($filters['activity']) && $filters['activity'] === 'Update' ? 'selected' : '' ?>>Update</option>
+                                    <option value="Delete" <?= isset($filters['activity']) && $filters['activity'] === 'Delete' ? 'selected' : '' ?>>Delete</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="relative w-full md:w-56">
-                            <select id="filterJurusan" placeholder="Filter Jurusan..." autocomplete="off">
-                                <option value="">Semua Jurusan</option>
-                                <option value="Kedokteran" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Kedokteran' ? 'selected' : '' ?>>Kedokteran</option>
-                                <option value="Kedokteran Gigi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Kedokteran Gigi' ? 'selected' : '' ?>>Kedokteran Gigi</option>
-                                <option value="Teknik Informatika" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Teknik Informatika' ? 'selected' : '' ?>>Teknik Informatika</option>
-                                <option value="Perpustakaan dan Sains Informasi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Perpustakaan dan Sains Informasi' ? 'selected' : '' ?>>Perpustakaan dan Sains Informasi</option>
-                                <option value="Manajemen" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Manajemen' ? 'selected' : '' ?>>Manajemen</option>
-                                <option value="Akuntansi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Akuntansi' ? 'selected' : '' ?>>Akuntansi</option>
-                                <option value="Hukum" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Hukum' ? 'selected' : '' ?>>Hukum</option>
-                                <option value="Psikologi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Psikologi' ? 'selected' : '' ?>>Psikologi</option>
-                            </select>
-                        </div>
-                        <div class="relative w-full md:w-56">
-                            <select id="filterAktivitas" placeholder="Filter Aktivitas..." autocomplete="off">
-                                <option value="">Semua Aktivitas</option>
-                                <option value="Login" <?= isset($filters['activity']) && $filters['activity'] === 'Login' ? 'selected' : '' ?>>Login</option>
-                                <option value="Logout" <?= isset($filters['activity']) && $filters['activity'] === 'Logout' ? 'selected' : '' ?>>Logout</option>
-                                <option value="Create" <?= isset($filters['activity']) && $filters['activity'] === 'Create' ? 'selected' : '' ?>>Create</option>
-                                <option value="Update" <?= isset($filters['activity']) && $filters['activity'] === 'Update' ? 'selected' : '' ?>>Update</option>
-                                <option value="Delete" <?= isset($filters['activity']) && $filters['activity'] === 'Delete' ? 'selected' : '' ?>>Delete</option>
-                            </select>
-                        </div>
-                        <div class="relative w-full">
-                            <input type="text" id="searchLog" placeholder="Cari aktivitas atau nama user..." value="<?= isset($filters['search']) ? esc($filters['search']) : '' ?>" class="search-input pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
-                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                        </div>
+                    </div>
+                    <!-- Search bawah filter, memanjang -->
+                    <div class="relative w-full mt-4">
+                        <input type="text" id="searchLog" placeholder="Cari aktivitas atau nama user..." value="<?= isset($filters['search']) ? esc($filters['search']) : '' ?>" class="search-input pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                     </div>
                 </div>
                 <div class="overflow-x-auto">

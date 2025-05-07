@@ -376,7 +376,44 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <!-- Data akan diisi oleh JavaScript -->
+                            <?php if (isset(
+                                $hkis) && count($hkis) > 0): ?>
+                                <?php foreach ($hkis as $i => $hki): ?>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $i+1 ?></td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer text-indigo-600 hover:underline hki-title" data-id="<?= $hki['id'] ?>">
+                                                <?= esc($hki['judul']) ?>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-500"><?= esc($hki['nama_pencipta']) ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <?= date('d M Y', strtotime($hki['tanggal_permohonan'])) ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= esc(ucwords(str_replace('-', ' ', $hki['jenis']))) ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="status-badge status-<?= esc($hki['status']) ?>">
+                                                <?= $hki['status'] == 'approved' ? 'Disetujui' : ($hki['status'] == 'pending' ? 'Pending' : 'Ditolak') ?>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= esc($hki['nomor_permohonan']) ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium table-row-actions">
+                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3 edit-hki" data-id="<?= $hki['id'] ?>" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-900 delete-hki" data-id="<?= $hki['id'] ?>" title="Hapus">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                                        Tidak ada data HKI yang ditemukan
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -405,15 +442,15 @@
     <!-- Modal Add/Edit HKI -->
     <div class="modal" id="hkiModal">
         <div class="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-4xl">
-            <div class="px-6 py-4 border-b flex justify-between items-center bg-indigo-600 text-white">
+            <div class="px-6 py-4 border-b flex justify-between items-center bg-indigo-600 text-white sticky top-0 z-10">
                 <h3 class="text-lg font-semibold" id="modalTitle">Tambah HKI Baru</h3>
                 <button id="closeModal" class="text-white hover:text-indigo-200">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="p-6">
-                <form id="hkiForm">
-                    <input type="hidden" id="hkiId">
+            <div class="p-6 max-h-[90vh] overflow-y-auto">
+                <form id="hkiForm" enctype="multipart/form-data">
+                    <input type="hidden" id="hkiId" name="id">
 
                     <!-- Section 1: Informasi HKI -->
                     <div class="mb-8">
@@ -423,75 +460,81 @@
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="hkiType" class="block text-sm font-medium text-gray-700 mb-1">Jenis HKI*</label>
-                                <select id="hkiType" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
+                                <label for="hkiTitle" class="block text-sm font-medium text-gray-700 mb-1">Judul Ciptaan*</label>
+                                <input type="text" id="hkiTitle" name="judul" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
+                            </div>
+                            <div>
+                                <label for="hkiType" class="block text-sm font-medium text-gray-700 mb-1">Jenis Ciptaan*</label>
+                                <select id="hkiType" name="jenis" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
                                     <option value="">Pilih Jenis</option>
-                                    <option value="paten">Paten</option>
                                     <option value="hak-cipta">Hak Cipta</option>
+                                    <option value="paten">Paten</option>
                                     <option value="merek">Merek</option>
                                     <option value="desain-industri">Desain Industri</option>
-                                    <option value="varietas-tanaman">Varietas Tanaman</option>
                                     <option value="rahasia-dagang">Rahasia Dagang</option>
+                                    <option value="dtlst">DTLST</option>
                                 </select>
                             </div>
-
                             <div>
-                                <label for="hkiStatus" class="block text-sm font-medium text-gray-700 mb-1">Status*</label>
-                                <select id="hkiStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
+                                <label for="hkiNumber" class="block text-sm font-medium text-gray-700 mb-1">Nomor Permohonan*</label>
+                                <input type="text" id="hkiNumber" name="nomor_permohonan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
+                            </div>
+                            <div>
+                                <label for="hkiDate" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Permohonan*</label>
+                                <input type="date" id="hkiDate" name="tanggal_permohonan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
+                            </div>
+                            <div>
+                                <label for="hkiPlace" class="block text-sm font-medium text-gray-700 mb-1">Tempat Diumumkan Pertama Kali*</label>
+                                <input type="text" id="hkiPlace" name="tempat_diumumkan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
+                            </div>
+                            <div>
+                                <label for="hkiAnnounceDate" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Diumumkan Pertama Kali*</label>
+                                <input type="date" id="hkiAnnounceDate" name="tanggal_diumumkan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
+                            </div>
+                            <div>
+                                <label for="hkiRegistrationNumber" class="block text-sm font-medium text-gray-700 mb-1">Nomor Pencatatan</label>
+                                <input type="text" id="hkiRegistrationNumber" name="nomor_pencatatan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                            </div>
+                            <div>
+                                <label for="hkiStatus" class="block text-sm font-medium text-gray-700 mb-1">Status HKI*</label>
+                                <select id="hkiStatus" name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
                                     <option value="pending">Pending</option>
                                     <option value="approved">Disetujui</option>
                                     <option value="rejected">Ditolak</option>
                                 </select>
                             </div>
-
-                            <div class="md:col-span-2">
-                                <label for="hkiTitle" class="block text-sm font-medium text-gray-700 mb-1">Judul HKI*</label>
-                                <input type="text" id="hkiTitle" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
-                            </div>
-
-                            <div>
-                                <label for="hkiDate" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pendaftaran*</label>
-                                <input type="date" id="hkiDate" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
-                            </div>
-
-                            <div>
-                                <label for="hkiNumber" class="block text-sm font-medium text-gray-700 mb-1">Nomor Pendaftaran</label>
-                                <input type="text" id="hkiNumber" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                            </div>
-
-                            <div>
-                                <label for="hkiCertificateDate" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Sertifikat</label>
-                                <input type="date" id="hkiCertificateDate" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                            </div>
-
-                            <div>
-                                <label for="hkiCertificateNumber" class="block text-sm font-medium text-gray-700 mb-1">Nomor Sertifikat</label>
-                                <input type="text" id="hkiCertificateNumber" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                            </div>
                         </div>
                     </div>
 
-                    <!-- Section 1.1: Inventor Dosen -->
+                    <!-- Section 1.1: Pencipta dan Pemegang -->
                     <div class="mb-8">
                         <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                             <i class="fas fa-users mr-2 text-indigo-500"></i>
-                            Inventor Dosen
+                            Pencipta dan Pemegang
                         </h4>
-
-                        <div>
-                            <label for="hkiInventors" class="block text-sm font-medium text-gray-700 mb-1">Daftar Inventor*</label>
-                            <select id="hkiInventors" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" multiple="multiple" required>
-                                <option value="1">Prof. Dr. Andi Wijaya</option>
-                                <option value="2">Dr. Budi Santoso, M.Kom</option>
-                                <option value="3">Dr. Citra Dewi, S.T., M.T.</option>
-                                <option value="4">Dian Pratama, S.Si., M.Si.</option>
-                                <option value="5">Eka Putra, S.Kom., M.Kom.</option>
-                            </select>
-                            <p class="text-xs text-gray-500 mt-1">Anda bisa memilih lebih dari satu inventor</p>
-                        </div>
-
-                        <div id="selectedInventors" class="mt-3 flex flex-wrap">
-                            <!-- Selected inventors will appear here -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="hkiCreator" class="block text-sm font-medium text-gray-700 mb-1">Nama Pencipta*</label>
+                                <select id="hkiCreator" name="pencipta_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
+                                    <option value="">Pilih Pencipta</option>
+                                    <?php if(isset($users) && !empty($users)): ?>
+                                        <?php foreach($users as $dosen): ?>
+                                            <option value="<?= $dosen['id'] ?>"><?= $dosen['nama'] ?> - <?= $dosen['nidn'] ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="hkiHolder" class="block text-sm font-medium text-gray-700 mb-1">Nama Pemegang*</label>
+                                <select id="hkiHolder" name="pemegang_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
+                                    <option value="">Pilih Pemegang</option>
+                                    <?php if(isset($users) && !empty($users)): ?>
+                                        <?php foreach($users as $dosen): ?>
+                                            <option value="<?= $dosen['id'] ?>"><?= $dosen['nama'] ?> - <?= $dosen['nidn'] ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -501,23 +544,21 @@
                             <i class="fas fa-file-upload mr-2 text-indigo-500"></i>
                             Upload Dokumen HKI
                         </h4>
-
                         <div id="dropzone" class="dropzone p-8 text-center cursor-pointer">
                             <div class="flex flex-col items-center justify-center">
-                                <i class="fas fa-cloud-upload-alt text-4xl text-indigo-400 mb-3"></i>
-                                <p class="font-medium text-gray-700">Drag & drop dokumen HKI di sini</p>
-                                <p class="text-sm text-gray-500 mt-1">Format file: PDF, Word, atau gambar (maks. 10MB)</p>
-                                <button type="button" id="browseFileBtn" class="mt-4 px-4 py-2 bg-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-200 transition">Atau Pilih File</button>
+                                <i class="fas fa-cloud-upload-alt text-3xl text-indigo-400 mb-2"></i>
+                                <p class="font-medium text-gray-700 text-sm">Drag & drop dokumen HKI di sini</p>
+                                <p class="text-xs text-gray-500 mt-1">Format file: PDF, Word, atau gambar (maks. 10MB)</p>
+                                <button type="button" id="browseFileBtn" class="mt-2 px-3 py-1 bg-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-200 transition text-sm">Atau Pilih File</button>
                             </div>
-                            <input type="file" id="hkiFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="hidden">
+                            <input type="file" id="hkiFile" name="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="hidden">
                         </div>
-
                         <div id="filePreview" class="mt-4 hidden">
-                            <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                            <div class="flex items-center justify-between bg-gray-50 p-2 rounded-lg">
                                 <div class="flex items-center">
-                                    <i class="fas fa-file-pdf text-red-500 text-2xl mr-3"></i>
+                                    <i class="fas fa-file-pdf text-red-500 text-xl mr-2"></i>
                                     <div>
-                                        <p id="fileName" class="font-medium"></p>
+                                        <p id="fileName" class="font-medium text-sm"></p>
                                         <p id="fileSize" class="text-xs text-gray-500"></p>
                                     </div>
                                 </div>
@@ -528,7 +569,7 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <div class="flex justify-end space-x-3 pt-4 border-t bg-white sticky bottom-0 z-10">
                         <button type="button" id="cancelHKI" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">Batal</button>
                         <button type="submit" id="saveHKI" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Simpan HKI</button>
                     </div>
@@ -638,119 +679,6 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        // Sample data for HKIs
-        let hkis = [{
-                id: '1',
-                title: 'Sistem Diagnosa Penyakit Jantung Berbasis AI',
-                inventors: [{
-                        id: '1',
-                        name: 'Prof. Dr. Andi Wijaya'
-                    },
-                    {
-                        id: '3',
-                        name: 'Dr. Citra Dewi, S.T., M.T.'
-                    }
-                ],
-                date: '2023-05-15',
-                type: 'paten',
-                typeText: 'Paten',
-                status: 'approved',
-                statusText: 'Disetujui',
-                number: 'P00202300001',
-                certificateDate: '2023-08-20',
-                certificateNumber: 'IDP000123456',
-                fileName: 'paten-diagnosa-jantung.pdf',
-                fileSize: '2.4 MB',
-                fileType: 'pdf'
-            },
-            {
-                id: '2',
-                title: 'Aplikasi Mobile untuk Monitoring Kesehatan Ibu Hamil',
-                inventors: [{
-                    id: '2',
-                    name: 'Dr. Budi Santoso, M.Kom'
-                }],
-                date: '2023-03-22',
-                type: 'hak-cipta',
-                typeText: 'Hak Cipta',
-                status: 'pending',
-                statusText: 'Pending',
-                number: 'HC00202300045',
-                certificateDate: '',
-                certificateNumber: '',
-                fileName: 'hak-cipta-aplikasi-hamil.docx',
-                fileSize: '5.7 MB',
-                fileType: 'word'
-            },
-            {
-                id: '3',
-                title: 'Desain Kemasan Produk Herbal "Sehat Alami"',
-                inventors: [{
-                        id: '4',
-                        name: 'Dian Pratama, S.Si., M.Si.'
-                    },
-                    {
-                        id: '5',
-                        name: 'Eka Putra, S.Kom., M.Kom.'
-                    }
-                ],
-                date: '2023-07-10',
-                type: 'desain-industri',
-                typeText: 'Desain Industri',
-                status: 'rejected',
-                statusText: 'Ditolak',
-                number: 'DI00202300123',
-                certificateDate: '',
-                certificateNumber: '',
-                fileName: 'desain-kemasan-herbal.jpg',
-                fileSize: '3.2 MB',
-                fileType: 'image'
-            },
-            {
-                id: '4',
-                title: 'Merek Dagang "EduTech" untuk Layanan Pendidikan Digital',
-                inventors: [{
-                        id: '1',
-                        name: 'Prof. Dr. Andi Wijaya'
-                    },
-                    {
-                        id: '5',
-                        name: 'Eka Putra, S.Kom., M.Kom.'
-                    }
-                ],
-                date: '2022-11-05',
-                type: 'merek',
-                typeText: 'Merek',
-                status: 'approved',
-                statusText: 'Disetujui',
-                number: 'M00202200321',
-                certificateDate: '2023-01-15',
-                certificateNumber: 'IDM000987654',
-                fileName: 'sertifikat-merek-edutech.pdf',
-                fileSize: '1.8 MB',
-                fileType: 'pdf'
-            },
-            {
-                id: '5',
-                title: 'Algoritma Prediksi Harga Saham Berbasis Deep Learning',
-                inventors: [{
-                    id: '3',
-                    name: 'Dr. Citra Dewi, S.T., M.T.'
-                }],
-                date: '2021-09-18',
-                type: 'paten',
-                typeText: 'Paten',
-                status: 'approved',
-                statusText: 'Disetujui',
-                number: 'P00202100078',
-                certificateDate: '2022-03-10',
-                certificateNumber: 'IDP000567890',
-                fileName: 'paten-algoritma-saham.pdf',
-                fileSize: '4.5 MB',
-                fileType: 'pdf'
-            }
-        ];
-
         // Initialize sidebar for mobile
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
@@ -979,12 +907,182 @@
             openModal();
         });
 
+        // Simpan data detail terakhir yang diambil untuk kebutuhan edit
+        let lastDetailData = null;
+
+        // Handle click on HKI title to show detail modal
+        $(document).on('click', '.hki-title', function() {
+            const hkiId = $(this).data('id');
+            $.ajax({
+                url: '<?= site_url('hki/detail') ?>/' + hkiId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        const data = response.data;
+                        lastDetailData = data; // simpan untuk edit
+                        // Set detail modal fields
+                        $('#detailTitle').text(data.judul);
+                        $('#detailType').text(data.jenis ? data.jenis.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '');
+                        $('#detailStatus')
+                            .text(data.status === 'approved' ? 'Disetujui' : (data.status === 'pending' ? 'Pending' : 'Ditolak'))
+                            .removeClass().addClass('text-sm px-2 py-1 rounded-md ml-2')
+                            .addClass(data.status === 'approved' ? 'bg-green-100 text-green-800' : (data.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'));
+                        $('#detailDate').text(data.tanggal_permohonan ? formatDate(data.tanggal_permohonan) : '-');
+                        $('#detailNumber').text(data.nomor_permohonan || '-');
+                        $('#detailCertificateDate').text(data.tanggal_diumumkan ? formatDate(data.tanggal_diumumkan) : '-');
+                        $('#detailCertificateNumber').text(data.nomor_pencatatan || '-');
+                        // Inventor
+                        $('#detailInventors').html('');
+                        if (data.nama_pencipta) {
+                            $('#detailInventors').append('<span class="inventor-tag">' + data.nama_pencipta + '</span>');
+                        }
+                        // File
+                        if (data.file_path) {
+                            const fileName = data.file_path.split('/').pop();
+                            $('#detailFileName').text(fileName);
+                            $('#detailFileSize').text('-');
+                            $('#downloadFileBtn').off('click').on('click', function() {
+                                window.open('<?= base_url() ?>/' + data.file_path, '_blank');
+                            });
+                        } else {
+                            $('#detailFileName').text('-');
+                            $('#detailFileSize').text('-');
+                            $('#downloadFileBtn').off('click');
+                        }
+                        openDetailModal();
+                    } else {
+                        alert(response.message || 'Gagal mengambil detail data.');
+                    }
+                },
+                error: function() {
+                    alert('Terjadi kesalahan saat mengambil detail data.');
+                }
+            });
+        });
+
+        // Fitur Edit langsung dari tabel (tombol edit)
+        $(document).on('click', '.edit-hki', function() {
+            const hkiId = $(this).data('id');
+            $.ajax({
+                url: '<?= site_url('hki/detail') ?>/' + hkiId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        const data = response.data;
+                        // Isi form edit
+                        $('#modalTitle').text('Edit HKI');
+                        $('#hkiId').val(data.id);
+                        $('#hkiTitle').val(data.judul);
+                        $('#hkiType').val(data.jenis);
+                        $('#hkiNumber').val(data.nomor_permohonan);
+                        $('#hkiDate').val(data.tanggal_permohonan);
+                        $('#hkiPlace').val(data.tempat_diumumkan);
+                        $('#hkiAnnounceDate').val(data.tanggal_diumumkan);
+                        $('#hkiRegistrationNumber').val(data.nomor_pencatatan);
+                        $('#hkiStatus').val(data.status);
+                        $('#hkiCreator').val(data.pencipta_id);
+                        $('#hkiHolder').val(data.pemegang_id);
+
+                        // File preview (jika ada file)
+                        if (data.file_path) {
+                            const fileNameOnly = data.file_path.split('/').pop();
+                            $('#fileName').text(fileNameOnly);
+                            $('#fileSize').text('-');
+                            $('#filePreview').removeClass('hidden');
+                            // Icon
+                            const ext = fileNameOnly.split('.').pop().toLowerCase();
+                            const fileIcon = $('#filePreview').find('i');
+                            if (ext === 'pdf') {
+                                fileIcon.attr('class', 'fas fa-file-pdf text-red-500 text-xl mr-2');
+                            } else if (ext === 'doc' || ext === 'docx') {
+                                fileIcon.attr('class', 'fas fa-file-word text-blue-500 text-xl mr-2');
+                            } else {
+                                fileIcon.attr('class', 'fas fa-file-image text-green-500 text-xl mr-2');
+                            }
+                        } else {
+                            $('#filePreview').addClass('hidden');
+                            $('#fileName').text('');
+                            $('#fileSize').text('');
+                        }
+                        // Kosongkan input file (user bisa upload file baru jika ingin)
+                        $('#hkiFile').val('');
+
+                        // Buka modal
+                        hkiModal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        alert(response.message || 'Gagal mengambil data untuk edit.');
+                    }
+                },
+                error: function() {
+                    alert('Terjadi kesalahan saat mengambil data untuk edit.');
+                }
+            });
+        });
+
+        // Fitur Edit dari modal detail
+        $('#editHKIBtn').on('click', function() {
+            if (!lastDetailData) return;
+            // Tutup modal detail
+            closeDetailModalFunc();
+
+            // Isi form edit
+            $('#modalTitle').text('Edit HKI');
+            $('#hkiId').val(lastDetailData.id);
+            $('#hkiTitle').val(lastDetailData.judul);
+            $('#hkiType').val(lastDetailData.jenis);
+            $('#hkiNumber').val(lastDetailData.nomor_permohonan);
+            $('#hkiDate').val(lastDetailData.tanggal_permohonan);
+            $('#hkiPlace').val(lastDetailData.tempat_diumumkan);
+            $('#hkiAnnounceDate').val(lastDetailData.tanggal_diumumkan);
+            $('#hkiRegistrationNumber').val(lastDetailData.nomor_pencatatan);
+            $('#hkiStatus').val(lastDetailData.status);
+            $('#hkiCreator').val(lastDetailData.pencipta_id);
+            $('#hkiHolder').val(lastDetailData.pemegang_id);
+
+            // File preview (jika ada file)
+            if (lastDetailData.file_path) {
+                const fileNameOnly = lastDetailData.file_path.split('/').pop();
+                $('#fileName').text(fileNameOnly);
+                $('#fileSize').text('-');
+                $('#filePreview').removeClass('hidden');
+                // Icon
+                const ext = fileNameOnly.split('.').pop().toLowerCase();
+                const fileIcon = $('#filePreview').find('i');
+                if (ext === 'pdf') {
+                    fileIcon.attr('class', 'fas fa-file-pdf text-red-500 text-xl mr-2');
+                } else if (ext === 'doc' || ext === 'docx') {
+                    fileIcon.attr('class', 'fas fa-file-word text-blue-500 text-xl mr-2');
+                } else {
+                    fileIcon.attr('class', 'fas fa-file-image text-green-500 text-xl mr-2');
+                }
+            } else {
+                $('#filePreview').addClass('hidden');
+                $('#fileName').text('');
+                $('#fileSize').text('');
+            }
+            // Kosongkan input file (user bisa upload file baru jika ingin)
+            $('#hkiFile').val('');
+
+            openModal();
+        });
+
+        // Saat modal edit dibuka manual (bukan dari edit), reset lastDetailData
+        $('#addHKIBtn').on('click', function() {
+            lastDetailData = null;
+        });
+
+        // Saat modal edit ditutup, reset form
         function resetForm() {
             hkiForm.reset();
             document.getElementById('hkiId').value = '';
             $('#hkiInventors').val(null).trigger('change');
-            fileInput.value = '';
-            filePreview.classList.add('hidden');
+            $('#hkiFile').val('');
+            $('#filePreview').addClass('hidden');
+            $('#fileName').text('');
+            $('#fileSize').text('');
         }
 
         // Filter functions
@@ -1003,395 +1101,28 @@
         document.getElementById('filterYear').addEventListener('change', applyFilters);
         searchInput.addEventListener('input', applyFilters);
 
-        // Render HKIs table
-        function renderHKIs(searchTerm = '', typeFilter = '', statusFilter = '', yearFilter = '') {
-            const tbody = document.querySelector('tbody');
-            tbody.innerHTML = '';
-
-            let filteredHKIs = [...hkis];
-
-            // Apply search
-            if (searchTerm) {
-                filteredHKIs = filteredHKIs.filter(hki =>
-                    hki.title.toLowerCase().includes(searchTerm) ||
-                    hki.inventors.some(inventor => inventor.name.toLowerCase().includes(searchTerm))
-                );
-            }
-
-            // Apply filters
-            if (typeFilter) {
-                filteredHKIs = filteredHKIs.filter(hki => hki.type === typeFilter);
-            }
-
-            if (statusFilter) {
-                filteredHKIs = filteredHKIs.filter(hki => hki.status === statusFilter);
-            }
-
-            if (yearFilter) {
-                filteredHKIs = filteredHKIs.filter(hki => hki.date.startsWith(yearFilter));
-            }
-
-            // Update pagination info
-            document.getElementById('totalItems').textContent = filteredHKIs.length;
-            document.getElementById('startItem').textContent = 1;
-            document.getElementById('endItem').textContent = filteredHKIs.length;
-
-            if (filteredHKIs.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">
-                            Tidak ada data HKI yang ditemukan
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            filteredHKIs.forEach((hki, index) => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-gray-50';
-
-                // Format inventors names (just show first inventor if multiple)
-                let inventorsDisplay = hki.inventors[0].name;
-                if (hki.inventors.length > 1) {
-                    inventorsDisplay += ` +${hki.inventors.length - 1}`;
-                }
-
-                // Format date
-                const dateObj = new Date(hki.date);
-                const formattedDate = dateObj.toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric'
-                });
-
-                // Status badge
-                let statusClass = '';
-                if (hki.status === 'pending') {
-                    statusClass = 'status-pending';
-                } else if (hki.status === 'approved') {
-                    statusClass = 'status-approved';
-                } else {
-                    statusClass = 'status-rejected';
-                }
-
-                // File icon
-                let fileIcon = '';
-                if (hki.fileType === 'pdf') {
-                    fileIcon = '<i class="fas fa-file-pdf text-red-500"></i>';
-                } else if (hki.fileType === 'word') {
-                    fileIcon = '<i class="fas fa-file-word text-blue-500"></i>';
-                } else {
-                    fileIcon = '<i class="fas fa-file-image text-green-500"></i>';
-                }
-
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${index + 1}</td>
-                    <td class="px-6 py-4">
-                        <div class="text-sm font-medium text-gray-900">${hki.title}</div>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-500">${inventorsDisplay}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formattedDate}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${hki.typeText}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="status-badge ${statusClass}">${hki.statusText}</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${hki.number || '-'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium table-row-actions">
-                        <button class="text-indigo-600 hover:text-indigo-900 mr-3 edit-hki" data-id="${hki.id}" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="text-red-600 hover:text-red-900 delete-hki" data-id="${hki.id}" title="Hapus">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-
-                tbody.appendChild(row);
-            });
-
-            // Add event listeners to buttons
-            document.querySelectorAll('.edit-hki').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const hkiId = this.getAttribute('data-id');
-                    editHKI(hkiId);
-                });
-            });
-
-            document.querySelectorAll('.delete-hki').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const hkiId = this.getAttribute('data-id');
-                    openConfirmationModal(hkiId);
-                });
-            });
-
-            document.querySelectorAll('.view-file').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const hkiId = this.getAttribute('data-id');
-                    viewHKI(hkiId);
-                });
-            });
-        }
-
-        // Edit HKI
-        function editHKI(hkiId) {
-            const hki = hkis.find(h => h.id === hkiId);
-            if (hki) {
-                document.getElementById('modalTitle').textContent = 'Edit HKI';
-                document.getElementById('hkiId').value = hki.id;
-                document.getElementById('hkiTitle').value = hki.title;
-                document.getElementById('hkiType').value = hki.type;
-                document.getElementById('hkiStatus').value = hki.status;
-                document.getElementById('hkiDate').value = hki.date;
-                document.getElementById('hkiNumber').value = hki.number || '';
-                document.getElementById('hkiCertificateDate').value = hki.certificateDate || '';
-                document.getElementById('hkiCertificateNumber').value = hki.certificateNumber || '';
-
-                // Set inventors
-                const inventorIds = hki.inventors.map(i => i.id);
-                $('#hkiInventors').val(inventorIds).trigger('change');
-
-                // Simulate file upload (in real app, this would be handled differently)
-                fileName.textContent = hki.fileName;
-                fileSize.textContent = hki.fileSize;
-
-                if (hki.fileType === 'pdf') {
-                    filePreview.querySelector('i').className = 'fas fa-file-pdf text-red-500 text-2xl mr-3';
-                } else if (hki.fileType === 'word') {
-                    filePreview.querySelector('i').className = 'fas fa-file-word text-blue-500 text-2xl mr-3';
-                } else {
-                    filePreview.querySelector('i').className = 'fas fa-file-image text-green-500 text-2xl mr-3';
-                }
-
-                filePreview.classList.remove('hidden');
-
-                openModal();
-            }
-        }
-
-        // Delete HKI
-        function deleteHKI(hkiId) {
-            hkis = hkis.filter(h => h.id !== hkiId);
-            renderHKIs();
-        }
-
-        // View HKI details
-        function viewHKI(hkiId) {
-            const hki = hkis.find(h => h.id === hkiId);
-            if (hki) {
-                document.getElementById('detailTitle').textContent = hki.title;
-                document.getElementById('detailType').textContent = hki.typeText;
-
-                // Set status with appropriate class
-                const statusElement = document.getElementById('detailStatus');
-                statusElement.textContent = hki.statusText;
-                statusElement.className = 'text-sm px-2 py-1 rounded-md ml-2 ';
-                if (hki.status === 'pending') {
-                    statusElement.className += 'status-pending';
-                } else if (hki.status === 'approved') {
-                    statusElement.className += 'status-approved';
-                } else {
-                    statusElement.className += 'status-rejected';
-                }
-
-                // Format dates
-                const dateObj = new Date(hki.date);
-                const formattedDate = dateObj.toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                });
-                document.getElementById('detailDate').textContent = formattedDate;
-
-                document.getElementById('detailNumber').textContent = hki.number || '-';
-
-                if (hki.certificateDate) {
-                    const certDateObj = new Date(hki.certificateDate);
-                    const formattedCertDate = certDateObj.toLocaleDateString('id-ID', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                    });
-                    document.getElementById('detailCertificateDate').textContent = formattedCertDate;
-                } else {
-                    document.getElementById('detailCertificateDate').textContent = '-';
-                }
-
-                document.getElementById('detailCertificateNumber').textContent = hki.certificateNumber || '-';
-
-                // Set inventors
-                const inventorsContainer = document.getElementById('detailInventors');
-                inventorsContainer.innerHTML = '';
-                hki.inventors.forEach(inventor => {
-                    inventorsContainer.innerHTML += `
-                        <span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded">${inventor.name}</span>
-                    `;
-                });
-
-                // Set file info
-                document.getElementById('detailFileName').textContent = hki.fileName;
-                document.getElementById('detailFileSize').textContent = hki.fileSize;
-
-                // Change file icon based on type
-                const fileIcon = document.querySelector('#detailFile i');
-                if (hki.fileType === 'pdf') {
-                    fileIcon.className = 'fas fa-file-pdf text-red-500 text-2xl mr-3';
-                } else if (hki.fileType === 'word') {
-                    fileIcon.className = 'fas fa-file-word text-blue-500 text-2xl mr-3';
-                } else {
-                    fileIcon.className = 'fas fa-file-image text-green-500 text-2xl mr-3';
-                }
-
-                // Set download button
-                document.getElementById('downloadFileBtn').setAttribute('data-id', hki.id);
-
-                // Set edit button
-                document.getElementById('editHKIBtn').setAttribute('data-id', hki.id);
-
-                openDetailModal();
-            }
-        }
-
-        // Form submission
-        hkiForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const hkiId = document.getElementById('hkiId').value;
-            const title = document.getElementById('hkiTitle').value;
-            const type = document.getElementById('hkiType').value;
-            const typeText = document.getElementById('hkiType').options[document.getElementById('hkiType').selectedIndex].text;
-            const status = document.getElementById('hkiStatus').value;
-            const statusText = document.getElementById('hkiStatus').options[document.getElementById('hkiStatus').selectedIndex].text;
-            const date = document.getElementById('hkiDate').value;
-            const number = document.getElementById('hkiNumber').value;
-            const certificateDate = document.getElementById('hkiCertificateDate').value;
-            const certificateNumber = document.getElementById('hkiCertificateNumber').value;
-
-            // Get selected inventors
-            const selectedInventors = $('#hkiInventors').val() || [];
-            const inventors = selectedInventors.map(id => {
-                const name = $(`#hkiInventors option[value="${id}"]`).text();
-                return {
-                    id,
-                    name
-                };
-            });
-
-            // Get file info (in a real app, this would handle actual file upload)
-            let fileInfo = {
-                fileName: 'file.pdf',
-                fileSize: '0 KB',
-                fileType: 'pdf'
-            };
-
-            if (!filePreview.classList.contains('hidden')) {
-                fileInfo.fileName = fileName.textContent;
-                fileInfo.fileSize = fileSize.textContent;
-                if (fileName.textContent.includes('.pdf')) {
-                    fileInfo.fileType = 'pdf';
-                } else if (fileName.textContent.includes('.doc')) {
-                    fileInfo.fileType = 'word';
-                } else {
-                    fileInfo.fileType = 'image';
-                }
-            }
-
-            const hkiData = {
-                id: hkiId || Date.now().toString(),
-                title,
-                inventors,
-                date,
-                type,
-                typeText,
-                status,
-                statusText,
-                number,
-                certificateDate,
-                certificateNumber,
-                fileName: fileInfo.fileName,
-                fileSize: fileInfo.fileSize,
-                fileType: fileInfo.fileType
-            };
-
-            // Update or add HKI
-            if (hkiId) {
-                const index = hkis.findIndex(h => h.id === hkiId);
-                if (index !== -1) {
-                    hkis[index] = hkiData;
-                }
-            } else {
-                hkis.push(hkiData);
-            }
-
-            renderHKIs();
-            closeModalFunc();
-        });
-
-        // Edit button in detail modal
-        document.getElementById('editHKIBtn').addEventListener('click', function() {
-            const hkiId = this.getAttribute('data-id');
-            closeDetailModalFunc();
-            editHKI(hkiId);
-        });
-
-        // Download button in detail modal
-        document.getElementById('downloadFileBtn').addEventListener('click', function() {
-            const hkiId = this.getAttribute('data-id');
-            const hki = hkis.find(h => h.id === hkiId);
-            if (hki) {
-                alert(`Ini akan mengunduh file: ${hki.fileName}\n\nDalam implementasi nyata, ini akan mengunduh file dari server.`);
-                // window.location.href = `/download/${hki.id}`;
-            }
-        });
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            renderHKIs();
-        });
-
         // Export to Excel
         document.getElementById('exportExcelBtn').addEventListener('click', function() {
-            // Ambil data yang sedang ditampilkan di tabel
+            // Ambil data dari tabel HTML
+            const table = document.querySelector('table');
             const rows = [];
-            const headers = [
-                "No", "Judul HKI", "Inventor", "Tanggal", "Jenis", "Status", "Nomor"
-            ];
+            // Ambil header
+            const headers = [];
+            table.querySelectorAll('thead th').forEach(th => {
+                headers.push(th.innerText.trim());
+            });
             rows.push(headers);
 
-            // Ambil data yang sudah difilter
-            const searchTerm = searchInput.value.toLowerCase();
-            const typeFilter = document.getElementById('filterType').value;
-            const statusFilter = document.getElementById('filterStatus').value;
-            const yearFilter = document.getElementById('filterYear').value;
-
-            let filteredHKIs = [...hkis];
-            if (searchTerm) {
-                filteredHKIs = filteredHKIs.filter(hki =>
-                    hki.title.toLowerCase().includes(searchTerm) ||
-                    hki.inventors.some(inventor => inventor.name.toLowerCase().includes(searchTerm))
-                );
-            }
-            if (typeFilter) filteredHKIs = filteredHKIs.filter(hki => hki.type === typeFilter);
-            if (statusFilter) filteredHKIs = filteredHKIs.filter(hki => hki.status === statusFilter);
-            if (yearFilter) filteredHKIs = filteredHKIs.filter(hki => hki.date.startsWith(yearFilter));
-
-            filteredHKIs.forEach((hki, index) => {
-                let inventorsDisplay = hki.inventors.map(i => i.name).join(', ');
-                const dateObj = new Date(hki.date);
-                const formattedDate = dateObj.toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric'
+            // Ambil data body
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const row = [];
+                tr.querySelectorAll('td').forEach(td => {
+                    row.push(td.innerText.trim());
                 });
-                rows.push([
-                    index + 1,
-                    hki.title,
-                    inventorsDisplay,
-                    formattedDate,
-                    hki.typeText,
-                    hki.statusText,
-                    hki.number || '-'
-                ]);
+                // Hanya tambahkan baris jika jumlah kolom sesuai header (hindari baris "tidak ada data")
+                if (row.length === headers.length) {
+                    rows.push(row);
+                }
             });
 
             // Buat worksheet dan workbook
@@ -1402,6 +1133,85 @@
             // Download file
             XLSX.writeFile(wb, "data_hki.xlsx");
         });
+
+        // Fungsi hapus HKI
+        function deleteHKI(hkiId) {
+            $.ajax({
+                url: '<?= site_url('hki/delete') ?>/' + hkiId,
+                type: 'DELETE',
+                dataType: 'json',
+                beforeSend: function() {
+                    $('#confirmDelete').prop('disabled', true).text('Menghapus...');
+                },
+                success: function(response) {
+                    $('#confirmDelete').prop('disabled', false).text('Hapus');
+                    if (response.status === 'success') {
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert(response.message || 'Gagal menghapus data.');
+                    }
+                },
+                error: function() {
+                    $('#confirmDelete').prop('disabled', false).text('Hapus');
+                    alert('Terjadi kesalahan saat menghapus data.');
+                }
+            });
+        }
+
+        // Event listener tombol delete di tabel
+        $(document).on('click', '.delete-hki', function() {
+            const hkiId = $(this).data('id');
+            openConfirmationModal(hkiId);
+        });
+
+        // Submit form HKI via AJAX
+        $('#hkiForm').on('submit', function(e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+
+            $('#saveHKI').prop('disabled', true).text('Menyimpan...');
+
+            $.ajax({
+                url: '<?= site_url('hki/save') ?>',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    $('#saveHKI').prop('disabled', false).text('Simpan HKI');
+                    if (response.status === 'success') {
+                        alert(response.message);
+                        closeModalFunc();
+                        location.reload();
+                    } else {
+                        let msg = '';
+                        if (typeof response.message === 'object') {
+                            for (const key in response.message) {
+                                msg += response.message[key] + "\n";
+                            }
+                        } else {
+                            msg = response.message;
+                        }
+                        alert(msg);
+                    }
+                },
+                error: function() {
+                    $('#saveHKI').prop('disabled', false).text('Simpan HKI');
+                    alert('Terjadi kesalahan saat menyimpan data.');
+                }
+            });
+        });
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            if (isNaN(date)) return dateStr;
+            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            return date.toLocaleDateString('id-ID', options);
+        }
     </script>
 </body>
 
