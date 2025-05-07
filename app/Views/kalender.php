@@ -569,12 +569,14 @@
                 <div class="lg:col-span-2 flex flex-col">
                     <div class="bg-white rounded-xl shadow-sm p-4 flex-1">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                            <div class="flex space-x-2">
-                                <button id="addEventBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center transition transform hover:-translate-y-0.5">
-                                    <i class="fas fa-plus mr-2"></i>
-                                    <span>Tambah Acara</span>
-                                </button>
-                            </div>
+                            <?php if (session()->get('role') === 'admin') : ?>
+                                <div class="flex space-x-2">
+                                    <button id="addEventBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center transition transform hover:-translate-y-0.5">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        <span>Tambah Acara</span>
+                                    </button>
+                                </div>
+                            <?php endif; ?>
 
                             <div class="flex flex-wrap gap-3">
                                 <div class="flex items-center space-x-2">
@@ -709,7 +711,9 @@
                     </div>
                 </div>
                 <div class="flex justify-end space-x-3 pt-4 border-t">
-                    <button type="button" id="editEvent" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Edit</button>
+                    <?php if (session()->get('role') === 'admin') : ?>
+                        <button type="button" id="editEvent" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Edit</button>
+                    <?php endif; ?>
                     <button type="button" id="closeDetail" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">Tutup</button>
                 </div>
             </div>
@@ -882,7 +886,7 @@
         cancelEvent.addEventListener('click', closeModalFunc);
         closeDetail.addEventListener('click', closeDetailModalFunc);
 
-        addEventBtn.addEventListener('click', function() {
+        addEventBtn?.addEventListener('click', function() {
             document.getElementById('modalTitle').textContent = 'Tambah Acara Baru';
             document.getElementById('deleteEvent').classList.add('hidden');
             openModal();
@@ -1060,6 +1064,12 @@
                         });
                 },
                 dateClick: function(info) {
+                    // Only allow adding events for admin
+                    if ('<?= session()->get('role') ?>' !== 'admin') {
+                        showNotification('info', 'Info', 'Hanya admin yang dapat menambahkan acara');
+                        return;
+                    }
+
                     document.getElementById('eventStartDate').value = info.dateStr;
                     document.getElementById('eventEndDate').value = info.dateStr;
                     document.getElementById('modalTitle').textContent = 'Tambah Acara Baru';
@@ -1157,7 +1167,7 @@
             calendar.render();
 
             // Edit event button
-            editEvent.addEventListener('click', function() {
+            editEvent?.addEventListener('click', function() {
                 const eventId = detailModal.dataset.eventId;
                 const event = calendar.getEventById(eventId);
 
@@ -1210,7 +1220,7 @@
             });
 
             // Delete event button with enhanced confirmation
-            deleteEvent.addEventListener('click', function() {
+            deleteEvent?.addEventListener('click', function() {
                 const eventId = document.getElementById('eventId').value;
                 const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
                 const closeDeleteModal = document.getElementById('closeDeleteModal');
@@ -1240,10 +1250,9 @@
                 openDeleteModal();
 
                 // Handle delete confirmation
-                // Ganti kode event listener confirmDelete dengan ini:
                 confirmDelete.addEventListener('click', function() {
                     const eventId = document.getElementById('eventId').value;
-                    const eventToRemove = calendar.getEventById(eventId); // Dapatkan event dari kalender
+                    const eventToRemove = calendar.getEventById(eventId);
 
                     fetch(`<?= site_url('kalender/delete') ?>/${eventId}`, {
                             method: 'POST',
@@ -1261,19 +1270,19 @@
                         })
                         .then(data => {
                             if (data.status === 'success') {
-                                // Hapus event langsung dari kalender
+                                // Remove event from calendar
                                 if (eventToRemove) {
                                     eventToRemove.remove();
                                 }
 
-                                // Tutup modal
+                                // Close modals
                                 closeModalFunc();
                                 closeDeleteModalFunc();
 
-                                // Tampilkan notifikasi
+                                // Show notification
                                 showNotification('success', 'Berhasil', 'Acara berhasil dihapus');
 
-                                // Refresh daftar acara mendatang
+                                // Refresh upcoming events list
                                 loadUpcomingEvents();
                             } else {
                                 showNotification('error', 'Gagal', 'Gagal menghapus acara: ' + (data.message || 'Terjadi kesalahan'));

@@ -35,8 +35,7 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
 
-        'auth' => \App\Filters\AuthFilter::class,
-        'guest' => \App\Filters\GuestFilter::class,
+        'role' => \App\Filters\RoleFilter::class,
     ];
 
     /**
@@ -107,11 +106,14 @@ class Filters extends BaseFilters
      * @var array<string, array<string, list<string>>>
      */
     public array $filters = [
-        'auth' => ['before' => [
-            'dashboard',
-            'kalender',
-            'kalender/*'
-        ]],
-        'guest' => ['before' => ['login', 'register']],
+        'role' => [
+            'before' => [
+                'dashboard', // Filter untuk route dashboard
+                'penelitian',
+                'publikasi',
+                'hki',
+                'kalender*' // Filter untuk semua route yang dimulai dengan kalender
+            ]
+        ]
     ];
 }

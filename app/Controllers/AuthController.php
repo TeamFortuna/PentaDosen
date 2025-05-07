@@ -70,7 +70,8 @@ class AuthController extends BaseController
             'jurusan' => $this->request->getPost('jurusan'),
             'email' => $this->request->getPost('email'),
             'username' => $this->request->getPost('username'),
-            'password' => $this->request->getPost('password')
+            'password' => $this->request->getPost('password'),
+            'role' => 'dosen' // Default role untuk registrasi baru
         ];
 
         $this->userModel->save($userData);
@@ -120,8 +121,12 @@ class AuthController extends BaseController
         // Set session
         $this->setUserSession($user);
 
-        // Redirect ke dashboard
-        return redirect()->to('/dashboard')->with('success', 'Login berhasil!');
+        // Redirect berdasarkan role
+        if ($user['role'] === 'admin') {
+            return redirect()->to('/dashboard')->with('success', 'Login berhasil!');
+        } else {
+            return redirect()->to('/kalender')->with('success', 'Login berhasil!');
+        }
     }
 
     // Logout
@@ -161,6 +166,7 @@ class AuthController extends BaseController
             'jurusan' => $user['jurusan'],
             'email' => $user['email'],
             'username' => $user['username'],
+            'role' => $user['role'],
             'isLoggedIn' => true
         ];
 

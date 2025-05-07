@@ -347,8 +347,8 @@
                                 <div class="internal-member flex items-center gap-2 mb-2">
                                     <select class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent member-select">
                                         <option value="">Pilih Dosen</option>
-                                        <?php if(isset($users) && !empty($users)): ?>
-                                            <?php foreach($users as $dosen): ?>
+                                        <?php if (isset($users) && !empty($users)): ?>
+                                            <?php foreach ($users as $dosen): ?>
                                                 <option value="<?= $dosen['id'] ?>"><?= $dosen['nama'] ?> - <?= $dosen['nidn'] ?></option>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
@@ -532,27 +532,27 @@
                             <p class="text-sm text-gray-600">Biaya Didanai</p>
                             <p class="font-medium" id="detailApprovedBudget"></p>
                         </div>
-                        </div>
                     </div>
+                </div>
 
                 <!-- Section 1.3 - Anggota Penelitian -->
                 <div class="mb-8">
                     <h4 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">1.3 Anggota Penelitian</h4>
                     <div id="detailAnggotaContainer" class="space-y-4">
                         <!-- Anggota akan ditambahkan secara dinamis -->
-                        </div>
                     </div>
+                </div>
 
                 <!-- Section 1.4 - File Penelitian -->
                 <div class="mb-8">
                     <h4 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">1.4 File Penelitian</h4>
                     <div class="space-y-4">
-                    <div>
+                        <div>
                             <p class="text-sm text-gray-600 mb-2">Proposal</p>
                             <a href="#" id="detailProposalLink" class="text-primary hover:underline hidden" target="_blank">
                                 <i class="fas fa-file-pdf mr-1"></i> Lihat Proposal
                             </a>
-                            </div>
+                        </div>
                         <div>
                             <p class="text-sm text-gray-600 mb-2">Laporan Kemajuan</p>
                             <a href="#" id="detailLaporanKemajuanLink" class="text-primary hover:underline hidden" target="_blank">
@@ -590,40 +590,40 @@
                 <form id="uploadReportForm" enctype="multipart/form-data">
                     <input type="hidden" id="uploadReportResearchId">
                     <input type="hidden" id="uploadReportType">
-                    
-                <div class="mb-4">
-                    <div class="dropzone p-8 text-center cursor-pointer" id="reportDropzone">
-                        <input type="file" id="reportFile" class="hidden" accept=".pdf">
-                        <div class="flex flex-col items-center justify-center">
-                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-                            <p class="text-sm text-gray-600">Drag & drop file laporan di sini atau klik untuk memilih</p>
-                            <p class="text-xs text-gray-500 mt-1">Format PDF (maks. 10MB)</p>
-                        </div>
-                    </div>
-                    <div id="reportPreview" class="hidden mt-2 p-3 bg-gray-50 rounded-lg">
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                <span id="reportFileName" class="text-sm font-medium"></span>
+
+                    <div class="mb-4">
+                        <div class="dropzone p-8 text-center cursor-pointer" id="reportDropzone">
+                            <input type="file" id="reportFile" class="hidden" accept=".pdf">
+                            <div class="flex flex-col items-center justify-center">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                                <p class="text-sm text-gray-600">Drag & drop file laporan di sini atau klik untuk memilih</p>
+                                <p class="text-xs text-gray-500 mt-1">Format PDF (maks. 10MB)</p>
                             </div>
-                            <button type="button" id="removeReport" class="text-danger hover:text-red-700">
-                                <i class="fas fa-times"></i>
-                            </button>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
-                            <div id="reportUploadProgress" class="bg-primary h-1.5 rounded-full" style="width: 0%"></div>
+                        <div id="reportPreview" class="hidden mt-2 p-3 bg-gray-50 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                    <span id="reportFileName" class="text-sm font-medium"></span>
+                                </div>
+                                <button type="button" id="removeReport" class="text-danger hover:text-red-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                                <div id="reportUploadProgress" class="bg-primary h-1.5 rounded-full" style="width: 0%"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                    
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancelUploadReport" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">
-                        Batal
-                    </button>
+
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" id="cancelUploadReport" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">
+                            Batal
+                        </button>
                         <button type="submit" id="confirmUploadReport" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition flex items-center">
-                        <i class="fas fa-upload mr-2"></i> Upload
-                    </button>
-                </div>
+                            <i class="fas fa-upload mr-2"></i> Upload
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -637,18 +637,18 @@
                 <div class="flex items-center justify-between p-4 border-b">
                     <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Hapus</h3>
                     <button id="closeDeleteConfirmModal" class="text-gray-400 hover:text-gray-500">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
                 <div class="p-4">
                     <p id="deleteConfirmMessage" class="text-gray-600 mb-4"></p>
                     <div class="flex justify-end space-x-2">
                         <button id="cancelDelete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">
-                        Batal
-                    </button>
+                            Batal
+                        </button>
                         <button id="confirmDelete" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md">
                             Hapus
-                    </button>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -671,7 +671,7 @@
         </div>
 
         <!-- Menu -->
-        <div class="flex-1 overflow-y-auto py-4">   
+        <div class="flex-1 overflow-y-auto py-4">
             <ul class="space-y-1 px-4">
                 <li>
                     <a href="<?= site_url('dashboard') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-primary hover:bg-gray-100 font-medium transition">
@@ -719,7 +719,7 @@
             </div>
             <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200 flex items-center justify-center">
                 <a href="<?= site_url('auth/logout') ?>">
-                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
                 </a>
             </button>
         </div>
@@ -826,66 +826,66 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if(isset($penelitian) && !empty($penelitian)): ?>
-                                <?php foreach($penelitian as $index => $p): ?>
-                            <tr>
+                            <?php if (isset($penelitian) && !empty($penelitian)): ?>
+                                <?php foreach ($penelitian as $index => $p): ?>
+                                    <tr>
                                         <td><?= $index + 1 ?></td>
-                                <td class="font-medium">
+                                        <td class="font-medium">
                                             <a href="#" class="text-primary hover:underline view-research" data-id="<?= $p['id'] ?>"><?= $p['judul'] ?></a>
-                                </td>
+                                        </td>
                                         <td><?= $p['ketua_nama'] ?></td>
                                         <td><?= $p['jumlah_anggota'] ?> Anggota</td>
                                         <td>Rp<?= number_format($p['biaya_didanai'], 0, ',', '.') ?></td>
                                         <td><?= date('d M Y', strtotime($p['tanggal'])) ?></td>
-                                <td>
-                                            <?php if($p['file_proposal']): ?>
+                                        <td>
+                                            <?php if ($p['file_proposal']): ?>
                                                 <a href="<?= base_url('uploads/proposal/' . $p['file_proposal']) ?>" class="text-primary hover:underline" target="_blank">
-                                        <i class="fas fa-file-pdf mr-1"></i> Lihat
-                                    </a>
+                                                    <i class="fas fa-file-pdf mr-1"></i> Lihat
+                                                </a>
                                             <?php else: ?>
                                                 <span class="text-gray-500">-</span>
                                             <?php endif; ?>
-                                </td>
-                                <td>
-                                            <?php if($p['file_laporan_kemajuan']): ?>
+                                        </td>
+                                        <td>
+                                            <?php if ($p['file_laporan_kemajuan']): ?>
                                                 <a href="<?= base_url('uploads/laporan/' . $p['file_laporan_kemajuan']) ?>" class="text-primary hover:underline" target="_blank">
                                                     <i class="fas fa-file-pdf mr-1"></i> Lihat
                                                 </a>
                                             <?php else: ?>
                                                 <button class="text-primary hover:underline upload-report" data-type="progress" data-id="<?= $p['id'] ?>">
-                                        <i class="fas fa-upload mr-1"></i> Upload
-                                    </button>
+                                                    <i class="fas fa-upload mr-1"></i> Upload
+                                                </button>
                                             <?php endif; ?>
-                                </td>
-                                <td>
-                                            <?php if($p['file_laporan_akhir']): ?>
+                                        </td>
+                                        <td>
+                                            <?php if ($p['file_laporan_akhir']): ?>
                                                 <a href="<?= base_url('uploads/laporan/' . $p['file_laporan_akhir']) ?>" class="text-primary hover:underline" target="_blank">
-                                        <i class="fas fa-file-pdf mr-1"></i> Lihat
-                                    </a>
+                                                    <i class="fas fa-file-pdf mr-1"></i> Lihat
+                                                </a>
                                             <?php else: ?>
                                                 <button class="text-primary hover:underline upload-report" data-type="final" data-id="<?= $p['id'] ?>">
-                                        <i class="fas fa-upload mr-1"></i> Upload
-                                    </button>
+                                                    <i class="fas fa-upload mr-1"></i> Upload
+                                                </button>
                                             <?php endif; ?>
-                                </td>
-                                <td class="text-center">
-                                    <div class="flex justify-center space-x-2">
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="flex justify-center space-x-2">
                                                 <button class="text-primary hover:text-primary-dark edit-research" data-id="<?= $p['id'] ?>">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
                                                 <button class="text-danger hover:text-red-700 delete-research" data-id="<?= $p['id'] ?>">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
                                     <td colspan="10" class="text-center py-4 text-gray-500">
                                         Belum ada data penelitian
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -942,6 +942,7 @@
             addResearchModal.classList.add('hidden');
             resetResearchForm();
         });
+
         function resetResearchForm() {
             researchForm.reset();
             internalMembersContainer.innerHTML = '';
@@ -950,8 +951,8 @@
             proposalFile.value = '';
             proposalPreview.classList.add('hidden');
             document.getElementById('proposalUploadProgress').style.width = '0%';
-                    otherFundingSourceContainer.classList.add('hidden');
-                }
+            otherFundingSourceContainer.classList.add('hidden');
+        }
         // Tambah anggota internal
         defaultAddInternalMember();
         addInternalMember.addEventListener('click', function() {
@@ -959,6 +960,7 @@
             internalMembersContainer.appendChild(template);
             updateRemoveInternalMemberListeners();
         });
+
         function updateRemoveInternalMemberListeners() {
             document.querySelectorAll('.remove-internal-member').forEach(button => {
                 button.onclick = function() {
@@ -966,6 +968,7 @@
                 };
             });
         }
+
         function defaultAddInternalMember() {
             // Tambahkan satu anggota internal secara default jika kosong
             if (internalMembersContainer.children.length === 0) {
@@ -995,28 +998,62 @@
             const otherUniversity = document.querySelector('.external-other-university').value;
             const faculty = document.querySelector('.external-faculty').value;
             const studyProgram = document.querySelector('.external-study-program').value;
-            if (!name) { alert('Nama anggota harus diisi'); return; }
-            if (!nidn) { alert('NIDN anggota harus diisi'); return; }
+            if (!name) {
+                alert('Nama anggota harus diisi');
+                return;
+            }
+            if (!nidn) {
+                alert('NIDN anggota harus diisi');
+                return;
+            }
             let universityText = university === 'other' ? otherUniversity : 'Universitas YARSI';
             let facultyText = '';
             switch (faculty) {
-                case 'kedokteran': facultyText = 'Fakultas Kedokteran'; break;
-                case 'kedokteran_gigi': facultyText = 'Fakultas Kedokteran Gigi'; break;
-                case 'teknologi_informasi': facultyText = 'Fakultas Teknologi Informasi'; break;
-                case 'ekonomi_bisnis': facultyText = 'Fakultas Ekonomi Bisnis'; break;
-                case 'hukum': facultyText = 'Fakultas Hukum'; break;
-                case 'psikologi': facultyText = 'Fakultas Psikologi'; break;
+                case 'kedokteran':
+                    facultyText = 'Fakultas Kedokteran';
+                    break;
+                case 'kedokteran_gigi':
+                    facultyText = 'Fakultas Kedokteran Gigi';
+                    break;
+                case 'teknologi_informasi':
+                    facultyText = 'Fakultas Teknologi Informasi';
+                    break;
+                case 'ekonomi_bisnis':
+                    facultyText = 'Fakultas Ekonomi Bisnis';
+                    break;
+                case 'hukum':
+                    facultyText = 'Fakultas Hukum';
+                    break;
+                case 'psikologi':
+                    facultyText = 'Fakultas Psikologi';
+                    break;
             }
             let studyProgramText = '';
             switch (studyProgram) {
-                case 'kedokteran': studyProgramText = 'Kedokteran'; break;
-                case 'kedokteran_gigi': studyProgramText = 'Kedokteran Gigi'; break;
-                case 'teknik_informatika': studyProgramText = 'Teknik Informatika'; break;
-                case 'perpustakaan_dan_sains_informasi': studyProgramText = 'Perpustakaan dan Sains Informasi'; break;
-                case 'manajemen': studyProgramText = 'Manajemen'; break;
-                case 'akuntansi': studyProgramText = 'Akuntansi'; break;
-                case 'hukum': studyProgramText = 'Hukum'; break;
-                case 'psikologi': studyProgramText = 'Psikologi'; break;
+                case 'kedokteran':
+                    studyProgramText = 'Kedokteran';
+                    break;
+                case 'kedokteran_gigi':
+                    studyProgramText = 'Kedokteran Gigi';
+                    break;
+                case 'teknik_informatika':
+                    studyProgramText = 'Teknik Informatika';
+                    break;
+                case 'perpustakaan_dan_sains_informasi':
+                    studyProgramText = 'Perpustakaan dan Sains Informasi';
+                    break;
+                case 'manajemen':
+                    studyProgramText = 'Manajemen';
+                    break;
+                case 'akuntansi':
+                    studyProgramText = 'Akuntansi';
+                    break;
+                case 'hukum':
+                    studyProgramText = 'Hukum';
+                    break;
+                case 'psikologi':
+                    studyProgramText = 'Psikologi';
+                    break;
             }
             const memberDiv = document.createElement('div');
             memberDiv.className = 'external-member-item bg-gray-50 p-3 rounded-lg mb-2 flex justify-between items-center';
@@ -1114,7 +1151,7 @@
                 }
                 const formatted = new Intl.NumberFormat('id-ID').format(parseInt(value));
                 this.value = formatted;
-        });
+            });
         }
         formatCurrencyInput(proposedBudget);
         formatCurrencyInput(approvedBudget);
@@ -1123,8 +1160,8 @@
             if (this.value === 'lainnya') {
                 otherFundingSourceContainer.classList.remove('hidden');
             } else {
-            otherFundingSourceContainer.classList.add('hidden');
-        }
+                otherFundingSourceContainer.classList.add('hidden');
+            }
         });
         // Event listener submit form tambah penelitian
         researchForm.addEventListener('submit', function(e) {
@@ -1165,22 +1202,22 @@
             formData.append('anggota_eksternal', JSON.stringify(externalMembers));
             // Kirim ke backend
             fetch('<?= base_url('penelitian/save') ?>', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert(data.message);
-                    location.reload();
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat menyimpan data');
-            });
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menyimpan data');
+                });
         });
 
         // Event listener untuk klik judul penelitian
@@ -1188,7 +1225,7 @@
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const researchId = this.dataset.id;
-                
+
                 // Tampilkan modal dan overlay
                 overlay.classList.remove('hidden');
                 document.getElementById('detailResearchModal').classList.remove('hidden');
@@ -1199,7 +1236,7 @@
                     .then(result => {
                         if (result.status === 'success') {
                             const data = result.data;
-                            
+
                             // Isi data ke dalam modal
                             document.getElementById('detailResearchTitle').textContent = data.judul;
                             document.getElementById('detailResearchStatus').textContent = data.status;
@@ -1208,7 +1245,7 @@
                                 month: 'long',
                                 year: 'numeric'
                             });
-                            
+
                             // Isi data ketua penelitian
                             document.getElementById('detailLeaderName').textContent = data.ketua.nama;
                             document.getElementById('detailLeaderNidn').textContent = data.ketua.nidn;
@@ -1219,11 +1256,11 @@
                             document.getElementById('detailResearchFunding').textContent = data.sumber_dana;
                             document.getElementById('detailProposedBudget').textContent = `Rp${Number(data.biaya_diusulkan).toLocaleString('id-ID')}`;
                             document.getElementById('detailApprovedBudget').textContent = `Rp${Number(data.biaya_didanai).toLocaleString('id-ID')}`;
-                            
+
                             // Isi data anggota
                             const anggotaContainer = document.getElementById('detailAnggotaContainer');
                             anggotaContainer.innerHTML = '';
-                            
+
                             data.anggota.forEach(anggota => {
                                 const anggotaDiv = document.createElement('div');
                                 anggotaDiv.className = 'mb-4 p-4 bg-gray-50 rounded-lg';
@@ -1257,14 +1294,14 @@
                 `;
                                 anggotaContainer.appendChild(anggotaDiv);
                             });
-                            
+
                             // Isi data file
                             if (data.file_proposal) {
                                 document.getElementById('detailProposalLink').href = `/uploads/proposal/${data.file_proposal}`;
                                 document.getElementById('detailProposalLink').classList.remove('hidden');
-            } else {
+                            } else {
                                 document.getElementById('detailProposalLink').classList.add('hidden');
-        }
+                            }
 
                             if (data.file_laporan_kemajuan) {
                                 document.getElementById('detailLaporanKemajuanLink').href = `/uploads/laporan/${data.file_laporan_kemajuan}`;
@@ -1272,7 +1309,7 @@
                             } else {
                                 document.getElementById('detailLaporanKemajuanLink').classList.add('hidden');
                             }
-                            
+
                             if (data.file_laporan_akhir) {
                                 document.getElementById('detailLaporanAkhirLink').href = `/uploads/laporan/${data.file_laporan_akhir}`;
                                 document.getElementById('detailLaporanAkhirLink').classList.remove('hidden');
@@ -1285,14 +1322,14 @@
                         console.error('Error:', error);
                         alert('Terjadi kesalahan saat mengambil data penelitian');
                     });
-                });
             });
+        });
 
         // Event listener untuk tombol tutup modal detail
         document.getElementById('closeDetailResearchModal').addEventListener('click', function() {
             overlay.classList.add('hidden');
             document.getElementById('detailResearchModal').classList.add('hidden');
-            });
+        });
 
         document.getElementById('closeDetailResearch').addEventListener('click', function() {
             overlay.classList.add('hidden');
@@ -1300,32 +1337,32 @@
         });
 
         // Event listener untuk tombol upload laporan
-            document.querySelectorAll('.upload-report').forEach(button => {
-                button.addEventListener('click', function() {
-                    const researchId = this.dataset.id;
+        document.querySelectorAll('.upload-report').forEach(button => {
+            button.addEventListener('click', function() {
+                const researchId = this.dataset.id;
                 const type = this.dataset.type;
-                
+
                 // Set nilai pada form
                 document.getElementById('uploadReportResearchId').value = researchId;
                 document.getElementById('uploadReportType').value = type;
-                
+
                 // Set judul modal
                 const title = type === 'progress' ? 'Upload Laporan Kemajuan' : 'Upload Laporan Akhir';
                 document.getElementById('uploadReportTitle').textContent = title;
 
-            // Tampilkan modal
-            overlay.classList.remove('hidden');
+                // Tampilkan modal
+                overlay.classList.remove('hidden');
                 document.getElementById('uploadReportModal').classList.remove('hidden');
             });
         });
-        
+
         // Event listener untuk dropzone laporan
         const reportDropzone = document.getElementById('reportDropzone');
         const reportFile = document.getElementById('reportFile');
         const reportPreview = document.getElementById('reportPreview');
         const reportFileName = document.getElementById('reportFileName');
         const removeReport = document.getElementById('removeReport');
-        
+
         reportDropzone.addEventListener('click', function() {
             reportFile.click();
         });
@@ -1383,30 +1420,30 @@
         // Event listener untuk form upload laporan
         document.getElementById('uploadReportForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const formData = new FormData();
             formData.append('type', document.getElementById('uploadReportType').value);
             formData.append('file', reportFile.files[0]);
-            
+
             const researchId = document.getElementById('uploadReportResearchId').value;
-            
+
             fetch(`/penelitian/upload-laporan/${researchId}`, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.status === 'success') {
-                    alert(result.message);
-                    location.reload();
-                } else {
-                    alert(result.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat mengupload file');
-            });
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === 'success') {
+                        alert(result.message);
+                        location.reload();
+                    } else {
+                        alert(result.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat mengupload file');
+                });
         });
 
         // Event listener untuk tombol tutup modal upload
@@ -1415,58 +1452,58 @@
             document.getElementById('uploadReportModal').classList.add('hidden');
             resetUploadReportForm();
         });
-        
+
         document.getElementById('cancelUploadReport').addEventListener('click', function() {
             overlay.classList.add('hidden');
             document.getElementById('uploadReportModal').classList.add('hidden');
             resetUploadReportForm();
         });
-        
+
         function resetUploadReportForm() {
             document.getElementById('uploadReportForm').reset();
             reportPreview.classList.add('hidden');
             document.getElementById('reportUploadProgress').style.width = '0%';
-            }
+        }
 
         // Event listener untuk tombol delete penelitian
         document.querySelectorAll('.delete-research').forEach(button => {
             button.addEventListener('click', function() {
                 const researchId = this.dataset.id;
-                
+
                 // Tampilkan modal konfirmasi
                 overlay.classList.remove('hidden');
                 document.getElementById('deleteConfirmModal').classList.remove('hidden');
-                
+
                 // Set pesan konfirmasi
                 document.getElementById('deleteConfirmMessage').textContent = 'Apakah Anda yakin ingin menghapus penelitian ini? Tindakan ini tidak dapat dibatalkan.';
 
                 // Event listener untuk tombol konfirmasi delete
                 document.getElementById('confirmDelete').onclick = function() {
                     fetch(`/penelitian/delete/${researchId}`, {
-                        method: 'DELETE'
-                    })
-                    .then(response => response.json())
-                    .then(result => {
-                        if (result.status === 'success') {
-                            alert(result.message);
-                            location.reload();
-                        } else {
-                            alert(result.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Terjadi kesalahan saat menghapus penelitian');
-            });
+                            method: 'DELETE'
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.status === 'success') {
+                                alert(result.message);
+                                location.reload();
+                            } else {
+                                alert(result.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Terjadi kesalahan saat menghapus penelitian');
+                        });
                 };
             });
         });
-        
+
         // Event listener untuk tombol tutup modal konfirmasi delete
         document.getElementById('closeDeleteConfirmModal').addEventListener('click', function() {
             overlay.classList.add('hidden');
             document.getElementById('deleteConfirmModal').classList.add('hidden');
-            });
+        });
 
         document.getElementById('cancelDelete').addEventListener('click', function() {
             overlay.classList.add('hidden');
@@ -1491,7 +1528,7 @@
                         month: 'short',
                         year: 'numeric'
                     });
-                    
+
                     rows.push([
                         index + 1,
                         p.judul,
