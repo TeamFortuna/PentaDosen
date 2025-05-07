@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.min.css">
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -86,6 +87,149 @@
             position: relative;
             height: 300px;
             width: 100%;
+        }
+
+        /* Custom Select Style */
+        .ts-dropdown {
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .ts-control {
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+
+        .ts-control.focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+        }
+
+        .ts-dropdown .active {
+            background-color: #6366f1;
+            color: white;
+        }
+
+        /* Badge Style for Department */
+        .department-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.25rem;
+        }
+
+        /* Faculty Specific Colors */
+        .badge-kedokteran {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .badge-kedokteran-gigi {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-teknik-informatika {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-perpustakaan {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .badge-manajemen {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-akuntansi {
+            background-color: #f0fdf4;
+            color: #15803d;
+        }
+
+        .badge-hukum {
+            background-color: #f5f3ff;
+            color: #7c3aed;
+        }
+
+        .badge-psikologi {
+            background-color: #fce7f3;
+            color: #be185d;
+        }
+
+        .badge-default {
+            background-color: #e5e7eb;
+            color: #4b5563;
+        }
+
+        /* Faculty Badge */
+        .faculty-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.25rem;
+            color: white;
+        }
+
+        /* Custom Faculty Colors */
+        .faculty-kedokteran {
+            background-color: #6a9256;
+        }
+
+        .faculty-kedokteran-gigi {
+            background-color: #8773ae;
+        }
+
+        .faculty-teknologi-informasi {
+            background-color: #e09a67;
+        }
+
+        .faculty-ekonomi-bisnis {
+            background-color: #036aac;
+        }
+
+        .faculty-hukum {
+            background-color: #a93246;
+        }
+
+        .faculty-psikologi {
+            background-color: #8b3969;
+        }
+
+        /* Custom styles for select options */
+        .ts-option {
+            padding: 0.5rem 1rem;
+        }
+
+        .ts-option .badge-option {
+            display: inline-block;
+            width: 100%;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -211,9 +355,45 @@
             <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                 <div class="px-6 py-4 border-b flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
                     <h3 class="font-semibold text-gray-800">Log Aktivitas</h3>
-                    <div class="relative w-full md:w-64">
-                        <input type="text" id="searchLog" placeholder="Cari aktivitas..." class="search-input pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto">
+                        <div class="relative w-full md:w-56">
+                            <select id="filterFakultas" placeholder="Filter Fakultas..." autocomplete="off">
+                                <option value="">Semua Fakultas</option>
+                                <option value="Fakultas Kedokteran" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Kedokteran' ? 'selected' : '' ?>>Fakultas Kedokteran</option>
+                                <option value="Fakultas Kedokteran Gigi" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Kedokteran Gigi' ? 'selected' : '' ?>>Fakultas Kedokteran Gigi</option>
+                                <option value="Fakultas Teknologi Informasi" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Teknologi Informasi' ? 'selected' : '' ?>>Fakultas Teknologi Informasi</option>
+                                <option value="Fakultas Ekonomi Bisnis" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Ekonomi Bisnis' ? 'selected' : '' ?>>Fakultas Ekonomi Bisnis</option>
+                                <option value="Fakultas Hukum" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Hukum' ? 'selected' : '' ?>>Fakultas Hukum</option>
+                                <option value="Fakultas Psikologi" <?= isset($filters['fakultas']) && $filters['fakultas'] === 'Fakultas Psikologi' ? 'selected' : '' ?>>Fakultas Psikologi</option>
+                            </select>
+                        </div>
+                        <div class="relative w-full md:w-56">
+                            <select id="filterJurusan" placeholder="Filter Jurusan..." autocomplete="off">
+                                <option value="">Semua Jurusan</option>
+                                <option value="Kedokteran" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Kedokteran' ? 'selected' : '' ?>>Kedokteran</option>
+                                <option value="Kedokteran Gigi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Kedokteran Gigi' ? 'selected' : '' ?>>Kedokteran Gigi</option>
+                                <option value="Teknik Informatika" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Teknik Informatika' ? 'selected' : '' ?>>Teknik Informatika</option>
+                                <option value="Perpustakaan dan Sains Informasi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Perpustakaan dan Sains Informasi' ? 'selected' : '' ?>>Perpustakaan dan Sains Informasi</option>
+                                <option value="Manajemen" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Manajemen' ? 'selected' : '' ?>>Manajemen</option>
+                                <option value="Akuntansi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Akuntansi' ? 'selected' : '' ?>>Akuntansi</option>
+                                <option value="Hukum" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Hukum' ? 'selected' : '' ?>>Hukum</option>
+                                <option value="Psikologi" <?= isset($filters['jurusan']) && $filters['jurusan'] === 'Psikologi' ? 'selected' : '' ?>>Psikologi</option>
+                            </select>
+                        </div>
+                        <div class="relative w-full md:w-56">
+                            <select id="filterAktivitas" placeholder="Filter Aktivitas..." autocomplete="off">
+                                <option value="">Semua Aktivitas</option>
+                                <option value="Login" <?= isset($filters['activity']) && $filters['activity'] === 'Login' ? 'selected' : '' ?>>Login</option>
+                                <option value="Logout" <?= isset($filters['activity']) && $filters['activity'] === 'Logout' ? 'selected' : '' ?>>Logout</option>
+                                <option value="Create" <?= isset($filters['activity']) && $filters['activity'] === 'Create' ? 'selected' : '' ?>>Create</option>
+                                <option value="Update" <?= isset($filters['activity']) && $filters['activity'] === 'Update' ? 'selected' : '' ?>>Update</option>
+                                <option value="Delete" <?= isset($filters['activity']) && $filters['activity'] === 'Delete' ? 'selected' : '' ?>>Delete</option>
+                            </select>
+                        </div>
+                        <div class="relative w-full">
+                            <input type="text" id="searchLog" placeholder="Cari aktivitas atau nama user..." value="<?= isset($filters['search']) ? esc($filters['search']) : '' ?>" class="search-input pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -221,6 +401,7 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fakultas & Jurusan</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aktivitas</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waktu</th>
@@ -229,6 +410,55 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200" id="logTable">
                             <?php foreach ($activity_logs as $log): ?>
+                                <?php
+                                // Determine faculty based on department
+                                $fakultas = '';
+                                $facultyClass = '';
+                                if (isset($log['user_jurusan'])) {
+                                    switch ($log['user_jurusan']) {
+                                        case 'Kedokteran':
+                                            $fakultas = 'Fakultas Kedokteran';
+                                            $facultyClass = 'faculty-kedokteran';
+                                            $badgeClass = 'badge-kedokteran';
+                                            break;
+                                        case 'Kedokteran Gigi':
+                                            $fakultas = 'Fakultas Kedokteran Gigi';
+                                            $facultyClass = 'faculty-kedokteran-gigi';
+                                            $badgeClass = 'badge-kedokteran-gigi';
+                                            break;
+                                        case 'Teknik Informatika':
+                                            $fakultas = 'Fakultas Teknologi Informasi';
+                                            $facultyClass = 'faculty-teknologi-informasi';
+                                            $badgeClass = 'badge-teknik-informatika';
+                                            break;
+                                        case 'Perpustakaan dan Sains Informasi':
+                                            $fakultas = 'Fakultas Teknologi Informasi';
+                                            $facultyClass = 'faculty-teknologi-informasi';
+                                            $badgeClass = 'badge-perpustakaan';
+                                            break;
+                                        case 'Manajemen':
+                                        case 'Akuntansi':
+                                            $fakultas = 'Fakultas Ekonomi Bisnis';
+                                            $facultyClass = 'faculty-ekonomi-bisnis';
+                                            $badgeClass = $log['user_jurusan'] === 'Manajemen' ? 'badge-manajemen' : 'badge-akuntansi';
+                                            break;
+                                        case 'Hukum':
+                                            $fakultas = 'Fakultas Hukum';
+                                            $facultyClass = 'faculty-hukum';
+                                            $badgeClass = 'badge-hukum';
+                                            break;
+                                        case 'Psikologi':
+                                            $fakultas = 'Fakultas Psikologi';
+                                            $facultyClass = 'faculty-psikologi';
+                                            $badgeClass = 'badge-psikologi';
+                                            break;
+                                        default:
+                                            $fakultas = '';
+                                            $facultyClass = '';
+                                            $badgeClass = 'badge-default';
+                                    }
+                                }
+                                ?>
                                 <tr class="table-row">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
@@ -237,31 +467,48 @@
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-medium text-gray-900"><?= $log['user_name'] ?? 'System' ?></div>
+                                                <div class="text-xs text-gray-500"><?= $log['user_jurusan'] ?? '-' ?></div>
                                             </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex flex-col space-y-1">
+                                            <?php if ($fakultas): ?>
+                                                <span class="faculty-badge <?= $facultyClass ?>"><?= $fakultas ?></span>
+                                            <?php endif; ?>
+                                            <span class="department-badge <?= $badgeClass ?>">
+                                                <?= $log['user_jurusan'] ?? '-' ?>
+                                            </span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-10 w-10 rounded-full 
-                                    <?= $log['activity'] === 'Login' ? 'bg-green-100 text-green-600' : ($log['activity'] === 'Logout' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600') ?> 
-                                    flex items-center justify-center">
+                                                <?= $log['activity'] === 'Login' ? 'bg-green-100 text-green-600' : ($log['activity'] === 'Logout' ? 'bg-purple-100 text-purple-600' : ($log['activity'] === 'Create' ? 'bg-blue-100 text-blue-600' : ($log['activity'] === 'Update' ? 'bg-yellow-100 text-yellow-600' :
+                                                    'bg-red-100 text-red-600'))) ?> 
+                                                flex items-center justify-center">
                                                 <i class="fas 
-                                        <?= $log['activity'] === 'Login' ? 'fa-sign-in-alt' : ($log['activity'] === 'Logout' ? 'fa-sign-out-alt' : 'fa-info-circle') ?>"></i>
+                                                    <?= $log['activity'] === 'Login' ? 'fa-sign-in-alt' : ($log['activity'] === 'Logout' ? 'fa-sign-out-alt' : ($log['activity'] === 'Create' ? 'fa-plus-circle' : ($log['activity'] === 'Update' ? 'fa-edit' :
+                                                        'fa-trash-alt'))) ?>"></i>
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-medium text-gray-900"><?= $log['activity'] ?></div>
+                                                <div class="text-xs text-gray-500"><?= date('H:i', strtotime($log['created_at'])) ?></div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900"><?= $log['description'] ?></div>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm text-gray-900 max-w-xs truncate"><?= $log['description'] ?></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900"><?= date('d M Y, H:i', strtotime($log['created_at'])) ?> WIB</div>
+                                        <div class="text-sm text-gray-900"><?= date('d M Y', strtotime($log['created_at'])) ?></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Success
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                            <?= $log['activity'] === 'Login' ? 'bg-green-100 text-green-800' : ($log['activity'] === 'Logout' ? 'bg-purple-100 text-purple-800' : ($log['activity'] === 'Create' ? 'bg-blue-100 text-blue-800' : ($log['activity'] === 'Update' ? 'bg-yellow-100 text-yellow-800' :
+                                                'bg-red-100 text-red-800'))) ?>">
+                                            <?= $log['activity'] === 'Login' ? 'Success' : ($log['activity'] === 'Logout' ? 'Success' : ($log['activity'] === 'Create' ? 'Created' : ($log['activity'] === 'Update' ? 'Updated' :
+                                                'Deleted'))) ?>
                                         </span>
                                     </td>
                                 </tr>
@@ -270,7 +517,7 @@
                     </table>
                 </div>
                 <div class="px-6 py-4 border-t flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
-                    <div class="text-sm text-gray-500">
+                    <div class="text-sm text-gray-500 pagination-info">
                         Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium"><?= count($activity_logs) ?></span> dari <span class="font-medium"><?= count($activity_logs) ?></span> aktivitas
                     </div>
                     <div class="flex space-x-2">
@@ -291,8 +538,109 @@
 
     <!-- Include Sidebar Script -->
     <script src="<?= base_url('js/sidebar-script.js') ?>"></script>
+    <!-- Tom Select Library -->
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 
     <script>
+        // Helper function to get faculty class
+        function getFacultyClass(fakultas) {
+            switch (fakultas) {
+                case 'Fakultas Kedokteran':
+                    return 'faculty-kedokteran';
+                case 'Fakultas Kedokteran Gigi':
+                    return 'faculty-kedokteran-gigi';
+                case 'Fakultas Teknologi Informasi':
+                    return 'faculty-teknologi-informasi';
+                case 'Fakultas Ekonomi Bisnis':
+                    return 'faculty-ekonomi-bisnis';
+                case 'Fakultas Hukum':
+                    return 'faculty-hukum';
+                case 'Fakultas Psikologi':
+                    return 'faculty-psikologi';
+                default:
+                    return '';
+            }
+        }
+
+        // Helper function to get badge class
+        function getBadgeClass(jurusan) {
+            switch (jurusan) {
+                case 'Kedokteran':
+                    return 'badge-kedokteran';
+                case 'Kedokteran Gigi':
+                    return 'badge-kedokteran-gigi';
+                case 'Teknik Informatika':
+                    return 'badge-teknik-informatika';
+                case 'Perpustakaan dan Sains Informasi':
+                    return 'badge-perpustakaan';
+                case 'Manajemen':
+                    return 'badge-manajemen';
+                case 'Akuntansi':
+                    return 'badge-akuntansi';
+                case 'Hukum':
+                    return 'badge-hukum';
+                case 'Psikologi':
+                    return 'badge-psikologi';
+                default:
+                    return 'badge-default';
+            }
+        }
+
+        // Initialize Tom Select for faculty filter
+        new TomSelect('#filterFakultas', {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            render: {
+                option: function(data, escape) {
+                    const facultyClass = getFacultyClass(data.value);
+                    return `<div class="ts-option">
+                        <span class="badge-option faculty-badge ${facultyClass}">${data.value}</span>
+                    </div>`;
+                },
+                item: function(data, escape) {
+                    const facultyClass = getFacultyClass(data.value);
+                    return `<div>
+                        <span class="faculty-badge ${facultyClass}">${data.value}</span>
+                    </div>`;
+                }
+            }
+        });
+
+        // Initialize Tom Select for department filter
+        new TomSelect('#filterJurusan', {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            render: {
+                option: function(data, escape) {
+                    const badgeClass = getBadgeClass(data.value);
+                    return `<div class="ts-option">
+                        <span class="badge-option department-badge ${badgeClass}">${data.value}</span>
+                    </div>`;
+                },
+                item: function(data, escape) {
+                    const badgeClass = getBadgeClass(data.value);
+                    return `<div>
+                        <span class="department-badge ${badgeClass}">${data.value}</span>
+                    </div>`;
+                }
+            }
+        });
+
+        // Initialize Tom Select for activity filter
+        new TomSelect('#filterAktivitas', {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        });
+
         // Chart Initialization
         document.addEventListener('DOMContentLoaded', function() {
             // Data Fakultas
@@ -305,10 +653,14 @@
                 'Fakultas Psikologi'
             ];
 
-            // Warna untuk chart
+            // Warna untuk chart sesuai permintaan
             const colors = [
-                '#6366F1', '#8B5CF6', '#EC4899',
-                '#F43F5E', '#F59E0B', '#10B981'
+                '#6a9256', // Kedokteran
+                '#8773ae', // Kedokteran Gigi
+                '#e09a67', // Teknologi Informasi
+                '#036aac', // Ekonomi Bisnis
+                '#a93246', // Hukum
+                '#8b3969' // Psikologi
             ];
 
             // Chart Penelitian per Fakultas (Bar Chart)
@@ -427,6 +779,252 @@
                         }
                     }
                 }
+            });
+
+            // Filter Functionality
+            const filterFakultas = document.getElementById('filterFakultas');
+            const filterJurusan = document.getElementById('filterJurusan');
+            const filterAktivitas = document.getElementById('filterAktivitas');
+            const searchLog = document.getElementById('searchLog');
+
+            // Debounce function untuk pencarian
+            let searchTimeout;
+
+            // Fungsi untuk memuat data via AJAX
+            function loadFilteredLogs() {
+                const fakultas = filterFakultas.value;
+                const jurusan = filterJurusan.value;
+                const aktivitas = filterAktivitas.value;
+                const searchTerm = searchLog.value;
+
+                // Tampilkan loading indicator
+                document.getElementById('logTable').innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center">
+                            <i class="fas fa-spinner fa-spin mr-2"></i> Memuat data...
+                        </td>
+                    </tr>
+                `;
+
+                // Buat URL dengan parameter filter
+                let params = new URLSearchParams();
+                if (fakultas) params.append('fakultas', fakultas);
+                if (jurusan) params.append('jurusan', jurusan);
+                if (aktivitas) params.append('activity', aktivitas);
+                if (searchTerm) params.append('search', searchTerm);
+
+                // Kirim request AJAX
+                fetch(`/dashboard?${params.toString()}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        renderLogs(data);
+                        updatePaginationInfo(data.length);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('logTable').innerHTML = `
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 text-center text-red-500">
+                                <i class="fas fa-exclamation-circle mr-2"></i> Gagal memuat data
+                            </td>
+                        </tr>
+                    `;
+                    });
+            }
+
+            // Fungsi untuk merender log
+            function renderLogs(logs) {
+                const logTable = document.getElementById('logTable');
+
+                if (logs.length === 0) {
+                    logTable.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                Tidak ada data yang ditemukan
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                logs.forEach(log => {
+                    // Determine faculty based on department
+                    let fakultas = '';
+                    let facultyClass = '';
+                    let badgeClass = 'badge-default';
+
+                    if (log.user_jurusan) {
+                        switch (log.user_jurusan) {
+                            case 'Kedokteran':
+                                fakultas = 'Fakultas Kedokteran';
+                                facultyClass = 'faculty-kedokteran';
+                                badgeClass = 'badge-kedokteran';
+                                break;
+                            case 'Kedokteran Gigi':
+                                fakultas = 'Fakultas Kedokteran Gigi';
+                                facultyClass = 'faculty-kedokteran-gigi';
+                                badgeClass = 'badge-kedokteran-gigi';
+                                break;
+                            case 'Teknik Informatika':
+                                fakultas = 'Fakultas Teknologi Informasi';
+                                facultyClass = 'faculty-teknologi-informasi';
+                                badgeClass = 'badge-teknik-informatika';
+                                break;
+                            case 'Perpustakaan dan Sains Informasi':
+                                fakultas = 'Fakultas Teknologi Informasi';
+                                facultyClass = 'faculty-teknologi-informasi';
+                                badgeClass = 'badge-perpustakaan';
+                                break;
+                            case 'Manajemen':
+                            case 'Akuntansi':
+                                fakultas = 'Fakultas Ekonomi Bisnis';
+                                facultyClass = 'faculty-ekonomi-bisnis';
+                                badgeClass = log.user_jurusan === 'Manajemen' ? 'badge-manajemen' : 'badge-akuntansi';
+                                break;
+                            case 'Hukum':
+                                fakultas = 'Fakultas Hukum';
+                                facultyClass = 'faculty-hukum';
+                                badgeClass = 'badge-hukum';
+                                break;
+                            case 'Psikologi':
+                                fakultas = 'Fakultas Psikologi';
+                                facultyClass = 'faculty-psikologi';
+                                badgeClass = 'badge-psikologi';
+                                break;
+                            default:
+                                fakultas = '';
+                                facultyClass = '';
+                                badgeClass = 'badge-default';
+                        }
+                    }
+
+                    // Determine activity icon and color
+                    let activityIcon, activityColor, statusColor, statusText;
+                    switch (log.activity) {
+                        case 'Login':
+                            activityIcon = 'fa-sign-in-alt';
+                            activityColor = 'bg-green-100 text-green-600';
+                            statusColor = 'bg-green-100 text-green-800';
+                            statusText = 'Success';
+                            break;
+                        case 'Logout':
+                            activityIcon = 'fa-sign-out-alt';
+                            activityColor = 'bg-purple-100 text-purple-600';
+                            statusColor = 'bg-purple-100 text-purple-800';
+                            statusText = 'Success';
+                            break;
+                        case 'Create':
+                            activityIcon = 'fa-plus-circle';
+                            activityColor = 'bg-blue-100 text-blue-600';
+                            statusColor = 'bg-blue-100 text-blue-800';
+                            statusText = 'Created';
+                            break;
+                        case 'Update':
+                            activityIcon = 'fa-edit';
+                            activityColor = 'bg-yellow-100 text-yellow-600';
+                            statusColor = 'bg-yellow-100 text-yellow-800';
+                            statusText = 'Updated';
+                            break;
+                        case 'Delete':
+                            activityIcon = 'fa-trash-alt';
+                            activityColor = 'bg-red-100 text-red-600';
+                            statusColor = 'bg-red-100 text-red-800';
+                            statusText = 'Deleted';
+                            break;
+                        default:
+                            activityIcon = 'fa-info-circle';
+                            activityColor = 'bg-gray-100 text-gray-600';
+                            statusColor = 'bg-gray-100 text-gray-800';
+                            statusText = 'Info';
+                    }
+
+                    const createdAt = new Date(log.created_at);
+                    const timeString = createdAt.toLocaleTimeString('id-ID', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    const dateString = createdAt.toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+
+                    html += `
+                        <tr class="table-row">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">${log.user_name || 'System'}</div>
+                                        <div class="text-xs text-gray-500">${log.user_jurusan || '-'}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex flex-col space-y-1">
+                                    ${fakultas ? `<span class="faculty-badge ${facultyClass}">${fakultas}</span>` : ''}
+                                    <span class="department-badge ${badgeClass}">
+                                        ${log.user_jurusan || '-'}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full ${activityColor} flex items-center justify-center">
+                                        <i class="fas ${activityIcon}"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">${log.activity}</div>
+                                        <div class="text-xs text-gray-500">${timeString}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-900 max-w-xs truncate">${log.description || ''}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">${dateString}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">
+                                    ${statusText}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                logTable.innerHTML = html;
+            }
+
+            // Fungsi untuk memperbarui info pagination
+            function updatePaginationInfo(count) {
+                const paginationInfo = document.querySelector('.pagination-info');
+                if (paginationInfo) {
+                    paginationInfo.innerHTML = `
+                        Menampilkan <span class="font-medium">1</span> sampai 
+                        <span class="font-medium">${count}</span> dari 
+                        <span class="font-medium">${count}</span> aktivitas
+                    `;
+                }
+            }
+
+            // Event listeners untuk filter
+            filterFakultas.addEventListener('change', loadFilteredLogs);
+            filterJurusan.addEventListener('change', loadFilteredLogs);
+            filterAktivitas.addEventListener('change', loadFilteredLogs);
+
+            // Event listener untuk search dengan debounce
+            searchLog.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(loadFilteredLogs, 500);
             });
         });
     </script>

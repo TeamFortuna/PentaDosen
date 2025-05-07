@@ -272,7 +272,7 @@
             </div>
             <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200 flex items-center justify-center">
                 <a href="<?= site_url('homepage') ?>">
-                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
                 </a>
             </button>
         </div>
@@ -639,13 +639,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         // Sample data for HKIs
-        let hkis = [
-            {
+        let hkis = [{
                 id: '1',
                 title: 'Sistem Diagnosa Penyakit Jantung Berbasis AI',
-                inventors: [
-                    { id: '1', name: 'Prof. Dr. Andi Wijaya' },
-                    { id: '3', name: 'Dr. Citra Dewi, S.T., M.T.' }
+                inventors: [{
+                        id: '1',
+                        name: 'Prof. Dr. Andi Wijaya'
+                    },
+                    {
+                        id: '3',
+                        name: 'Dr. Citra Dewi, S.T., M.T.'
+                    }
                 ],
                 date: '2023-05-15',
                 type: 'paten',
@@ -662,9 +666,10 @@
             {
                 id: '2',
                 title: 'Aplikasi Mobile untuk Monitoring Kesehatan Ibu Hamil',
-                inventors: [
-                    { id: '2', name: 'Dr. Budi Santoso, M.Kom' }
-                ],
+                inventors: [{
+                    id: '2',
+                    name: 'Dr. Budi Santoso, M.Kom'
+                }],
                 date: '2023-03-22',
                 type: 'hak-cipta',
                 typeText: 'Hak Cipta',
@@ -680,9 +685,14 @@
             {
                 id: '3',
                 title: 'Desain Kemasan Produk Herbal "Sehat Alami"',
-                inventors: [
-                    { id: '4', name: 'Dian Pratama, S.Si., M.Si.' },
-                    { id: '5', name: 'Eka Putra, S.Kom., M.Kom.' }
+                inventors: [{
+                        id: '4',
+                        name: 'Dian Pratama, S.Si., M.Si.'
+                    },
+                    {
+                        id: '5',
+                        name: 'Eka Putra, S.Kom., M.Kom.'
+                    }
                 ],
                 date: '2023-07-10',
                 type: 'desain-industri',
@@ -699,9 +709,14 @@
             {
                 id: '4',
                 title: 'Merek Dagang "EduTech" untuk Layanan Pendidikan Digital',
-                inventors: [
-                    { id: '1', name: 'Prof. Dr. Andi Wijaya' },
-                    { id: '5', name: 'Eka Putra, S.Kom., M.Kom.' }
+                inventors: [{
+                        id: '1',
+                        name: 'Prof. Dr. Andi Wijaya'
+                    },
+                    {
+                        id: '5',
+                        name: 'Eka Putra, S.Kom., M.Kom.'
+                    }
                 ],
                 date: '2022-11-05',
                 type: 'merek',
@@ -718,9 +733,10 @@
             {
                 id: '5',
                 title: 'Algoritma Prediksi Harga Saham Berbasis Deep Learning',
-                inventors: [
-                    { id: '3', name: 'Dr. Citra Dewi, S.T., M.T.' }
-                ],
+                inventors: [{
+                    id: '3',
+                    name: 'Dr. Citra Dewi, S.T., M.T.'
+                }],
                 date: '2021-09-18',
                 type: 'paten',
                 typeText: 'Paten',
@@ -1165,7 +1181,7 @@
             if (hki) {
                 document.getElementById('detailTitle').textContent = hki.title;
                 document.getElementById('detailType').textContent = hki.typeText;
-                
+
                 // Set status with appropriate class
                 const statusElement = document.getElementById('detailStatus');
                 statusElement.textContent = hki.statusText;

@@ -29,13 +29,20 @@ class KalenderController extends Controller
             'fakultas' => session()->get('fakultas'),
             'jurusan' => session()->get('jurusan'),
             'email' => session()->get('email'),
-            'username' => session()->get('username')
+            'username' => session()->get('username'),
+            'role' => session()->get('role')
         ];
         return view('kalender', $data);
     }
 
     public function getEvents()
     {
+
+        // Pastikan user sudah login
+        if (!session()->get('isLoggedIn')) {
+            return $this->response->setJSON([]);
+        }
+
         $start = $this->request->getGet('start');
         $end = $this->request->getGet('end');
         $userId = session()->get('user_id') ?? 1; // Default to 1 if no session
@@ -69,6 +76,14 @@ class KalenderController extends Controller
 
     public function addEvent()
     {
+        // Hanya admin yang bisa menambah event
+        if (session()->get('role') !== 'admin') {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Anda tidak memiliki izin untuk menambah acara'
+            ]);
+        }
+
         $validation = \Config\Services::validation();
         $validation->setRules([
             'title' => 'required',
@@ -97,6 +112,9 @@ class KalenderController extends Controller
 
         try {
             if ($this->eventModel->insert($data)) {
+                // Catat aktivitas - pindahkan ke sini
+                log_activity(session()->get('id'), 'Create', 'Membuat acara baru: ' . $data['title']);
+
                 return $this->response->setJSON([
                     'status' => 'success',
                     'message' => 'Event added successfully',
@@ -119,6 +137,15 @@ class KalenderController extends Controller
 
     public function updateEvent($id)
     {
+
+        // Hanya admin yang bisa mengupdate event
+        if (session()->get('role') !== 'admin') {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Anda tidak memiliki izin untuk mengupdate acara'
+            ]);
+        }
+
         $validation = \Config\Services::validation();
         $validation->setRules([
             'title' => 'required',
@@ -143,6 +170,9 @@ class KalenderController extends Controller
 
         try {
             if ($this->eventModel->update($id, $data)) {
+                // Catat aktivitas - pindahkan ke sini
+                log_activity(session()->get('id'), 'Update', 'Memperbarui acara: ' . $data['title']);
+
                 return $this->response->setJSON(['status' => 'success', 'message' => 'Event updated successfully']);
             } else {
                 return $this->response->setJSON([
@@ -161,6 +191,14 @@ class KalenderController extends Controller
 
     public function deleteEvent($id)
     {
+        // Hanya admin yang bisa menghapus event
+        if (session()->get('role') !== 'admin') {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Anda tidak memiliki izin untuk menghapus acara'
+            ]);
+        }
+
         $event = $this->eventModel->find($id);
 
         if (!$event) {
@@ -169,6 +207,8 @@ class KalenderController extends Controller
 
         try {
             if ($this->eventModel->delete($id)) {
+                // Catat aktivitas
+                log_activity(session()->get('id'), 'Delete', 'Menghapus acara: ' . $event['title']);
                 return $this->response->setJSON(['status' => 'success', 'message' => 'Event deleted successfully']);
             } else {
                 return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to delete event']);

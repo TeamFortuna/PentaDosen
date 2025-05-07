@@ -82,6 +82,11 @@ class CreateUsersTable extends Migration
                 'null' => true,
                 'after' => 'reset_token'
             ],
+            'role' => [
+                'type'       => 'ENUM',
+                'constraint' => ['admin', 'dosen'],
+                'default'    => 'dosen',
+            ],
         ]);
 
         $this->forge->addKey('id', true);

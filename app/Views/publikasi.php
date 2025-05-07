@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
     <style>
         :root {
             --primary: #6366f1;
@@ -151,6 +152,127 @@
             box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
         }
 
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            z-index: 1000;
+            animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+        }
+
+        .toast.success {
+            background-color: var(--success);
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* Preview Modal Styles */
+        #documentViewer {
+            min-height: 70vh;
+            background-color: white;
+        }
+
+        #pdfViewer {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+        }
+
+        #pdfViewer canvas {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        #wordViewer {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .toolbar-btn {
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Loading animation */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        /* New styles for action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .action-btn i {
+            margin-right: 0.5rem;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -180,6 +302,15 @@
             .table-row-actions {
                 opacity: 1;
             }
+
+            .action-buttons {
+                gap: 0.5rem;
+            }
+
+            .action-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
+            }
         }
     </style>
 </head>
@@ -188,73 +319,8 @@
     <!-- Overlay (for mobile sidebar) -->
     <div class="overlay" id="overlay" style="display: none;"></div>
 
-    <!-- Sidebar -->
-    <div class="sidebar flex flex-col h-full" id="sidebar">
-        <!-- Logo and Toggle -->
-        <div class="p-4 flex items-center justify-between border-b">
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center text-white mr-3">
-                    <i class="fas fa-flask text-xl"></i>
-                </div>
-                <h1 class="text-xl font-bold text-indigo-600">Penta Dosen</h1>
-            </div>
-            <button class="menu-toggle md:hidden text-gray-500" id="closeSidebar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-
-        <!-- Menu -->
-        <div class="flex-1 overflow-y-auto py-4">
-            <ul class="space-y-1 px-4">
-                <li>
-                    <a href="<?= site_url('dashboard') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-tachometer-alt mr-3"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('kalender') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="far fa-calendar-alt mr-3"></i>
-                        Kalender
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('penelitian') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-microscope mr-3"></i>
-                        Penelitian
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('publikasi') ?>" class="sidebar-item active flex items-center px-4 py-3 rounded-lg text-white font-medium">
-                        <i class="fas fa-book-open mr-3"></i>
-                        Publikasi
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('hki') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-lightbulb mr-3"></i>
-                        HKI
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- User Profile -->
-        <div class="p-4 border-t">
-            <div class="flex items-center">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full mr-3 border-2 border-indigo-100">
-                <div>
-                    <p class="font-medium text-gray-800">Prof. Dr. Andi Wijaya</p>
-                    <p class="text-xs text-gray-500">Dosen Fakultas Kedokteran</p>
-                </div>
-            </div>
-            <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200 flex items-center justify-center">
-                <a href="<?= site_url('homepage') ?>">
-                <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                </a>
-            </button>
-        </div>
-    </div>
+    <!-- Include Sidebar -->
+    <?= view('partials/sidebar') ?>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden main-content">
@@ -282,14 +348,29 @@
         <main class="flex-1 overflow-y-auto p-6">
             <!-- Header and Add Button -->
             <div class="mb-6">
-                <div class="flex justify-between items-center mb-3">
-                    <h1 class="text-2xl font-bold text-gray-800">Daftar Publikasi</h1>
+                <div class="flex flex-col">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800">Daftar Publikasi</h1>
+                            <p class="text-gray-600 mt-1">Kelola semua publikasi dosen di sini</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <?php if ($user['role'] === 'dosen' || $user['role'] === 'admin') : ?>
+                            <button id="addPublicationBtn" class="action-btn bg-indigo-600 text-white hover:bg-indigo-700">
+                                <i class="fas fa-plus"></i>
+                                Tambah Publikasi
+                            </button>
+                        <?php endif; ?>
+
+                        <button id="exportExcelBtn" class="action-btn bg-green-600 text-white hover:bg-green-700">
+                            <i class="fas fa-file-excel"></i>
+                            Export to Excel
+                        </button>
+                    </div>
                 </div>
-                <p class="text-gray-600 mb-4">Kelola semua publikasi dosen di sini</p>
-                <button id="addPublicationBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center transition transform hover:-translate-y-0.5">
-                    <i class="fas fa-plus mr-2"></i>
-                    Tambah Publikasi
-                </button>
             </div>
 
             <!-- Filters -->
@@ -321,9 +402,12 @@
                     <div>
                         <select id="filterYear" class="filter-input w-full">
                             <option value="">Semua Tahun</option>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
-                            <option value="2021">2021</option>
+                            <?php
+                            $currentYear = date('Y');
+                            for ($year = $currentYear; $year >= $currentYear - 5; $year--) {
+                                echo "<option value='$year'>$year</option>";
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -342,11 +426,13 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Aksi</th>
+                                <?php if ($user['role'] === 'dosen' || $user['role'] === 'admin') : ?>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Aksi</th>
+                                <?php endif; ?>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <!-- Data akan diisi oleh JavaScript -->
+                        <tbody class="bg-white divide-y divide-gray-200" id="publicationTableBody">
+                            <!-- Data will be filled by JavaScript -->
                         </tbody>
                     </table>
                 </div>
@@ -355,16 +441,14 @@
             <!-- Pagination -->
             <div class="flex flex-col md:flex-row justify-between items-center mt-4">
                 <div class="text-sm text-gray-500 mb-4 md:mb-0">
-                    Menampilkan <span id="startItem">1</span> sampai <span id="endItem">5</span> dari <span id="totalItems">12</span> publikasi
+                    Menampilkan <span id="startItem">1</span> sampai <span id="endItem">5</span> dari <span id="totalItems">0</span> publikasi
                 </div>
                 <div class="flex space-x-2">
-                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300" id="prevPage">
                         <i class="fas fa-chevron-left"></i>
                     </button>
-                    <button class="px-3 py-1 bg-indigo-600 text-white rounded">1</button>
-                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">2</button>
-                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">3</button>
-                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                    <button class="px-3 py-1 bg-indigo-600 text-white rounded" id="currentPage">1</button>
+                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300" id="nextPage">
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
@@ -448,11 +532,13 @@
                         <div>
                             <label for="publicationAuthors" class="block text-sm font-medium text-gray-700 mb-1">Daftar Penulis*</label>
                             <select id="publicationAuthors" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" multiple="multiple" required>
-                                <option value="1">Prof. Dr. Andi Wijaya</option>
-                                <option value="2">Dr. Budi Santoso, M.Kom</option>
-                                <option value="3">Dr. Citra Dewi, S.T., M.T.</option>
-                                <option value="4">Dian Pratama, S.Si., M.Si.</option>
-                                <option value="5">Eka Putra, S.Kom., M.Kom.</option>
+                                <?php if (isset($dosen) && is_array($dosen)): ?>
+                                    <?php foreach ($dosen as $d) : ?>
+                                        <option value="<?= $d['id'] ?>"><?= $d['nama'] ?></option>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <option value="">Tidak ada data dosen</option>
+                                <?php endif; ?>
                             </select>
                             <p class="text-xs text-gray-500 mt-1">Anda bisa memilih lebih dari satu penulis</p>
                         </div>
@@ -558,15 +644,76 @@
                                 <p id="detailFileSize" class="text-xs text-gray-500"></p>
                             </div>
                         </div>
-                        <button id="downloadFileBtn" class="px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm">
-                            <i class="fas fa-download mr-1"></i> Unduh
-                        </button>
+                        <div class="flex space-x-2">
+                            <button id="previewFileBtn" class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm">
+                                <i class="fas fa-eye mr-1"></i> Preview
+                            </button>
+                            <button id="downloadFileBtn" class="px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm">
+                                <i class="fas fa-download mr-1"></i> Unduh
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="flex justify-end space-x-3 pt-4 border-t">
                     <button id="editPublicationBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Edit</button>
                     <button id="closeDetail" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Document Modal -->
+    <div class="modal" id="previewModal">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-6xl h-[90vh]">
+            <div class="px-6 py-4 border-b flex justify-between items-center bg-indigo-600 text-white">
+                <h3 class="text-lg font-semibold" id="previewTitle">Preview Dokumen</h3>
+                <button id="closePreviewModal" class="text-white hover:text-indigo-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4 h-full flex flex-col">
+                <!-- Toolbar -->
+                <div class="flex justify-between items-center mb-4 bg-gray-100 p-2 rounded-lg">
+                    <div class="flex space-x-2">
+                        <button id="zoomInBtn" class="p-2 bg-white rounded-lg hover:bg-gray-200">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button id="zoomOutBtn" class="p-2 bg-white rounded-lg hover:bg-gray-200">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <button id="fitWidthBtn" class="p-2 bg-white rounded-lg hover:bg-gray-200">
+                            <i class="fas fa-arrows-alt-h"></i> Fit Width
+                        </button>
+                        <button id="fitPageBtn" class="p-2 bg-white rounded-lg hover:bg-gray-200">
+                            <i class="fas fa-expand"></i> Fit Page
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span id="pageInfo" class="text-sm text-gray-600">Page 1 of 1</span>
+                        <button id="prevPageBtn" class="p-2 bg-white rounded-lg hover:bg-gray-200 disabled:opacity-50" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button id="nextPageBtn" class="p-2 bg-white rounded-lg hover:bg-gray-200 disabled:opacity-50" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Document Viewer Container -->
+                <div id="documentViewer" class="flex-1 border rounded-lg overflow-hidden relative">
+                    <div class="absolute inset-0 flex items-center justify-center bg-gray-100">
+                        <div class="text-center">
+                            <i class="fas fa-spinner fa-spin text-4xl text-indigo-500 mb-3"></i>
+                            <p class="text-gray-600">Memuat dokumen...</p>
+                        </div>
+                    </div>
+
+                    <!-- PDF Viewer (canvas based) -->
+                    <div id="pdfViewer" class="hidden w-full h-full"></div>
+
+                    <!-- Word Viewer (will be shown for Word files) -->
+                    <div id="wordViewer" class="hidden w-full h-full"></div>
                 </div>
             </div>
         </div>
@@ -601,142 +748,19 @@
         </div>
     </div>
 
+    <!-- Include Sidebar Script -->
+    <script src="<?= base_url('js/sidebar-script.js') ?>"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        // Sample data for publications
-        let publications = [{
-                id: '1',
-                title: 'Pengaruh Teknologi Blockchain pada Sistem Keamanan Data',
-                authors: [{
-                        id: '1',
-                        name: 'Prof. Dr. Andi Wijaya'
-                    },
-                    {
-                        id: '3',
-                        name: 'Dr. Citra Dewi, S.T., M.T.'
-                    }
-                ],
-                date: '2023-05-15',
-                category: 'karya-ilmiah',
-                categoryText: 'Publikasi Karya Ilmiah',
-                type: 'artikel',
-                typeText: 'Artikel',
-                pages: 12,
-                publisher: 'Jurnal Teknologi Informasi',
-                isbn: '978-602-03-7983-5',
-                fileName: 'blockchain-security.pdf',
-                fileSize: '2.4 MB',
-                fileType: 'pdf'
-            },
-            {
-                id: '2',
-                title: 'Artificial Intelligence dalam Diagnosa Medis',
-                authors: [{
-                    id: '1',
-                    name: 'Prof. Dr. Andi Wijaya'
-                }],
-                date: '2023-03-22',
-                category: 'buku-ilmiah',
-                categoryText: 'Publikasi Buku Ilmiah',
-                type: 'buku',
-                typeText: 'Buku',
-                pages: 245,
-                publisher: 'Penerbit Ilmu Komputer',
-                isbn: '978-602-8511-23-4',
-                fileName: 'ai-diagnosa-medis.docx',
-                fileSize: '5.7 MB',
-                fileType: 'word'
-            },
-            {
-                id: '3',
-                title: 'Implementasi IoT pada Smart City',
-                authors: [{
-                        id: '2',
-                        name: 'Dr. Budi Santoso, M.Kom'
-                    },
-                    {
-                        id: '4',
-                        name: 'Dian Pratama, S.Si., M.Si.'
-                    }
-                ],
-                date: '2023-07-10',
-                category: 'karya-ilmiah',
-                categoryText: 'Publikasi Karya Ilmiah',
-                type: 'artikel',
-                typeText: 'Artikel',
-                pages: 8,
-                publisher: 'Majalah Teknologi',
-                isbn: '',
-                fileName: 'iot-smart-city.pdf',
-                fileSize: '1.8 MB',
-                fileType: 'pdf'
-            },
-            {
-                id: '4',
-                title: 'Pengembangan Sistem Informasi Manajemen Rumah Sakit',
-                authors: [{
-                        id: '1',
-                        name: 'Prof. Dr. Andi Wijaya'
-                    },
-                    {
-                        id: '5',
-                        name: 'Eka Putra, S.Kom., M.Kom.'
-                    }
-                ],
-                date: '2022-11-05',
-                category: 'karya-ilmiah',
-                categoryText: 'Publikasi Karya Ilmiah',
-                type: 'artikel',
-                typeText: 'Artikel',
-                pages: 15,
-                publisher: 'Jurnal Sistem Informasi',
-                isbn: '',
-                fileName: 'sistem-informasi-rs.pdf',
-                fileSize: '3.2 MB',
-                fileType: 'pdf'
-            },
-            {
-                id: '5',
-                title: 'Machine Learning untuk Prediksi Penyakit Jantung',
-                authors: [{
-                    id: '3',
-                    name: 'Dr. Citra Dewi, S.T., M.T.'
-                }],
-                date: '2021-09-18',
-                category: 'buku-ilmiah',
-                categoryText: 'Publikasi Buku Ilmiah',
-                type: 'buku',
-                typeText: 'Buku',
-                pages: 320,
-                publisher: 'Penerbit Kesehatan',
-                isbn: '978-602-8511-45-6',
-                fileName: 'ml-penyakit-jantung.docx',
-                fileSize: '7.1 MB',
-                fileType: 'word'
-            }
-        ];
-
-        // Initialize sidebar for mobile
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        const openSidebar = document.getElementById('openSidebar');
-        const closeSidebar = document.getElementById('closeSidebar');
-
-        openSidebar.addEventListener('click', () => {
-            sidebar.classList.add('active');
-            overlay.style.display = 'block';
-        });
-
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.style.display = 'none';
-        });
-
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.style.display = 'none';
-        });
+        // Inisialisasi variabel
+        let currentPage = 1;
+        const itemsPerPage = 5;
+        let publications = [];
+        let filteredPublications = [];
+        let publicationToDelete = null;
+        const currentUserId = <?= $user['id'] ?>;
+        const currentUserRole = '<?= $user['role'] ?>';
 
         // Initialize Select2 for authors
         $(document).ready(function() {
@@ -748,6 +772,22 @@
             // Update selected authors display
             $('#publicationAuthors').on('change', function() {
                 updateSelectedAuthors();
+            });
+
+            // Load initial data
+            loadPublications();
+
+            // Export to Excel button
+            $('#exportExcelBtn').click(function() {
+                const btn = $(this);
+                btn.html('<i class="fas fa-spinner fa-spin mr-2"></i> Membuat Excel...');
+                btn.prop('disabled', true);
+
+                setTimeout(() => {
+                    window.location.href = '/publikasi/export';
+                    btn.html('<i class="fas fa-file-excel mr-2"></i> Export to Excel');
+                    btn.prop('disabled', false);
+                }, 500);
             });
         });
 
@@ -834,13 +874,13 @@
                 // Validate file type
                 const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
                 if (!validTypes.includes(file.type)) {
-                    alert('Format file tidak didukung. Harap unggah file PDF atau Word.');
+                    showToast('Format file tidak didukung. Harap unggah file PDF atau Word.', 'error');
                     return;
                 }
 
                 // Validate file size (max 10MB)
                 if (file.size > 10 * 1024 * 1024) {
-                    alert('Ukuran file terlalu besar. Maksimal 10MB.');
+                    showToast('Ukuran file terlalu besar. Maksimal 10MB.', 'error');
                     return;
                 }
 
@@ -877,9 +917,11 @@
         // Modal functions
         const publicationModal = document.getElementById('publicationModal');
         const detailModal = document.getElementById('detailModal');
+        const previewModal = document.getElementById('previewModal');
         const confirmationModal = document.getElementById('confirmationModal');
         const closeModal = document.getElementById('closeModal');
         const closeDetailModal = document.getElementById('closeDetailModal');
+        const closePreviewModal = document.getElementById('closePreviewModal');
         const closeConfirmationModal = document.getElementById('closeConfirmationModal');
         const cancelPublication = document.getElementById('cancelPublication');
         const closeDetail = document.getElementById('closeDetail');
@@ -888,8 +930,6 @@
         const addPublicationBtn = document.getElementById('addPublicationBtn');
         const publicationForm = document.getElementById('publicationForm');
         const searchInput = document.getElementById('searchInput');
-
-        let publicationToDelete = null;
 
         function openModal() {
             publicationModal.classList.add('active');
@@ -912,6 +952,19 @@
             document.body.style.overflow = '';
         }
 
+        function openPreviewModal() {
+            previewModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePreviewModalFunc() {
+            previewModal.classList.remove('active');
+            document.body.style.overflow = '';
+            pdfDoc = null;
+            currentPageNum = 1;
+            currentScale = 1.0;
+        }
+
         function openConfirmationModal(pubId) {
             publicationToDelete = pubId;
             confirmationModal.classList.add('active');
@@ -926,6 +979,7 @@
 
         closeModal.addEventListener('click', closeModalFunc);
         closeDetailModal.addEventListener('click', closeDetailModalFunc);
+        closePreviewModal.addEventListener('click', closePreviewModalFunc);
         closeConfirmationModal.addEventListener('click', closeConfirmationModalFunc);
         cancelPublication.addEventListener('click', closeModalFunc);
         closeDetail.addEventListener('click', closeDetailModalFunc);
@@ -940,6 +994,7 @@
 
         addPublicationBtn.addEventListener('click', function() {
             document.getElementById('modalTitle').textContent = 'Tambah Publikasi Baru';
+            resetForm();
             openModal();
         });
 
@@ -967,43 +1022,73 @@
         document.getElementById('filterYear').addEventListener('change', applyFilters);
         searchInput.addEventListener('input', applyFilters);
 
+        // Pagination functions
+        document.getElementById('prevPage').addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPublications();
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', function() {
+            const totalPages = Math.ceil(filteredPublications.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPublications();
+            }
+        });
+
         // Render publications table
         function renderPublications(searchTerm = '', categoryFilter = '', typeFilter = '', yearFilter = '') {
-            const tbody = document.querySelector('tbody');
+            const tbody = document.getElementById('publicationTableBody');
             tbody.innerHTML = '';
 
-            let filteredPublications = [...publications];
+            filteredPublications = [...publications];
 
             // Apply search
             if (searchTerm) {
                 filteredPublications = filteredPublications.filter(pub =>
-                    pub.title.toLowerCase().includes(searchTerm) ||
-                    pub.authors.some(author => author.name.toLowerCase().includes(searchTerm))
+                    pub.judul.toLowerCase().includes(searchTerm) ||
+                    pub.penulis.toLowerCase().includes(searchTerm)
                 );
             }
 
             // Apply filters
             if (categoryFilter) {
-                filteredPublications = filteredPublications.filter(pub => pub.category === categoryFilter);
+                filteredPublications = filteredPublications.filter(pub => pub.kategori === categoryFilter);
             }
 
             if (typeFilter) {
-                filteredPublications = filteredPublications.filter(pub => pub.type === typeFilter);
+                filteredPublications = filteredPublications.filter(pub => pub.jenis === typeFilter);
             }
 
             if (yearFilter) {
-                filteredPublications = filteredPublications.filter(pub => pub.date.startsWith(yearFilter));
+                filteredPublications = filteredPublications.filter(pub => {
+                    const pubYear = new Date(pub.tanggal_terbit).getFullYear().toString();
+                    return pubYear === yearFilter;
+                });
             }
 
             // Update pagination info
-            document.getElementById('totalItems').textContent = filteredPublications.length;
-            document.getElementById('startItem').textContent = 1;
-            document.getElementById('endItem').textContent = filteredPublications.length;
+            const totalItems = filteredPublications.length;
+            document.getElementById('totalItems').textContent = totalItems;
+
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const startItem = (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+            document.getElementById('startItem').textContent = startItem;
+            document.getElementById('endItem').textContent = endItem;
+            document.getElementById('currentPage').textContent = currentPage;
+
+            // Disable/enable pagination buttons
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage === totalPages;
 
             if (filteredPublications.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                        <td colspan="${currentUserRole === 'admin' || currentUserRole === 'dosen' ? '8' : '7'}" class="px-6 py-4 text-center text-gray-500">
                             Tidak ada data publikasi yang ditemukan
                         </td>
                     </tr>
@@ -1011,47 +1096,53 @@
                 return;
             }
 
-            filteredPublications.forEach((pub, index) => {
+            // Paginate the results
+            const paginatedPublications = filteredPublications.slice(startItem - 1, endItem);
+
+            paginatedPublications.forEach((pub, index) => {
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-gray-50';
 
-                // Format authors names (just show first author if multiple)
-                let authorsDisplay = pub.authors[0].name;
-                if (pub.authors.length > 1) {
-                    authorsDisplay += ` +${pub.authors.length - 1}`;
-                }
-
                 // Format date
-                const dateObj = new Date(pub.date);
+                const dateObj = new Date(pub.tanggal_terbit);
                 const formattedDate = dateObj.toLocaleDateString('id-ID', {
                     day: 'numeric',
                     month: 'short',
                     year: 'numeric'
                 });
 
+                // Get category and type text
+                const categoryText = pub.kategori === 'karya-ilmiah' ? 'Publikasi Karya Ilmiah' : 'Publikasi Buku Ilmiah';
+                const typeText = pub.jenis === 'artikel' ? 'Artikel' :
+                    pub.jenis === 'buku' ? 'Buku' : 'Majalah';
+
                 // File icon
                 let fileIcon = '';
-                if (pub.fileType === 'pdf') {
+                if (pub.file_path && pub.file_path.toLowerCase().endsWith('.pdf')) {
                     fileIcon = '<i class="fas fa-file-pdf text-red-500"></i>';
                 } else {
                     fileIcon = '<i class="fas fa-file-word text-blue-500"></i>';
                 }
 
+                // Check if current user is the creator
+                const isCreator = pub.created_by == currentUserId;
+
                 row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${index + 1}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${startItem + index}</td>
                     <td class="px-6 py-4">
-                        <div class="text-sm font-medium text-gray-900">${pub.title}</div>
-                        <div class="text-xs text-gray-500 mt-1">${pub.publisher}</div>
+                        <div class="text-sm font-medium text-gray-900">${pub.judul}</div>
+                        <div class="text-xs text-gray-500 mt-1">${pub.penerbit}</div>
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-500">${authorsDisplay}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${pub.penulis}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formattedDate}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${pub.categoryText}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${pub.typeText}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${categoryText}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${typeText}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <button class="text-indigo-600 hover:text-indigo-900 view-file" data-id="${pub.id}">
                             ${fileIcon} Lihat
                         </button>
                     </td>
+                    ${currentUserRole === 'admin' || isCreator ? `
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium table-row-actions">
                         <button class="text-indigo-600 hover:text-indigo-900 mr-3 edit-pub" data-id="${pub.id}" title="Edit">
                             <i class="fas fa-edit"></i>
@@ -1060,6 +1151,7 @@
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
+                    ` : ''}
                 `;
 
                 tbody.appendChild(row);
@@ -1088,35 +1180,76 @@
             });
         }
 
+        // Load publications from server
+        function loadPublications() {
+            let url = currentUserRole === 'admin' ? '/publikasi/admin' : '/publikasi';
+
+            // Show loading state
+            $('#publicationTableBody').html('<tr><td colspan="8" class="px-6 py-4 text-center">Memuat data...</td></tr>');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response && response.status === 'success' && Array.isArray(response.data)) {
+                        publications = response.data;
+                        renderPublications();
+                    } else {
+                        console.error('Invalid response format:', response);
+                        showToast('Gagal memuat data publikasi', 'error');
+                        $('#publicationTableBody').html('<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">Gagal memuat data publikasi</td></tr>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading publications:', xhr.responseText);
+                    showToast('Gagal memuat data publikasi: ' + error, 'error');
+                    $('#publicationTableBody').html('<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">Gagal memuat data publikasi</td></tr>');
+                }
+            });
+        }
+
         // Edit publication
         function editPublication(pubId) {
-            const pub = publications.find(p => p.id === pubId);
+            const pub = publications.find(p => p.id == pubId);
             if (pub) {
                 document.getElementById('modalTitle').textContent = 'Edit Publikasi';
                 document.getElementById('publicationId').value = pub.id;
-                document.getElementById('publicationTitle').value = pub.title;
-                document.getElementById('publicationCategory').value = pub.category;
-                document.getElementById('publicationType').value = pub.type;
-                document.getElementById('publicationDate').value = pub.date;
-                document.getElementById('publicationPages').value = pub.pages;
-                document.getElementById('publicationPublisher').value = pub.publisher;
+                document.getElementById('publicationTitle').value = pub.judul;
+                document.getElementById('publicationCategory').value = pub.kategori;
+                document.getElementById('publicationType').value = pub.jenis;
+                document.getElementById('publicationDate').value = pub.tanggal_terbit;
+                document.getElementById('publicationPages').value = pub.jumlah_halaman;
+                document.getElementById('publicationPublisher').value = pub.penerbit;
                 document.getElementById('publicationISBN').value = pub.isbn;
 
                 // Set authors
-                const authorIds = pub.authors.map(a => a.id);
-                $('#publicationAuthors').val(authorIds).trigger('change');
+                $.ajax({
+                    url: `/publikasi/${pubId}/penulis`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(authors) {
+                        const authorIds = authors.map(a => a.id.toString());
+                        $('#publicationAuthors').val(authorIds).trigger('change');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading authors:', error);
+                    }
+                });
 
-                // Simulate file upload (in real app, this would be handled differently)
-                fileName.textContent = pub.fileName;
-                fileSize.textContent = pub.fileSize;
+                // Set file info
+                if (pub.file_path) {
+                    fileName.textContent = pub.file_path;
+                    fileSize.textContent = formatFileSize(pub.file_size);
 
-                if (pub.fileType === 'pdf') {
-                    filePreview.querySelector('i').className = 'fas fa-file-pdf text-red-500 text-2xl mr-3';
-                } else {
-                    filePreview.querySelector('i').className = 'fas fa-file-word text-blue-500 text-2xl mr-3';
+                    if (pub.file_path.toLowerCase().endsWith('.pdf')) {
+                        filePreview.querySelector('i').className = 'fas fa-file-pdf text-red-500 text-2xl mr-3';
+                    } else {
+                        filePreview.querySelector('i').className = 'fas fa-file-word text-blue-500 text-2xl mr-3';
+                    }
+
+                    filePreview.classList.remove('hidden');
                 }
-
-                filePreview.classList.remove('hidden');
 
                 openModal();
             }
@@ -1124,20 +1257,41 @@
 
         // Delete publication
         function deletePublication(pubId) {
-            publications = publications.filter(p => p.id !== pubId);
-            renderPublications();
+            $.ajax({
+                url: `/publikasi/${pubId}`,
+                type: 'DELETE',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        showToast('Publikasi berhasil dihapus', 'success');
+                        loadPublications();
+                    } else {
+                        showToast('Gagal menghapus publikasi: ' + response.message, 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showToast('Terjadi kesalahan saat menghapus publikasi', 'error');
+                    console.error('Error deleting publication:', error);
+                }
+            });
         }
 
         // View publication details
         function viewPublication(pubId) {
-            const pub = publications.find(p => p.id === pubId);
+            const pub = publications.find(p => p.id == pubId);
             if (pub) {
-                document.getElementById('detailTitle').textContent = pub.title;
-                document.getElementById('detailCategory').textContent = pub.categoryText;
-                document.getElementById('detailType').textContent = pub.typeText;
+                document.getElementById('detailTitle').textContent = pub.judul;
+
+                // Set category and type
+                const categoryText = pub.kategori === 'karya-ilmiah' ? 'Publikasi Karya Ilmiah' : 'Publikasi Buku Ilmiah';
+                const typeText = pub.jenis === 'artikel' ? 'Artikel' :
+                    pub.jenis === 'buku' ? 'Buku' : 'Majalah';
+
+                document.getElementById('detailCategory').textContent = categoryText;
+                document.getElementById('detailType').textContent = typeText;
 
                 // Format date
-                const dateObj = new Date(pub.date);
+                const dateObj = new Date(pub.tanggal_terbit);
                 const formattedDate = dateObj.toLocaleDateString('id-ID', {
                     day: 'numeric',
                     month: 'long',
@@ -1145,26 +1299,36 @@
                 });
                 document.getElementById('detailDate').textContent = formattedDate;
 
-                document.getElementById('detailPublisher').textContent = pub.publisher;
-                document.getElementById('detailPages').textContent = pub.pages;
+                document.getElementById('detailPublisher').textContent = pub.penerbit;
+                document.getElementById('detailPages').textContent = pub.jumlah_halaman;
                 document.getElementById('detailISBN').textContent = pub.isbn || '-';
 
-                // Set authors
-                const authorsContainer = document.getElementById('detailAuthors');
-                authorsContainer.innerHTML = '';
-                pub.authors.forEach(author => {
-                    authorsContainer.innerHTML += `
-                        <span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded">${author.name}</span>
-                    `;
+                // Set authors (need to fetch from server)
+                $.ajax({
+                    url: `/publikasi/${pubId}/penulis`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(authors) {
+                        const authorsContainer = document.getElementById('detailAuthors');
+                        authorsContainer.innerHTML = '';
+                        authors.forEach(author => {
+                            authorsContainer.innerHTML += `
+                                <span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded">${author.nama}</span>
+                            `;
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading authors:', error);
+                    }
                 });
 
                 // Set file info
-                document.getElementById('detailFileName').textContent = pub.fileName;
-                document.getElementById('detailFileSize').textContent = pub.fileSize;
+                document.getElementById('detailFileName').textContent = pub.file_path;
+                document.getElementById('detailFileSize').textContent = formatFileSize(pub.file_size);
 
                 // Change file icon based on type
                 const fileIcon = document.querySelector('#detailFile i');
-                if (pub.fileType === 'pdf') {
+                if (pub.file_path && pub.file_path.toLowerCase().endsWith('.pdf')) {
                     fileIcon.className = 'fas fa-file-pdf text-red-500 text-2xl mr-3';
                 } else {
                     fileIcon.className = 'fas fa-file-word text-blue-500 text-2xl mr-3';
@@ -1172,81 +1336,328 @@
 
                 // Set download button
                 document.getElementById('downloadFileBtn').setAttribute('data-id', pub.id);
+                document.getElementById('previewFileBtn').setAttribute('data-id', pub.id);
 
-                // Set edit button
-                document.getElementById('editPublicationBtn').setAttribute('data-id', pub.id);
+                // Set edit button (only show if user is creator or admin)
+                const editBtn = document.getElementById('editPublicationBtn');
+                if (pub.created_by == currentUserId || currentUserRole === 'admin') {
+                    editBtn.style.display = 'inline-flex';
+                    editBtn.setAttribute('data-id', pub.id);
+                } else {
+                    editBtn.style.display = 'none';
+                }
 
                 openDetailModal();
             }
         }
 
+        // Preview Document Functionality
+        const documentViewer = document.getElementById('documentViewer');
+        const pdfViewer = document.getElementById('pdfViewer');
+        const wordViewer = document.getElementById('wordViewer');
+        const previewTitle = document.getElementById('previewTitle');
+        const downloadFromPreviewBtn = document.getElementById('downloadFromPreviewBtn');
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+        const fitWidthBtn = document.getElementById('fitWidthBtn');
+        const fitPageBtn = document.getElementById('fitPageBtn');
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+        const pageInfo = document.getElementById('pageInfo');
+
+        let currentPreviewPubId = null;
+        let pdfDoc = null;
+        let currentPageNum = 1;
+        let currentScale = 1.0;
+
+        // Event listener untuk preview button di detail modal
+        document.getElementById('previewFileBtn').addEventListener('click', function() {
+            const pubId = this.getAttribute('data-id');
+            currentPreviewPubId = pubId;
+            const pub = publications.find(p => p.id == pubId);
+
+            if (pub) {
+                previewTitle.textContent = `Preview: ${pub.judul}`;
+                openPreviewModal();
+                loadDocumentForPreview(pub);
+            }
+        });
+
+        // Event listener untuk download dari preview modal
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.id === 'downloadFromPreviewBtn') {
+                if (currentPreviewPubId) {
+                    window.location.href = `/publikasi/download/${currentPreviewPubId}`;
+                }
+            }
+        });
+
+        // Fungsi untuk memuat dokumen untuk preview
+        function loadDocumentForPreview(pub) {
+            // Reset viewer
+            pdfViewer.classList.add('hidden');
+            wordViewer.classList.add('hidden');
+
+            // Tampilkan loading state
+            documentViewer.querySelector('.absolute').classList.remove('hidden');
+
+            // Ambil data preview dari server
+            $.ajax({
+                url: `/publikasi/preview/${pub.id}`,
+                type: 'GET',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        if (response.type === 'pdf') {
+                            // Load PDF
+                            loadPDFForPreview(response.data, pub.file_path);
+                        } else if (response.type === 'word') {
+                            // Untuk file Word, tampilkan pesan dan tombol download
+                            documentViewer.querySelector('.absolute').classList.add('hidden');
+                            wordViewer.classList.remove('hidden');
+                            wordViewer.innerHTML = `
+                                <div class="text-center max-w-md p-6">
+                                    <i class="fas fa-file-word text-blue-500 text-5xl mb-4"></i>
+                                    <h4 class="text-xl font-semibold mb-2">Dokumen Word</h4>
+                                    <p class="text-gray-600 mb-2">${response.filename}</p>
+                                    <p class="text-gray-500 text-sm mb-4">${formatFileSize(response.size)}</p>
+                                    <button id="downloadFromPreviewBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                        <i class="fas fa-download mr-2"></i> Unduh Dokumen
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        showErrorInPreview(response.message || 'Gagal memuat dokumen');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showErrorInPreview('Terjadi kesalahan saat memuat dokumen');
+                }
+            });
+        }
+
+        // Fungsi untuk memuat PDF (menggunakan PDF.js)
+        function loadPDFForPreview(pdfData, filename) {
+            // Load PDF menggunakan PDF.js
+            pdfjsLib = window['pdfjs-dist/build/pdf'];
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+
+            // Convert base64 to Uint8Array
+            const binaryString = atob(pdfData);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+
+            // Loading PDF
+            const loadingTask = pdfjsLib.getDocument({
+                data: bytes
+            });
+
+            loadingTask.promise.then(function(pdf) {
+                pdfDoc = pdf;
+                documentViewer.querySelector('.absolute').classList.add('hidden');
+                pdfViewer.classList.remove('hidden');
+
+                // Update page info
+                pageInfo.textContent = `Page 1 of ${pdf.numPages}`;
+
+                // Enable/disable navigation buttons
+                prevPageBtn.disabled = true;
+                nextPageBtn.disabled = pdf.numPages <= 1;
+
+                // Render first page
+                renderPDFPage(1);
+
+            }).catch(function(error) {
+                console.error('Error loading PDF:', error);
+                showErrorInPreview('Gagal memuat dokumen PDF');
+            });
+        }
+
+        function showErrorInPreview(message) {
+            documentViewer.querySelector('.absolute').classList.add('hidden');
+            wordViewer.classList.remove('hidden');
+            wordViewer.innerHTML = `
+                <div class="text-center max-w-md p-6">
+                    <i class="fas fa-exclamation-triangle text-yellow-500 text-5xl mb-4"></i>
+                    <h4 class="text-xl font-semibold mb-2">Gagal Memuat Dokumen</h4>
+                    <p class="text-gray-600 mb-4">${message}</p>
+                    <button id="downloadFromPreviewBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        <i class="fas fa-download mr-2"></i> Unduh Dokumen
+                    </button>
+                </div>
+            `;
+        }
+
+        // Fungsi untuk merender halaman PDF
+        function renderPDFPage(pageNum) {
+            if (!pdfDoc) return;
+
+            currentPageNum = pageNum;
+            pageInfo.textContent = `Page ${pageNum} of ${pdfDoc.numPages}`;
+
+            // Update navigation buttons
+            prevPageBtn.disabled = pageNum <= 1;
+            nextPageBtn.disabled = pageNum >= pdfDoc.numPages;
+
+            // Load the page
+            pdfDoc.getPage(pageNum).then(function(page) {
+                const viewport = page.getViewport({
+                    scale: currentScale
+                });
+
+                // Create canvas for rendering
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                // Clear previous content
+                pdfViewer.innerHTML = '';
+                pdfViewer.appendChild(canvas);
+
+                // Render PDF page
+                page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                });
+            });
+        }
+
+        // Navigation controls
+        prevPageBtn.addEventListener('click', function() {
+            if (pdfDoc && currentPageNum > 1) {
+                renderPDFPage(currentPageNum - 1);
+            }
+        });
+
+        nextPageBtn.addEventListener('click', function() {
+            if (pdfDoc && currentPageNum < pdfDoc.numPages) {
+                renderPDFPage(currentPageNum + 1);
+            }
+        });
+
+        // Zoom controls
+        zoomInBtn.addEventListener('click', function() {
+            if (pdfDoc) {
+                currentScale = Math.min(currentScale + 0.25, 3.0);
+                renderPDFPage(currentPageNum);
+            }
+        });
+
+        zoomOutBtn.addEventListener('click', function() {
+            if (pdfDoc) {
+                currentScale = Math.max(currentScale - 0.25, 0.5);
+                renderPDFPage(currentPageNum);
+            }
+        });
+
+        fitWidthBtn.addEventListener('click', function() {
+            if (pdfDoc) {
+                currentScale = 1.0; // Adjust this based on container width if needed
+                renderPDFPage(currentPageNum);
+            }
+        });
+
+        fitPageBtn.addEventListener('click', function() {
+            if (pdfDoc) {
+                currentScale = 1.0;
+                renderPDFPage(currentPageNum);
+            }
+        });
+
         // Form submission
         publicationForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const pubId = document.getElementById('publicationId').value;
-            const title = document.getElementById('publicationTitle').value;
-            const category = document.getElementById('publicationCategory').value;
-            const categoryText = document.getElementById('publicationCategory').options[document.getElementById('publicationCategory').selectedIndex].text;
-            const type = document.getElementById('publicationType').value;
-            const typeText = document.getElementById('publicationType').options[document.getElementById('publicationType').selectedIndex].text;
-            const date = document.getElementById('publicationDate').value;
-            const pages = document.getElementById('publicationPages').value;
-            const publisher = document.getElementById('publicationPublisher').value;
-            const isbn = document.getElementById('publicationISBN').value;
+            // Show loading state
+            const saveBtn = document.getElementById('savePublication');
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+            saveBtn.disabled = true;
 
-            // Get selected authors
+            const pubId = document.getElementById('publicationId').value;
+            const formData = new FormData();
+
+            // Hanya tambahkan field yang diubah atau diperlukan
+            if (pubId) {
+                formData.append('_method', 'PUT'); // Untuk method override
+            }
+
+            // Tambahkan semua field wajib
+            formData.append('judul', document.getElementById('publicationTitle').value);
+            formData.append('kategori', document.getElementById('publicationCategory').value);
+            formData.append('jenis', document.getElementById('publicationType').value);
+            formData.append('tanggal_terbit', document.getElementById('publicationDate').value);
+            formData.append('jumlah_halaman', document.getElementById('publicationPages').value);
+            formData.append('penerbit', document.getElementById('publicationPublisher').value);
+
+            // Field opsional
+            const isbn = document.getElementById('publicationISBN').value;
+            if (isbn) formData.append('isbn', isbn);
+
+            // Tambahkan penulis
             const selectedAuthors = $('#publicationAuthors').val() || [];
-            const authors = selectedAuthors.map(id => {
-                const name = $(`#publicationAuthors option[value="${id}"]`).text();
-                return {
-                    id,
-                    name
-                };
+            selectedAuthors.forEach(authorId => {
+                formData.append('penulis[]', authorId);
             });
 
-            // Get file info (in a real app, this would handle actual file upload)
-            let fileInfo = {
-                fileName: 'file.pdf',
-                fileSize: '0 KB',
-                fileType: 'pdf'
-            };
-
-            if (!filePreview.classList.contains('hidden')) {
-                fileInfo.fileName = fileName.textContent;
-                fileInfo.fileSize = fileSize.textContent;
-                fileInfo.fileType = fileName.textContent.includes('.pdf') ? 'pdf' : 'word';
+            // Hanya tambahkan file jika ada file yang dipilih
+            const fileInput = document.getElementById('publicationFile');
+            if (fileInput.files.length > 0) {
+                formData.append('file', fileInput.files[0]);
             }
 
-            const pubData = {
-                id: pubId || Date.now().toString(),
-                title,
-                authors,
-                date,
-                category,
-                categoryText,
-                type,
-                typeText,
-                pages,
-                publisher,
-                isbn,
-                fileName: fileInfo.fileName,
-                fileSize: fileInfo.fileSize,
-                fileType: fileInfo.fileType
-            };
+            const method = pubId ? 'POST' : 'POST'; // Selalu POST karena FormData
+            const url = pubId ? `/publikasi/${pubId}` : '/publikasi';
 
-            // Update or add publication
+            // Tambahkan header untuk PUT request
+            const headers = {};
             if (pubId) {
-                const index = publications.findIndex(p => p.id === pubId);
-                if (index !== -1) {
-                    publications[index] = pubData;
-                }
-            } else {
-                publications.push(pubData);
+                headers['X-HTTP-Method-Override'] = 'PUT';
             }
 
-            renderPublications();
-            closeModalFunc();
+            $.ajax({
+                url: url,
+                type: method,
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: headers,
+                success: function(response) {
+                    saveBtn.innerHTML = 'Simpan Publikasi';
+                    saveBtn.disabled = false;
+
+                    if (response.status === 'success') {
+                        showToast('Publikasi berhasil disimpan', 'success');
+                        loadPublications();
+                        closeModalFunc();
+                    } else {
+                        const errorMsg = response.message || 'Gagal menyimpan publikasi';
+                        showToast(errorMsg, 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    saveBtn.innerHTML = 'Simpan Publikasi';
+                    saveBtn.disabled = false;
+
+                    let errorMsg = 'Terjadi kesalahan saat menyimpan publikasi';
+
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response && response.errors) {
+                            // Format validation errors
+                            errorMsg = Object.values(response.errors).join('<br>');
+                        } else if (response && response.message) {
+                            errorMsg = response.message;
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+
+                    showToast(errorMsg, 'error');
+                }
+            });
         });
 
         // Edit button in detail modal
@@ -1259,17 +1670,23 @@
         // Download button in detail modal
         document.getElementById('downloadFileBtn').addEventListener('click', function() {
             const pubId = this.getAttribute('data-id');
-            const pub = publications.find(p => p.id === pubId);
-            if (pub) {
-                alert(`Ini akan mengunduh file: ${pub.fileName}\n\nDalam implementasi nyata, ini akan mengunduh file dari server.`);
-                // window.location.href = `/download/${pub.id}`;
-            }
+            window.location.href = `/publikasi/download/${pubId}`;
         });
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-            renderPublications();
-
             // ISBN input formatting
             document.getElementById('publicationISBN').addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\D/g, '');

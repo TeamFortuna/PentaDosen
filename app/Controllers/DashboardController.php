@@ -29,6 +29,20 @@ class DashboardController extends Controller
             session()->set('login_activity_logged', true);
         }
 
+        // Ambil parameter filter
+        $filters = [
+            'activity' => $this->request->getGet('activity'),
+            'fakultas' => $this->request->getGet('fakultas'),
+            'jurusan' => $this->request->getGet('jurusan'),
+            'search' => $this->request->getGet('search')
+        ];
+
+        // Jika request AJAX, kembalikan data JSON
+        if ($this->request->isAJAX()) {
+            $logs = $this->activityLogModel->getFilteredLogs($filters, 10);
+            return $this->response->setJSON($logs);
+        }
+
         $data = [
             'title' => 'Dashboard',
             'user' => [
@@ -42,9 +56,11 @@ class DashboardController extends Controller
                 'fakultas' => session()->get('fakultas'),
                 'jurusan' => session()->get('jurusan'),
                 'email' => session()->get('email'),
-                'username' => session()->get('username')
+                'username' => session()->get('username'),
+                'role' => session()->get('role')
             ],
-            'activity_logs' => $this->activityLogModel->getLogsWithUsers(10) // Menggunakan method baru
+            'activity_logs' => $this->activityLogModel->getFilteredLogs($filters, 10),
+            'filters' => $filters
         ];
 
         return view('dashboard', $data);

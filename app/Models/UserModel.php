@@ -22,7 +22,8 @@ class UserModel extends Model
         'username',
         'password',
         'reset_token',
-        'reset_expiry'
+        'reset_expiry',
+        'role' // Tambahkan ini
     ];
 
     // Tambahkan ini untuk mengaktifkan timestamps
@@ -48,5 +49,11 @@ class UserModel extends Model
         return $this->where('username', $usernameOrEmail)
             ->orWhere('email', $usernameOrEmail)
             ->first();
+    }
+
+    // Tambahkan method ini
+    public function getAdminUsers()
+    {
+        return $this->where('role', 'admin')->findAll();
     }
 }
