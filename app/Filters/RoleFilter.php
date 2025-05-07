@@ -11,7 +11,7 @@ class RoleFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         // Jika belum login, redirect ke login
-        if (!session()->get('isLoggedIn')) {
+        if (!session()->get('logged_in')) {
             return redirect()->to('/login');
         }
 
