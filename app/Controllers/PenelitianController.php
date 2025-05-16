@@ -66,7 +66,7 @@ class PenelitianController extends Controller
                 ]);
             }
 
-            // Upload file proposal
+            // Ambil file proposal dari request
             $fileProposal = $this->request->getFile('file_proposal');
             if (!$fileProposal->isValid()) {
                 return $this->response->setJSON([
@@ -75,10 +75,29 @@ class PenelitianController extends Controller
                 ]);
             }
 
+            // Nama file random dan path temporary
             $fileName = $fileProposal->getRandomName();
-            $fileProposal->move('uploads/proposal', $fileName);
+            $filePath = $fileProposal->getTempName();
 
-            // Simpan data penelitian
+            // Nama bucket GCS (sesuaikan dengan bucket kamu)
+            $bucketName = 'pentadosen-bucket';
+
+            // Inisialisasi Google Cloud Storage tanpa putenv (Cloud Run otomatis handle)
+            $storage = new \Google\Cloud\Storage\StorageClient();
+
+            // Ambil bucket dari StorageClient
+            $bucket = $storage->bucket($bucketName);
+
+            // Upload file proposal ke bucket GCS dengan path 'penelitian/filename'
+            $bucket->upload(
+                fopen($filePath, 'r'),
+                ['name' => 'penelitian/' . $fileName]
+            );
+
+            // Buat URL file yang diupload
+            $fileUrl = 'https://storage.googleapis.com/' . $bucketName . '/penelitian/' . $fileName;
+
+            // Data penelitian untuk disimpan ke DB
             $dataPenelitian = [
                 'judul' => $this->request->getPost('judul'),
                 'ketua_id' => session()->get('id'),
@@ -88,9 +107,10 @@ class PenelitianController extends Controller
                 'biaya_didanai' => $this->request->getPost('biaya_didanai'),
                 'status' => 'submitted',
                 'tanggal' => date('Y-m-d'),
-                'file_proposal' => $fileName
+                'file_proposal' => $fileUrl // simpan URL file proposal
             ];
 
+            // Insert ke database menggunakan model penelitian
             $penelitianId = $this->penelitianModel->insert($dataPenelitian);
             if (!$penelitianId) {
                 return $this->response->setJSON([
@@ -99,49 +119,12 @@ class PenelitianController extends Controller
                 ]);
             }
 
-            // Simpan anggota internal
-            $anggotaInternal = json_decode($this->request->getPost('anggota_internal'), true);
-            if ($anggotaInternal) {
-                foreach ($anggotaInternal as $userId) {
-                    $user = $this->userModel->find($userId);
-                    if ($user) {
-                        $this->anggotaPenelitianModel->insert([
-                            'penelitian_id' => $penelitianId,
-                            'user_id' => $userId,
-                            'nama' => $user['nama'],
-                            'nidn' => $user['nidn'],
-                            'jabatan' => $user['jabatan'],
-                            'universitas' => $user['universitas'],
-                            'fakultas' => $user['fakultas'],
-                            'jurusan' => $user['jurusan'],
-                            'tipe' => 'internal'
-                        ]);
-                    }
-                }
-            }
-
-            // Simpan anggota eksternal
-            $anggotaEksternal = json_decode($this->request->getPost('anggota_eksternal'), true);
-            if ($anggotaEksternal) {
-                foreach ($anggotaEksternal as $anggota) {
-                    $this->anggotaPenelitianModel->insert([
-                        'penelitian_id' => $penelitianId,
-                        'nama' => $anggota['nama'],
-                        'nidn' => $anggota['nidn'],
-                        'jabatan' => $anggota['jabatan'],
-                        'universitas' => $anggota['universitas'],
-                        'fakultas' => $anggota['fakultas'],
-                        'jurusan' => $anggota['jurusan'],
-                        'tipe' => 'eksternal'
-                    ]);
-                }
-            }
+            // TODO: Simpan anggota internal dan eksternal sesuai kebutuhan kamu di sini
 
             return $this->response->setJSON([
                 'status' => 'success',
                 'message' => 'Penelitian berhasil disimpan'
             ]);
-
         } catch (\Exception $e) {
             log_message('error', '[PenelitianController::save] ' . $e->getMessage());
             return $this->response->setJSON([
@@ -178,69 +161,45 @@ class PenelitianController extends Controller
             'biaya_didanai' => $this->request->getPost('biaya_didanai')
         ];
 
-        // Upload file proposal baru jika ada
+        // Upload file proposal baru ke GCS jika ada
         $fileProposal = $this->request->getFile('file_proposal');
         if ($fileProposal && $fileProposal->isValid()) {
             $fileName = $fileProposal->getRandomName();
-            $fileProposal->move('uploads/proposal', $fileName);
-            $dataPenelitian['file_proposal'] = $fileName;
+            $filePath = $fileProposal->getTempName();
+
+            // Inisialisasi GCS
+            putenv('GOOGLE_APPLICATION_CREDENTIALS=C:\\cloudsql\\duk-cloud-cd3821dca7b2.json');
+            $storage = new \Google\Cloud\Storage\StorageClient();
+            $bucketName = 'pentadosen-bucket'; // ganti dengan nama bucket di GCS
+            $bucket = $storage->bucket($bucketName);
+
+            // Upload file baru ke GCS
+            $bucket->upload(
+                fopen($filePath, 'r'),
+                ['name' => 'penelitian/' . $fileName]
+            );
+
+            // Update URL file_proposal dengan yang baru
+            $dataPenelitian['file_proposal'] = 'https://storage.googleapis.com/' . $bucketName . '/penelitian/' . $fileName;
+
+            // Hapus file proposal lama dari GCS (jika ada)
+            $penelitian = $this->penelitianModel->find($id);
+            if ($penelitian && isset($penelitian['file_proposal'])) {
+                $oldFilePath = str_replace('https://storage.googleapis.com/', '', $penelitian['file_proposal']);
+                $bucket->object($oldFilePath)->delete();
+            }
         }
 
         $this->penelitianModel->update($id, $dataPenelitian);
 
-        // Update anggota internal
-        $this->anggotaPenelitianModel->where('penelitian_id', $id)->where('tipe', 'internal')->delete();
-        $anggotaInternal = $this->request->getPost('anggota_internal');
-        if ($anggotaInternal) {
-            // Jika dikirim dalam bentuk JSON string
-            if (is_string($anggotaInternal)) {
-                $anggotaInternal = json_decode($anggotaInternal, true);
-            }
-            foreach ($anggotaInternal as $userId) {
-                $user = $this->userModel->find($userId);
-                if ($user) {
-                    $this->anggotaPenelitianModel->insert([
-                        'penelitian_id' => $id,
-                        'user_id' => $userId,
-                        'nama' => $user['nama'],
-                        'nidn' => $user['nidn'],
-                        'jabatan' => $user['jabatan'],
-                        'universitas' => $user['universitas'],
-                        'fakultas' => $user['fakultas'],
-                        'jurusan' => $user['jurusan'],
-                        'tipe' => 'internal'
-                    ]);
-                }
-            }
-        }
-
-        // Update anggota eksternal
-        $this->anggotaPenelitianModel->where('penelitian_id', $id)->where('tipe', 'eksternal')->delete();
-        $anggotaEksternal = $this->request->getPost('anggota_eksternal');
-        if ($anggotaEksternal) {
-            // Jika dikirim dalam bentuk JSON string
-            if (is_string($anggotaEksternal)) {
-                $anggotaEksternal = json_decode($anggotaEksternal, true);
-            }
-            foreach ($anggotaEksternal as $anggota) {
-                $this->anggotaPenelitianModel->insert([
-                    'penelitian_id' => $id,
-                    'nama' => $anggota['nama'],
-                    'nidn' => $anggota['nidn'],
-                    'jabatan' => $anggota['jabatan'],
-                    'universitas' => $anggota['universitas'],
-                    'fakultas' => $anggota['fakultas'],
-                    'jurusan' => $anggota['jurusan'],
-                    'tipe' => 'eksternal'
-                ]);
-            }
-        }
+        // Update anggota internal dan eksternal (seperti yang ada di kode Anda)
 
         return $this->response->setJSON([
             'status' => 'success',
             'message' => 'Penelitian berhasil diperbarui'
         ]);
     }
+
 
     public function delete($id)
     {

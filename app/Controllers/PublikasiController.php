@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\Controller;
 use App\Models\PublikasiModel;
 use App\Models\DosenModel;
+use Google\Cloud\Storage\StorageClient;
 
 class PublikasiController extends Controller
 {
@@ -98,70 +99,106 @@ class PublikasiController extends Controller
 
     public function store()
     {
-        // Validasi input
-        $validation = \Config\Services::validation();
-        $validation->setRules([
-            'judul' => 'required|max_length[255]',
-            'kategori' => 'required|in_list[karya-ilmiah,buku-ilmiah]',
-            'jenis' => 'required|in_list[artikel,buku,majalah]',
-            'tanggal_terbit' => 'required|valid_date',
-            'jumlah_halaman' => 'required|numeric|greater_than[0]',
-            'penerbit' => 'required|max_length[255]',
-            'isbn' => 'permit_empty|max_length[20]',
-            'penulis' => 'required',
-            'file' => 'uploaded[file]|max_size[file,10240]|ext_in[file,pdf,doc,docx]'
-        ]);
+        try {
+            // Validasi input
+            $validation = \Config\Services::validation();
+            $validation->setRules([
+                'judul' => 'required|max_length[255]',
+                'kategori' => 'required|in_list[karya-ilmiah,buku-ilmiah]',
+                'jenis' => 'required|in_list[artikel,buku,majalah]',
+                'tanggal_terbit' => 'required|valid_date',
+                'jumlah_halaman' => 'required|numeric|greater_than[0]',
+                'penerbit' => 'required|max_length[255]',
+                'isbn' => 'permit_empty|max_length[20]',
+                'penulis' => 'required',  // pastikan ini array di frontend
+                'file' => 'uploaded[file]|max_size[file,10240]|ext_in[file,pdf,doc,docx]'
+            ]);
 
-        if (!$validation->withRequest($this->request)->run()) {
+            if (!$validation->withRequest($this->request)->run()) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'errors' => $validation->getErrors()
+                ]);
+            }
+
+            // Ambil file upload
+            $file = $this->request->getFile('file');
+
+            if (!$file->isValid()) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'File tidak valid: ' . $file->getErrorString()
+                ]);
+            }
+
+            // Inisialisasi Google Cloud Storage (GCS)
+            $storage = new \Google\Cloud\Storage\StorageClient();
+            $bucketName = 'pentadosen-bucket';
+            $bucket = $storage->bucket($bucketName);
+
+            // Generate nama file unik untuk simpan di GCS
+            $judul = $this->request->getPost('judul');
+            $judulSlug = url_title($judul, '_', true);
+            $tanggal = date('Ymd_His');
+            $ext = $file->getExtension();
+            $newFileName = $judulSlug . '_' . $tanggal . '.' . $ext;
+
+            // Path folder di bucket GCS
+            $folder = 'publikasi';
+            $objectName = $folder . '/' . $newFileName;
+
+            // Upload file ke GCS
+            $bucket->upload(
+                fopen($file->getTempName(), 'r'),
+                ['name' => $objectName]
+            );
+
+            // Data untuk simpan ke database
+            $dataPublikasi = [
+                'judul' => $judul,
+                'kategori' => $this->request->getPost('kategori'),
+                'jenis' => $this->request->getPost('jenis'),
+                'tanggal_terbit' => $this->request->getPost('tanggal_terbit'),
+                'jumlah_halaman' => $this->request->getPost('jumlah_halaman'),
+                'penerbit' => $this->request->getPost('penerbit'),
+                'isbn' => $this->request->getPost('isbn'),
+                'file_path' => $objectName, // Simpan path relatif untuk referensi
+                'file_size' => $file->getSize(),
+                'created_by' => session()->get('id'),
+                'created_at' => date('Y-m-d H:i:s')
+            ];
+
+            // Ambil array penulis dari request
+            $penulisIds = $this->request->getPost('penulis');
+
+            // Pastikan penulis adalah array (jika frontend kirim string, convert ke array)
+            if (!is_array($penulisIds)) {
+                $penulisIds = [$penulisIds];
+            }
+
+            // Simpan publikasi beserta relasi penulisnya melalui model
+            $result = $this->publikasiModel->addPublikasiWithPenulis($dataPublikasi, $penulisIds);
+
+            if ($result) {
+                return $this->response->setJSON([
+                    'status' => 'success',
+                    'message' => 'Publikasi berhasil ditambahkan'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Gagal menambahkan publikasi'
+                ]);
+            }
+        } catch (\Exception $e) {
+            log_message('error', '[PublikasiController::store] ' . $e->getMessage());
             return $this->response->setJSON([
                 'status' => 'error',
-                'errors' => $validation->getErrors()
+                'message' => 'Terjadi kesalahan server: ' . $e->getMessage()
             ]);
         }
-
-        // Upload file
-        $file = $this->request->getFile('file');
-
-        // Generate filename: judulpublikasi_tanggaldibuat.ext
-        $judul = $this->request->getPost('judul');
-        $judulSlug = url_title($judul, '_', true);
-        $tanggal = date('Ymd');
-        $ext = $file->getExtension();
-        $newName = $judulSlug . '_' . $tanggal . '.' . $ext;
-
-        // Pindahkan file dengan nama baru
-        $file->move(WRITEPATH . 'uploads/publikasi', $newName);
-
-        // Data publikasi
-        $dataPublikasi = [
-            'judul' => $judul,
-            'kategori' => $this->request->getPost('kategori'),
-            'jenis' => $this->request->getPost('jenis'),
-            'tanggal_terbit' => $this->request->getPost('tanggal_terbit'),
-            'jumlah_halaman' => $this->request->getPost('jumlah_halaman'),
-            'penerbit' => $this->request->getPost('penerbit'),
-            'isbn' => $this->request->getPost('isbn'),
-            'file_path' => $newName,
-            'file_size' => $file->getSize(),
-            'created_by' => session()->get('id')
-        ];
-
-        // Penulis
-        $penulisIds = $this->request->getPost('penulis');
-
-        // Simpan ke database
-        if ($this->publikasiModel->addPublikasiWithPenulis($dataPublikasi, $penulisIds)) {
-            return $this->response->setJSON([
-                'status' => 'success',
-                'message' => 'Publikasi berhasil ditambahkan'
-            ]);
-        }
-
-        return $this->response->setJSON([
-            'status' => 'error',
-            'message' => 'Gagal menambahkan publikasi'
-        ]);
     }
+
 
     public function update($id)
     {

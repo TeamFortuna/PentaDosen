@@ -93,6 +93,7 @@ class Autoload extends AutoloadConfig
     public $helpers = [
         'form',
         'url',
-        'activity' // Tambahkan ini
+        'activity',
+        'env' // Tambahkan ini
     ];
 }

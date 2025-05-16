@@ -25,6 +25,11 @@
             color: #334155;
         }
 
+        .sidebar-container {
+            position: relative;
+            z-index: 20;
+        }
+
         .sidebar {
             width: 16rem;
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
@@ -173,6 +178,101 @@
             color: #991b1b;
         }
 
+        /* Notification Styles */
+        .notification-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            width: 320px;
+            max-width: 100%;
+        }
+
+        .notification {
+            position: relative;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            animation: slideIn 0.3s ease-out forwards;
+            display: flex;
+            align-items: center;
+        }
+
+        .notification.success {
+            background-color: var(--success);
+        }
+
+        .notification.error {
+            background-color: var(--danger);
+        }
+
+        .notification.warning {
+            background-color: var(--warning);
+        }
+
+        .notification.info {
+            background-color: var(--primary);
+        }
+
+        .notification-icon {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-message {
+            font-size: 0.875rem;
+        }
+
+        .notification-close {
+            margin-left: 0.75rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .notification.hide {
+            animation: slideOut 0.3s ease-in forwards;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -202,92 +302,29 @@
             .table-row-actions {
                 opacity: 1;
             }
+
+            .notification-container {
+                width: 90%;
+                left: 5%;
+                right: 5%;
+                top: 1rem;
+            }
         }
     </style>
 </head>
 
 <body class="flex h-screen overflow-hidden bg-gray-50">
-    <?php if (ENVIRONMENT === 'development' && isset($debug)): ?>
-    <div class="fixed bottom-0 right-0 bg-gray-800 text-white p-4 m-4 rounded-lg shadow-lg z-50">
-        <h3 class="font-bold mb-2">Debug Info:</h3>
-        <pre class="text-xs">
-User ID: <?= $debug['user_id'] ?? 'null' ?>
-Logged In: <?= $debug['logged_in'] ? 'Yes' : 'No' ?>
-Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
-        </pre>
-    </div>
-    <?php endif; ?>
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
 
     <!-- Overlay (for mobile sidebar) -->
     <div class="overlay" id="overlay" style="display: none;"></div>
 
-    <!-- Sidebar -->
-    <div class="sidebar flex flex-col h-full" id="sidebar">
-        <!-- Logo and Toggle -->
-        <div class="p-4 flex items-center justify-between border-b">
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center text-white mr-3">
-                    <i class="fas fa-flask text-xl"></i>
-                </div>
-                <h1 class="text-xl font-bold text-indigo-600">Penta Dosen</h1>
-            </div>
-            <button class="menu-toggle md:hidden text-gray-500" id="closeSidebar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay"></div>
 
-        <!-- Menu -->
-        <div class="flex-1 overflow-y-auto py-4">
-            <ul class="space-y-1 px-4">
-                <li>
-                    <a href="<?= site_url('dashboard') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-tachometer-alt mr-3"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('kalender') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="far fa-calendar-alt mr-3"></i>
-                        Kalender
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('penelitian') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-microscope mr-3"></i>
-                        Penelitian
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('publikasi') ?>" class="sidebar-item flex items-center px-4 py-3 rounded-lg text-gray-600 hover:text-indigo-600 font-medium">
-                        <i class="fas fa-book-open mr-3"></i>
-                        Publikasi
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('hki') ?>" class="sidebar-item active flex items-center px-4 py-3 rounded-lg text-white font-medium">
-                        <i class="fas fa-lightbulb mr-3"></i>
-                        HKI
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- User Profile -->
-        <div class="p-4 border-t">
-            <div class="flex items-center">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full mr-3 border-2 border-indigo-100">
-                <div>
-                    <p class="font-medium text-gray-800">Prof. Dr. Andi Wijaya</p>
-                    <p class="text-xs text-gray-500">Dosen Fakultas Kedokteran</p>
-                </div>
-            </div>
-            <button class="mt-3 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition duration-200 flex items-center justify-center">
-                <a href="<?= site_url('homepage') ?>">
-                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                </a>
-            </button>
-        </div>
-    </div>
+    <!-- Include Sidebar -->
+    <?= view('partials/sidebar') ?>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden main-content">
@@ -304,8 +341,9 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                     </h2>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition">
+                    <button id="notificationBell" class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition relative">
                         <i class="fas fa-bell"></i>
+                        <span id="notificationCount" class="absolute -top-1 -right-1 bg-indigo-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
                     </button>
                 </div>
             </div>
@@ -390,7 +428,7 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                             <?php if (isset($hkis) && count($hkis) > 0): ?>
                                 <?php foreach ($hkis as $i => $hki): ?>
                                     <tr class="hover:bg-gray-50">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $i+1 ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $i + 1 ?></td>
                                         <td class="px-6 py-4">
                                             <div class="text-sm font-medium text-gray-900 cursor-pointer text-indigo-600 hover:underline hki-title" data-id="<?= $hki['id'] ?>">
                                                 <?= esc($hki['judul']) ?>
@@ -421,12 +459,6 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                                 <tr>
                                     <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                                         Tidak ada data HKI yang ditemukan
-                                        <?php if (ENVIRONMENT === 'development'): ?>
-                                            <br>
-                                            <small class="text-xs text-gray-400">
-                                                Debug: User ID = <?= session()->get('user_id') ?? 'null' ?>
-                                            </small>
-                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>
@@ -533,8 +565,8 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                                 <label for="hkiCreator" class="block text-sm font-medium text-gray-700 mb-1">Nama Pencipta*</label>
                                 <select id="hkiCreator" name="pencipta_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
                                     <option value="">Pilih Pencipta</option>
-                                    <?php if(isset($users) && !empty($users)): ?>
-                                        <?php foreach($users as $dosen): ?>
+                                    <?php if (isset($users) && !empty($users)): ?>
+                                        <?php foreach ($users as $dosen): ?>
                                             <option value="<?= $dosen['id'] ?>"><?= $dosen['nama'] ?> - <?= $dosen['nidn'] ?></option>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
@@ -544,8 +576,8 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                                 <label for="hkiHolder" class="block text-sm font-medium text-gray-700 mb-1">Nama Pemegang*</label>
                                 <select id="hkiHolder" name="pemegang_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" required>
                                     <option value="">Pilih Pemegang</option>
-                                    <?php if(isset($users) && !empty($users)): ?>
-                                        <?php foreach($users as $dosen): ?>
+                                    <?php if (isset($users) && !empty($users)): ?>
+                                        <?php foreach ($users as $dosen): ?>
                                             <option value="<?= $dosen['id'] ?>"><?= $dosen['nama'] ?> - <?= $dosen['nidn'] ?></option>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
@@ -567,7 +599,7 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                                 <p class="text-xs text-gray-500 mt-1">Format file: PDF, Word, atau gambar (maks. 10MB)</p>
                                 <button type="button" id="browseFileBtn" class="mt-2 px-3 py-1 bg-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-200 transition text-sm">Atau Pilih File</button>
                             </div>
-                            <input type="file" id="hkiFile" name="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="hidden">
+                            <input type="file" id="hkiFile" name="file_hki" accept=".pdf,.doc,.docx" class="hidden">
                         </div>
                         <div id="filePreview" class="mt-4 hidden">
                             <div class="flex items-center justify-between bg-gray-50 p-2 rounded-lg">
@@ -691,68 +723,95 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
         </div>
     </div>
 
+    <!-- Notification Events Modal -->
+    <div class="modal" id="notificationModal">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-md">
+            <div class="px-6 py-4 border-b flex justify-between items-center bg-indigo-600 text-white">
+                <h3 class="text-lg font-semibold">Daftar Acara Mendatang</h3>
+                <button id="closeNotificationModal" class="text-white hover:text-indigo-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4 max-h-96 overflow-y-auto" id="eventsList">
+                <!-- Daftar acara akan dimuat di sini -->
+                <div class="text-center py-4 text-gray-500">
+                    <i class="fas fa-spinner fa-spin mr-2"></i> Memuat acara...
+                </div>
+            </div>
+            <div class="px-6 py-3 border-t flex justify-end">
+                <button id="closeNotificationBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Sidebar Script -->
+    <script src="<?= base_url('js/sidebar-script.js') ?>"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        // Initialize sidebar for mobile
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        const openSidebar = document.getElementById('openSidebar');
-        const closeSidebar = document.getElementById('closeSidebar');
+        // Notification System
+        function showNotification(type, title, message, duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
 
-        openSidebar.addEventListener('click', () => {
-            sidebar.classList.add('active');
-            overlay.style.display = 'block';
-        });
+            let icon;
+            switch (type) {
+                case 'success':
+                    icon = 'fa-check-circle';
+                    break;
+                case 'error':
+                    icon = 'fa-exclamation-circle';
+                    break;
+                case 'warning':
+                    icon = 'fa-exclamation-triangle';
+                    break;
+                default:
+                    icon = 'fa-info-circle';
+            }
 
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.style.display = 'none';
-        });
+            notification.innerHTML = `
+                <div class="notification-icon">
+                    <i class="fas ${icon}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <div class="notification-close">
+                    <i class="fas fa-times"></i>
+                </div>
+            `;
 
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.style.display = 'none';
-        });
+            container.appendChild(notification);
 
-        // Initialize Select2 for inventors
-        $(document).ready(function() {
-            $('#hkiInventors').select2({
-                placeholder: "Pilih inventor",
-                width: '100%'
-            });
+            // Auto remove after duration
+            const timer = setTimeout(() => {
+                notification.classList.add('hide');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, duration);
 
-            // Update selected inventors display
-            $('#hkiInventors').on('change', function() {
-                updateSelectedInventors();
-            });
-        });
-
-        function updateSelectedInventors() {
-            const selectedInventors = $('#hkiInventors').val() || [];
-            const inventorsContainer = $('#selectedInventors');
-            inventorsContainer.empty();
-
-            selectedInventors.forEach(inventorId => {
-                const inventorName = $(`#hkiInventors option[value="${inventorId}"]`).text();
-                inventorsContainer.append(`
-                    <div class="inventor-tag">
-                        ${inventorName}
-                        <button type="button" class="ml-2 text-indigo-600 hover:text-indigo-800 remove-inventor" data-id="${inventorId}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `);
-            });
-
-            // Add event listeners to remove buttons
-            $('.remove-inventor').on('click', function() {
-                const inventorId = $(this).data('id');
-                $('#hkiInventors option[value="' + inventorId + '"]').prop('selected', false);
-                $('#hkiInventors').trigger('change');
+            // Close button
+            const closeBtn = notification.querySelector('.notification-close');
+            closeBtn.addEventListener('click', () => {
+                clearTimeout(timer);
+                notification.classList.add('hide');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
             });
         }
+
+        // Initialize Select2 for select elements
+        $(document).ready(function() {
+            $('#hkiCreator').select2();
+            $('#hkiHolder').select2();
+        });
 
         // File upload handling
         const dropzone = document.getElementById('dropzone');
@@ -812,13 +871,13 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                 // Validate file type
                 const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
                 if (!validTypes.includes(file.type)) {
-                    alert('Format file tidak didukung. Harap unggah file PDF, Word, atau gambar.');
+                    showNotification('error', 'Error', 'Format file tidak didukung. Harap unggah file PDF, Word, atau gambar.');
                     return;
                 }
 
                 // Validate file size (max 10MB)
                 if (file.size > 10 * 1024 * 1024) {
-                    alert('Ukuran file terlalu besar. Maksimal 10MB.');
+                    showNotification('error', 'Error', 'Ukuran file terlalu besar. Maksimal 10MB.');
                     return;
                 }
 
@@ -832,11 +891,11 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                 // Change icon based on file type
                 const fileIcon = filePreview.querySelector('i');
                 if (file.type.includes('pdf')) {
-                    fileIcon.className = 'fas fa-file-pdf text-red-500 text-2xl mr-3';
+                    fileIcon.className = 'fas fa-file-pdf text-red-500 text-xl mr-2';
                 } else if (file.type.includes('word')) {
-                    fileIcon.className = 'fas fa-file-word text-blue-500 text-2xl mr-3';
+                    fileIcon.className = 'fas fa-file-word text-blue-500 text-xl mr-2';
                 } else {
-                    fileIcon.className = 'fas fa-file-image text-green-500 text-2xl mr-3';
+                    fileIcon.className = 'fas fa-file-image text-green-500 text-xl mr-2';
                 }
             }
         }
@@ -858,9 +917,12 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
         const hkiModal = document.getElementById('hkiModal');
         const detailModal = document.getElementById('detailModal');
         const confirmationModal = document.getElementById('confirmationModal');
+        const notificationModal = document.getElementById('notificationModal');
         const closeModal = document.getElementById('closeModal');
         const closeDetailModal = document.getElementById('closeDetailModal');
         const closeConfirmationModal = document.getElementById('closeConfirmationModal');
+        const closeNotificationModal = document.getElementById('closeNotificationModal');
+        const closeNotificationBtn = document.getElementById('closeNotificationBtn');
         const cancelHKI = document.getElementById('cancelHKI');
         const closeDetail = document.getElementById('closeDetail');
         const cancelDelete = document.getElementById('cancelDelete');
@@ -868,6 +930,7 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
         const addHKIBtn = document.getElementById('addHKIBtn');
         const hkiForm = document.getElementById('hkiForm');
         const searchInput = document.getElementById('searchInput');
+        const notificationBell = document.getElementById('notificationBell');
 
         let hkiToDelete = null;
 
@@ -904,9 +967,21 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
             hkiToDelete = null;
         }
 
+        function openNotificationModal() {
+            notificationModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNotificationModalFunc() {
+            notificationModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
         closeModal.addEventListener('click', closeModalFunc);
         closeDetailModal.addEventListener('click', closeDetailModalFunc);
         closeConfirmationModal.addEventListener('click', closeConfirmationModalFunc);
+        closeNotificationModal.addEventListener('click', closeNotificationModalFunc);
+        closeNotificationBtn.addEventListener('click', closeNotificationModalFunc);
         cancelHKI.addEventListener('click', closeModalFunc);
         closeDetail.addEventListener('click', closeDetailModalFunc);
         cancelDelete.addEventListener('click', closeConfirmationModalFunc);
@@ -922,6 +997,9 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
             document.getElementById('modalTitle').textContent = 'Tambah HKI Baru';
             openModal();
         });
+
+        // Notification Bell Functionality
+        notificationBell.addEventListener('click', openNotificationModal);
 
         // Simpan data detail terakhir yang diambil untuk kebutuhan edit
         let lastDetailData = null;
@@ -968,11 +1046,11 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                         }
                         openDetailModal();
                     } else {
-                        alert(response.message || 'Gagal mengambil detail data.');
+                        showNotification('error', 'Error', response.message || 'Gagal mengambil detail data.');
                     }
                 },
                 error: function() {
-                    alert('Terjadi kesalahan saat mengambil detail data.');
+                    showNotification('error', 'Error', 'Terjadi kesalahan saat mengambil detail data.');
                 }
             });
         });
@@ -1029,11 +1107,11 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                         hkiModal.classList.add('active');
                         document.body.style.overflow = 'hidden';
                     } else {
-                        alert(response.message || 'Gagal mengambil data untuk edit.');
+                        showNotification('error', 'Error', response.message || 'Gagal mengambil data untuk edit.');
                     }
                 },
                 error: function() {
-                    alert('Terjadi kesalahan saat mengambil data untuk edit.');
+                    showNotification('error', 'Error', 'Terjadi kesalahan saat mengambil data untuk edit.');
                 }
             });
         });
@@ -1094,7 +1172,6 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
         function resetForm() {
             hkiForm.reset();
             document.getElementById('hkiId').value = '';
-            $('#hkiInventors').val(null).trigger('change');
             $('#hkiFile').val('');
             $('#filePreview').addClass('hidden');
             $('#fileName').text('');
@@ -1162,15 +1239,17 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                 success: function(response) {
                     $('#confirmDelete').prop('disabled', false).text('Hapus');
                     if (response.status === 'success') {
-                        alert(response.message);
-                        location.reload();
+                        showNotification('success', 'Sukses', response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
                     } else {
-                        alert(response.message || 'Gagal menghapus data.');
+                        showNotification('error', 'Error', response.message || 'Gagal menghapus data.');
                     }
                 },
                 error: function() {
                     $('#confirmDelete').prop('disabled', false).text('Hapus');
-                    alert('Terjadi kesalahan saat menghapus data.');
+                    showNotification('error', 'Error', 'Terjadi kesalahan saat menghapus data.');
                 }
             });
         }
@@ -1186,6 +1265,10 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
             e.preventDefault();
 
             var formData = new FormData(this);
+            const hkiFileInput = document.getElementById('hkiFile');
+            if (hkiFileInput.files.length > 0) {
+                formData.append('file_hki', hkiFileInput.files[0]);
+            }
 
             $('#saveHKI').prop('disabled', true).text('Menyimpan...');
 
@@ -1199,9 +1282,11 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                 success: function(response) {
                     $('#saveHKI').prop('disabled', false).text('Simpan HKI');
                     if (response.status === 'success') {
-                        alert(response.message);
-                        closeModalFunc();
-                        location.reload();
+                        showNotification('success', 'Sukses', response.message);
+                        setTimeout(() => {
+                            closeModalFunc();
+                            location.reload();
+                        }, 1500);
                     } else {
                         let msg = '';
                         if (typeof response.message === 'object') {
@@ -1211,12 +1296,12 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
                         } else {
                             msg = response.message;
                         }
-                        alert(msg);
+                        showNotification('error', 'Error', msg);
                     }
                 },
                 error: function() {
                     $('#saveHKI').prop('disabled', false).text('Simpan HKI');
-                    alert('Terjadi kesalahan saat menyimpan data.');
+                    showNotification('error', 'Error', 'Terjadi kesalahan saat menyimpan data.');
                 }
             });
         });
@@ -1225,9 +1310,144 @@ Session Data: <?= json_encode($debug['session_data'], JSON_PRETTY_PRINT) ?>
             if (!dateStr) return '-';
             const date = new Date(dateStr);
             if (isNaN(date)) return dateStr;
-            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            const options = {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            };
             return date.toLocaleDateString('id-ID', options);
         }
+
+        // Load upcoming events for notification
+        function loadUpcomingEvents() {
+            const eventsList = document.getElementById('eventsList');
+            eventsList.innerHTML = '<div class="text-center py-4 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Memuat acara...</div>';
+
+            // Get today's date and 7 days from now
+            const today = new Date();
+            const nextWeek = new Date();
+            nextWeek.setDate(today.getDate() + 7);
+
+            const startStr = today.toISOString().split('T')[0];
+            const endStr = nextWeek.toISOString().split('T')[0];
+
+            fetch(`<?= site_url('kalender/events') ?>?start=${startStr}&end=${endStr}`)
+                .then(response => response.json())
+                .then(events => {
+                    if (events.length === 0) {
+                        eventsList.innerHTML = '<div class="text-center py-4 text-gray-500">Tidak ada acara mendatang dalam 7 hari ke depan</div>';
+                        document.getElementById('notificationCount').classList.add('hidden');
+                        return;
+                    }
+
+                    // Update notification count
+                    document.getElementById('notificationCount').textContent = events.length;
+                    document.getElementById('notificationCount').classList.remove('hidden');
+
+                    // Sort events by date
+                    events.sort((a, b) => new Date(a.start) - new Date(b.start));
+
+                    // Group events by date
+                    const eventsByDate = {};
+                    events.forEach(event => {
+                        const eventDate = new Date(event.start);
+                        const dateKey = eventDate.toLocaleDateString('id-ID', {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+
+                        if (!eventsByDate[dateKey]) {
+                            eventsByDate[dateKey] = [];
+                        }
+
+                        eventsByDate[dateKey].push(event);
+                    });
+
+                    // Render events
+                    let html = '';
+                    for (const [date, dateEvents] of Object.entries(eventsByDate)) {
+                        html += `<div class="mb-4">
+                            <h4 class="font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="far fa-calendar-alt mr-2 text-indigo-500"></i>
+                                ${date}
+                            </h4>
+                            <div class="space-y-2">`;
+
+                        dateEvents.forEach(event => {
+                            // Determine event type class
+                            let eventTypeClass = 'event-research-item';
+                            if (event.extendedProps?.type === 'publication') {
+                                eventTypeClass = 'event-publication-item';
+                            } else if (event.extendedProps?.type === 'hki') {
+                                eventTypeClass = 'event-hki-item';
+                            } else if (event.extendedProps?.type === 'deadline') {
+                                eventTypeClass = 'event-deadline-item';
+                            } else if (event.extendedProps?.type === 'other') {
+                                eventTypeClass = 'event-other-item';
+                            }
+
+                            // Format time
+                            let timeStr = 'Sepanjang hari';
+                            if (event.start.includes('T')) {
+                                const startTime = new Date(event.start);
+                                timeStr = startTime.toLocaleTimeString('id-ID', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+
+                                if (event.end && event.end.includes('T')) {
+                                    const endTime = new Date(event.end);
+                                    timeStr += ' - ' + endTime.toLocaleTimeString('id-ID', {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    });
+                                }
+                            }
+
+                            html += `<div class="event-item ${eventTypeClass}">
+                                <div class="event-title">${event.title}</div>
+                                <div class="event-date">
+                                    <i class="far fa-clock"></i>
+                                    ${timeStr}
+                                </div>
+                            </div>`;
+                        });
+
+                        html += `</div></div>`;
+                    }
+
+                    eventsList.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error loading events:', error);
+                    eventsList.innerHTML = '<div class="text-center py-4 text-red-500">Gagal memuat daftar acara</div>';
+                });
+        }
+
+        // Load upcoming events count when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get today's date and 7 days from now
+            const today = new Date();
+            const nextWeek = new Date();
+            nextWeek.setDate(today.getDate() + 7);
+
+            const startStr = today.toISOString().split('T')[0];
+            const endStr = nextWeek.toISOString().split('T')[0];
+
+            fetch(`<?= site_url('kalender/events') ?>?start=${startStr}&end=${endStr}`)
+                .then(response => response.json())
+                .then(events => {
+                    if (events.length > 0) {
+                        document.getElementById('notificationCount').textContent = events.length;
+                        document.getElementById('notificationCount').classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading events count:', error);
+                });
+        });
     </script>
 </body>
 

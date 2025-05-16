@@ -23,3 +23,18 @@ ini_set('display_errors', '0');
  | release of the framework.
  */
 defined('CI_DEBUG') || define('CI_DEBUG', false);
+
+/*
+ |--------------------------------------------------------------------------
+ | ERROR DISPLAY
+ |--------------------------------------------------------------------------
+ */
+ini_set('display_errors', '1');
+error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
+
+/*
+ |--------------------------------------------------------------------------
+ | DEBUG MODE
+ |--------------------------------------------------------------------------
+ */
+defined('CI_DEBUG') || define('CI_DEBUG', true);

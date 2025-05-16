@@ -78,3 +78,14 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 $routes->post('hki/save', 'HkiController::save');
 $routes->delete('hki/delete/(:num)', 'HkiController::delete/$1');
 $routes->get('hki/detail/(:num)', 'HkiController::detail/$1');
+
+$routes->get('check-db', function() {
+    try {
+        $db = \Config\Database::connect();
+        return 'Database connected successfully!';
+    } catch (\Exception $e) {
+        return 'Database connection error: ' . $e->getMessage();
+    }
+});
+
+$routes->post('/upload', 'UploadController::upload');

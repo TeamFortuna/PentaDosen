@@ -1,0 +1,5 @@
+# Mengabaikan direktori node_modules
+node_modules/
+
+# Mengabaikan direktori tests
+tests/
