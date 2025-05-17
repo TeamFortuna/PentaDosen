@@ -124,3 +124,7 @@ nb-configuration.xml
 
 /results/
 /phpunit*.xml
+
+# Ignore service account and JSON credentials (hilangkan .json kredensial yang penting)
+*.json
+
